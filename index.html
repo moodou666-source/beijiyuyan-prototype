@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>北京语燕 - 旅行规划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 状态栏 */
+        .status-bar {
+            height: 44px;
+            background: #1a365d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            padding-top: 20px;
+        }
+        
+        /* 底部导航 */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 20px;
+            z-index: 1000;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: #718096;
+            font-size: 10px;
+        }
+        
+        .tab-item.active {
+            color: #1a365d;
+        }
+        
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+        }
+        
+        /* 页面内容 */
+        .page {
+            display: none;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 首页 */
+        .home-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 20px;
+            color: white;
+        }
+        
+        .search-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-bar input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .location-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        
+        /* 地图区域 */
+        .map-container {
+            height: 200px;
+            background: #e2e8f0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+        }
+        
+        .map-placeholder {
+            text-align: center;
+        }
+        
+        .map-placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        /* Tab导航 */
+        .content-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+        
+        .content-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #718096;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .content-tab.active {
+            color: #1a365d;
+            font-weight: 600;
+        }
+        
+        .content-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: #d69e2e;
+            border-radius: 2px;
+        }
+        
+        /* 路线卡片 */
+        .route-card {
+            margin: 15px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .route-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            position: relative;
+        }
+        
+        .route-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            color: #1a365d;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .route-info {
+            padding: 15px;
+        }
+        
+        .route-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .route-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: #ebf8ff;
+            color: #3182ce;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        .tag.food {
+            background: #fffaf0;
+            color: #dd6b20;
+        }
+        
+        .tag.photo {
+            background: #f0fff4;
+            color: #38a169;
+        }
+        
+        .route-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #718096;
+            font-size: 13px;
+        }
+        
+        .route-stats {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* 规划页面 */
+        .plan-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 30px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .plan-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .plan-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: white;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .step.active .step-number {
+            background: #d69e2e;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .step.active .step-label {
+            color: #1a365d;
+            font-weight: 600;
+        }
+        
+        /* 偏好选择 */
+        .preference-section {
+            padding: 20px;
+            background: white;
+            margin-bottom: 10px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon {
+            font-size: 20px;
+        }
+        
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .option-item {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-item:hover {
+            border-color: #1a365d;
+        }
+        
+        .option-item.selected {
+            border-color: #1a365d;
+            background: #ebf8ff;
+        }
+        
+        .option-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .option-label {
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .option-desc {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+        
+        /* 按钮 */
+        .btn {
+            width: calc(100% - 40px);
+            margin: 20px;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);
+        }
+        
+        /* 足迹页面 */
+        .footprint-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .footprint-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-size: 15px;
+            color: #718096;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .footprint-tab.active {
+            color: #1a365d;
+            border-bottom: 3px solid #d69e2e;
+        }
+        
+        /* 旅行圈 */
+        .feed-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        .feed-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .feed-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            position: relative;
+        }
+        
+        .feed-location {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .feed-info {
+            padding: 10px;
+        }
+        
+        .feed-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .feed-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #718096;
+            font-size: 12px;
+        }
+        
+        .feed-author {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .author-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .feed-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .feed-action {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        /* 排序选项 */
+        .sort-bar {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            overflow-x: auto;
+        }
+        
+        .sort-option {
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #718096;
+            background: #f7fafc;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .sort-option.active {
+            background: #1a365d;
+            color: white;
+        }
+        
+        /* 个人中心 */
+        .profile-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 40px 20px 60px;
+            color: white;
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .profile-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .profile-level {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: white;
+            margin-top: -30px;
+            margin-left: 20px;
+            margin-right: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a365d;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+        
+        .menu-list {
+            padding: 20px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #ebf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .menu-text {
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .menu-arrow {
+            color: #a0aec0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 状态栏 -->
+        <div class="status-bar">北京语燕</div>
+        
+        <!-- 首页 -->
+        <div class="page active" id="page-home">
+            <div class="home-header">
+                <div class="search-bar">
+                    <span>🔍</span>
+                    <input type="text" placeholder="搜索目的地、景点、路线...">
+                </div>
+                <div class="location-tag">
+                    <span>📍</span>
+                    <span>北京市</span>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <div class="map-placeholder-icon">🗺️</div>
+                    <div>地图区域</div>
+                </div>
+            </div>
+            
+            <div class="content-tabs">
+                <div class="content-tab active">推荐路线</div>
+                <div class="content-tab">附近景点</div>
+                <div class="content-tab">摄影点</div>
+                <div class="content-tab">小众秘境</div>
+            </div>
+            
+            <div class="route-card">
+                <div class="route-image">
+                    古北水镇一日游
+                    <span class="route-badge">热门</span>
+                </div>
+                <div class="route-info">
+                    <div class="route-title">古北水镇+司马台长城经典路线</div>
+                    <div class="route-tags">
+                        <span class="tag photo">📷 摄影</span>
+                        <span class="tag">🏛️ 历史</span>
+                        <span class="tag food">🍜 美食</span>
+                    </div>
+                    <div class="route-meta">
+                        <div class="route-stats">
+                            <span class="stat">⏱️ 1天</span>
+                            <span class="stat">📍 120km</span>
+                        </div>
+                        <span>🔥 2.3k</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="route-card">
+                <div class="route-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    京郊赏秋路线
+                    <span class="route-badge">小众</span>
+                </div>
+                <div class="route-info">
+                    <div class="route-title">坡峰岭红叶+周口店遗址</div>
+                    <div class="route-tags">
+                        <span class="tag photo">📷 摄影</span>
+                        <span class="tag">🍂 赏秋</span>
+                    </div>
+                    <div class="route-meta">
+                        <div class="route-stats">
+                            <span class="stat">⏱️ 1天</span>
+                            <span class="stat">📍 50km</span>
+                        </div>
+                        <span>🔥 856</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 规划页面 -->
+        <div class="page" id="page-plan">
+            <div class="plan-header">
+                <div class="plan-title">规划你的旅程</div>
+                <div class="plan-subtitle">告诉我们你的偏好，AI为你定制专属路线</div>
+            </div>
+            
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">时间</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">目的地</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">偏好</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">生成</div>
+                </div>
+            </div>
+            
+            <div class="preference-section">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    旅行节奏
+                </div>
+                <div class="option-grid">
+                    <div class="option-item selected">
+                        <div class="option-icon">🌿</div>
+                        <div class="option-label">轻松休闲</div>
+                        <div class="option-desc">每天1-2个景点</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">⚡</div>
+                        <div class="option-label">充实打卡</div>
+                        <div class="option-desc">每天3-5个景点</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🎯</div>
+                        <div class="option-label">深度沉浸</div>
+                        <div class="option-desc">少而精，体验生活</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🎲</div>
+                        <div class="option-label">随性自由</div>
+                        <div class="option-desc">走到哪玩到哪</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preference-section">
+                <div class="section-title">
+                    <span class="section-icon">✨</span>
+                    旅行主题（可多选）
+                </div>
+                <div class="option-grid">
+                    <div class="option-item selected">
+                        <div class="option-icon">📷</div>
+                        <div class="option-label">摄影旅拍</div>
+                    </div>
+                    <div class="option-item selected">
+                        <div class="option-icon">🍜</div>
+                        <div class="option-label">美食探索</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🏛️</div>
+                        <div class="option-label">历史文化</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🏔️</div>
+                        <div class="option-label">自然风光</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🏙️</div>
+                        <div class="option-label">城市漫步</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🥾</div>
+                        <div class="option-label">户外探险</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">👨‍👩‍👧‍👦</div>
+                        <div class="option-label">亲子家庭</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">💕</div>
+                        <div class="option-label">浪漫情侣</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preference-section">
+                <div class="section-title">
+                    <span class="section-icon">💎</span>
+                    旅行风格
+                </div>
+                <div class="option-grid">
+                    <div class="option-item selected">
+                        <div class="option-icon">💎</div>
+                        <div class="option-label">小众独特</div>
+                        <div class="option-desc">避开人潮，探索冷门</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">🔥</div>
+                        <div class="option-label">网红打卡</div>
+                        <div class="option-desc">热门景点，社交分享</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">✨</div>
+                        <div class="option-label">品质舒适</div>
+                        <div class="option-desc">注重体验质量</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">💰</div>
+                        <div class="option-label">经济实惠</div>
+                        <div class="option-desc">性价比优先</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preference-section">
+                <div class="section-title">
+                    <span class="section-icon">👥</span>
+                    旅行同伴
+                </div>
+                <div class="option-grid">
+                    <div class="option-item">
+                        <div class="option-icon">🧍</div>
+                        <div class="option-label">独自旅行</div>
+                    </div>
+                    <div class="option-item selected">
+                        <div class="option-icon">💑</div>
+                        <div class="option-label">情侣二人</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">👨‍👩‍👧‍👦</div>
+                        <div class="option-label">家庭亲子</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-icon">👫</div>
+                        <div class="option-label">朋友结伴</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary">下一步：选择目的地</button>
+        </div>
+        
+        <!-- 足迹页面 -->
+        <div class="page" id="page-footprint">
+            <div class="footprint-tabs">
+                <div class="footprint-tab active">我的足迹</div>
+                <div class="footprint-tab">旅行圈</div>
+            </div>
+            
+            <div class="sort-bar">
+                <div class="sort-option active">🔥 热门</div>
+                <div class="sort-option">⭐ 精选</div>
+                <div class="sort-option">🆕 最新</div>
+                <div class="sort-option">📍 附近</div>
+            </div>
+            
+            <div class="feed-grid">
+                <div class="feed-card">
+                    <div class="feed-image">
+                        <div class="feed-location">
+                            <span>📍</span>
+                            <span>云南·丽江</span>
+                        </div>
+                    </div>
+                    <div class="feed-info">
+                        <div class="feed-title">玉龙雪山下的蓝月谷，美得像仙境一样！</div>
+                        <div class="feed-stats">
+                            <div class="feed-author">
+                                <div class="author-avatar"></div>
+                                <span>旅行达人</span>
+                            </div>
+                            <div class="feed-actions">
+                                <span class="feed-action">❤️ 1.2k</span>
+                                <span class="feed-action">💬 89</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feed-card">
+                    <div class="feed-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="feed-location">
+                            <span>📍</span>
+                            <span>浙江·乌镇</span>
+                        </div>
+                    </div>
+                    <div class="feed-info">
+                        <div class="feed-title">江南水乡的黄昏，每一帧都是壁纸</div>
+                        <div class="feed-stats">
+                            <div class="feed-author">
+                                <div class="author-avatar"></div>
+                                <span>摄影师小王</span>
+                            </div>
+                            <div class="feed-actions">
+                                <span class="feed-action">❤️ 856</span>
+                                <span class="feed-action">💬 45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feed-card">
+                    <div class="feed-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="feed-location">
+                            <span>📍</span>
+                            <span>四川·稻城</span>
+                        </div>
+                    </div>
+                    <div class="feed-info">
+                        <div class="feed-title">稻城亚丁的秋天，五彩斑斓的世界</div>
+                        <div class="feed-stats">
+                            <div class="feed-author">
+                                <div class="author-avatar"></div>
+                                <span>背包客阿明</span>
+                            </div>
+                            <div class="feed-actions">
+                                <span class="feed-action">❤️ 2.1k</span>
+                                <span class="feed-action">💬 156</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feed-card">
+                    <div class="feed-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="feed-location">
+                            <span>📍</span>
+                            <span>北京·故宫</span>
+                        </div>
+                    </div>
+                    <div class="feed-info">
+                        <div class="feed-title">雪后的故宫，红墙白雪美如画</div>
+                        <div class="feed-stats">
+                            <div class="feed-author">
+                                <div class="author-avatar"></div>
+                                <span>北京土著</span>
+                            </div>
+                            <div class="feed-actions">
+                                <span class="feed-action">❤️ 3.5k</span>
+                                <span class="feed-action">💬 234</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 个人中心 -->
+        <div class="page" id="page-profile">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-name">旅行者</div>
+                <div class="profile-level">Lv.3 旅行达人</div>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">去过城市</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">足迹</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1.2k</div>
+                    <div class="stat-label">里程(km)</div>
+                </div>
+            </div>
+            
+            <div class="menu-list">
+                <div class="menu-item">
+                    <div class="menu-left">
+                        <div class="menu-icon">🗺️</div>
+                        <div class="menu-text">我的路线</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-left">
+                        <div class="menu-icon">📝</div>
+                        <div class="menu-text">我的笔记</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-left">
+                        <div class="menu-icon">🏆</div>
+                        <div class="menu-text">我的成就</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-left">
+                        <div class="menu-icon">⚙️</div>
+                        <div class="menu-text">偏好设置</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-left">
+                        <div class="menu-icon">❓</div>
+                        <div class="menu-text">帮助与反馈</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="tab-bar">
+            <div class="tab-item active" onclick="switchTab('home')">
+                <span class="tab-icon">🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('plan')">
+                <span class="tab-icon">🗺️</span>
+                <span>规划</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('footprint')">
+                <span class="tab-icon">👣</span>
+                <span>足迹</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('profile')">
+                <span class="tab-icon">👤</span>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tabName) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById('page-' + tabName).classList.add('active');
+            
+            // 更新导航状态
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.tab-item').classList.add('active');
+        }
+        
+        // 选项选择交互
+        document.querySelectorAll('.option-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 单选逻辑（节奏、风格、同伴）
+                const parent = this.closest('.preference-section');
+                const title = parent.querySelector('.section-title').textContent;
+                
+                if (title.includes('节奏') || title.includes('风格') || title.includes('同伴')) {
+                    parent.querySelectorAll('.option-item').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                } else {
+                    // 多选逻辑（主题）
+                    this.classList.toggle('selected');
+                }
+            });
+        });
+        
+        // 内容Tab切换
+        document.querySelectorAll('.content-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 足迹Tab切换
+        document.querySelectorAll('.footprint-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.footprint-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 排序选项切换
+        document.querySelectorAll('.sort-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
