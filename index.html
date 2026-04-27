@@ -296,86 +296,91 @@
             opacity: 0.8;
         }
         
-        /* 自驾规划区域 */
+        /* 自驾规划区域 - 简洁大气 */
         .drive-plan-section {
-            padding: 15px;
+            padding: 20px;
             background: white;
-            margin: 10px;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .drive-plan-header {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
         }
         
         .drive-plan-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 4px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 6px;
         }
         
         .drive-plan-subtitle {
-            font-size: 12px;
+            font-size: 14px;
             color: #718096;
         }
         
         .drive-plan-input {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .drive-stop {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
         
         .stop-icon {
-            width: 28px;
-            height: 28px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: white;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         
         .stop-icon.start {
-            background: #38a169;
+            background: linear-gradient(135deg, #38a169, #2f855a);
         }
         
         .stop-icon.end {
-            background: #e53e3e;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
         }
         
         .stop-icon.via {
-            background: #d69e2e;
+            background: linear-gradient(135deg, #d69e2e, #b7791f);
         }
         
         .drive-stop input {
             flex: 1;
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
             outline: none;
+            background: #f7fafc;
+            transition: all 0.3s;
         }
         
         .drive-stop input:focus {
-            border-color: #1a365d;
+            background: #edf2f7;
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
         }
         
         .add-stop-btn {
             background: none;
-            border: 2px dashed #e2e8f0;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 14px;
+            border: 2px dashed #cbd5e0;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
             color: #718096;
             cursor: pointer;
             width: 100%;
@@ -385,131 +390,154 @@
         .add-stop-btn:hover {
             border-color: #1a365d;
             color: #1a365d;
+            background: #f7fafc;
         }
         
         .drive-stops {
             margin-bottom: 10px;
         }
         
-        /* 旅行主题 */
+        /* 旅行主题 - 简洁大气 */
         .theme-section {
-            padding: 15px;
+            padding: 20px;
             background: white;
-            margin: 10px;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .theme-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
         
         .theme-item {
             text-align: center;
-            padding: 15px 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 20px 10px;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s;
+            background: #f7fafc;
+            border: 2px solid transparent;
         }
         
         .theme-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
             border-color: #1a365d;
-            background: #ebf8ff;
         }
         
         .theme-item.selected {
-            border-color: #1a365d;
-            background: #ebf8ff;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(26, 54, 93, 0.3);
         }
         
         .theme-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
+            font-size: 32px;
+            margin-bottom: 8px;
         }
         
         .theme-name {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: #2d3748;
         }
         
         .theme-desc {
-            font-size: 11px;
-            color: #718096;
-            margin-top: 2px;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 4px;
         }
         
-        /* 推荐路线 */
+        /* 推荐路线 - 简洁大气 */
         .route-section {
-            padding: 15px;
+            padding: 20px;
             background: white;
-            margin: 10px;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .route-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
         
         .route-card {
             display: flex;
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+        }
+        
+        .route-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
         
         .route-image {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             position: relative;
             flex-shrink: 0;
         }
         
         .route-duration {
             position: absolute;
-            bottom: 5px;
-            left: 5px;
-            background: rgba(0,0,0,0.6);
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.7);
             color: white;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
         }
         
         .route-info {
-            padding: 10px;
+            padding: 16px;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .route-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 8px;
         }
         
         .route-tags {
             display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
+            gap: 8px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
         
-        .route-distance {
+        .tag {
+            background: #ebf8ff;
+            color: #3182ce;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .route-distance {
+            font-size: 13px;
             color: #718096;
+            font-weight: 500;
         }
         .map-container {
             height: 250px;
