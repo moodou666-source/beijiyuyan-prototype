@@ -2403,23 +2403,34 @@
         let hiddenGemsData = [];
         let currentCity = 'beijing';
         
+        // OSS配置
+        const OSS_BASE_URL = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com';
+        
+        // 生成签名URL（注意：实际项目中应该在服务端生成签名）
+        function getSignedUrl(objectKey) {
+            return `${OSS_BASE_URL}/${objectKey}`;
+        }
+        
         async function loadDataFromOSS() {
             try {
                 console.log('🚀 正在从OSS加载数据...');
                 
                 let attractionsUrl, routesUrl, hiddenGemsUrl;
                 if (currentCity === 'jiangsu') {
-                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_complete.json';
-                    routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_routes.json';
-                    hiddenGemsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_hidden_gems.json';
+                    attractionsUrl = getSignedUrl('data/jiangsu_complete.json');
+                    routesUrl = getSignedUrl('data/jiangsu_routes.json');
+                    hiddenGemsUrl = getSignedUrl('data/jiangsu_hidden_gems.json');
                 } else {
-                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/attractions.json';
-                    routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/routes.json';
+                    attractionsUrl = getSignedUrl('data/attractions.json');
+                    routesUrl = getSignedUrl('data/routes.json');
                     hiddenGemsUrl = null;
                 }
                 
+                console.log('加载URL:', attractionsUrl);
+                
                 // 加载景点数据
                 const attractionsResponse = await fetch(attractionsUrl);
+                console.log('景点响应状态:', attractionsResponse.status);
                 if (attractionsResponse.ok) {
                     const attractionsJson = await attractionsResponse.json();
                     if (attractionsJson.cities) {
@@ -2435,6 +2446,8 @@
                         attractionsData = attractionsJson.attractions || [];
                     }
                     console.log(`✅ 加载了 ${attractionsData.length} 个景点`);
+                } else {
+                    console.error('❌ 加载景点失败:', attractionsResponse.status);
                 }
                 
                 // 加载特色打卡点
