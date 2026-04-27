@@ -1512,191 +1512,145 @@
         
         <!-- 规划页面 -->
         <div class="page" id="plan">
-            <div class="plan-header">
-                <div class="plan-title">自驾路线规划</div>
-                <div class="plan-subtitle">多目的地智能规划，生成最优路线</div>
+            <div class="plan-header" style="background: #1a365d; padding: 20px; color: white;">
+                <div class="plan-title" style="font-size: 20px; font-weight: 600; margin-bottom: 5px;">路线规划</div>
+                <div class="plan-subtitle" style="font-size: 13px; opacity: 0.8;">多目的地智能规划，生成最优路线</div>
             </div>
             
-            <!-- 自驾规划核心功能 -->
-            <div class="drive-plan-section">
-                <div class="drive-plan-header">
-                    <div class="drive-plan-title">路线规划</div>
-                    <div class="drive-plan-subtitle">添加多个途经城市，生成完整自驾方案</div>
+            <!-- 步骤指示器 -->
+            <div style="display: flex; justify-content: center; padding: 20px; background: white; border-bottom: 1px solid #e2e8f0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #1a365d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">1</div>
+                    <div style="font-size: 12px; color: #1a365d;">时间</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #1a365d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">2</div>
+                    <div style="font-size: 12px; color: #1a365d;">目的地</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #d69e2e; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">3</div>
+                    <div style="font-size: 12px; color: #d69e2e; font-weight: 600;">偏好</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; color: #718096; display: flex; align-items: center; justify-content: center; font-size: 12px;">4</div>
+                    <div style="font-size: 12px; color: #718096;">生成</div>
                 </div>
-                <div class="drive-plan-input">
-                    <div class="drive-stop">
-                        <span class="stop-icon start">起</span>
-                        <input type="text" placeholder="输入出发地" id="drive-start">
-                    </div>
-                    <div class="drive-stop">
-                        <span class="stop-icon end">终</span>
-                        <input type="text" placeholder="输入目的地" id="drive-end">
-                    </div>
-                    <button class="add-stop-btn" onclick="addStop()">+ 添加途经点</button>
-                </div>
-                <div class="drive-stops" id="drive-stops"></div>
             </div>
             
-            <!-- 旅行主题选择 -->
-            <div class="theme-section">
-                <div class="section-title">旅行主题</div>
-                <div class="theme-grid">
-                    <div class="theme-item" onclick="selectTheme('family')">
-                        <div class="theme-icon">👨‍👩‍👧‍👦</div>
-                        <div class="theme-name">亲子时光</div>
-                        <div class="theme-desc">适合全家出游</div>
+            <!-- 旅行节奏选择 -->
+            <div style="padding: 20px; background: white; margin-bottom: 10px;">
+                <div style="font-size: 16px; font-weight: 600; color: #1a365d; margin-bottom: 15px;">旅行节奏</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="border: 2px solid #1a365d; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; background: #f8fafc;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🐌</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">轻松休闲</div>
+                        <div style="font-size: 12px; color: #718096;">每天1-2个景点</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('study')">
-                        <div class="theme-icon">📚</div>
-                        <div class="theme-name">研学探索</div>
-                        <div class="theme-desc">知识与文化之旅</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🚶</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">充实打卡</div>
+                        <div style="font-size: 12px; color: #718096;">每天3-5个景点</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('culture')">
-                        <div class="theme-icon">🏮</div>
-                        <div class="theme-name">烟火人文</div>
-                        <div class="theme-desc">体验当地生活</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🎯</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">深度沉浸</div>
+                        <div style="font-size: 12px; color: #718096;">少而精，体验生活</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('photo')">
-                        <div class="theme-icon">📸</div>
-                        <div class="theme-name">摄影之旅</div>
-                        <div class="theme-desc">记录美好瞬间</div>
-                    </div>
-                    <div class="theme-item" onclick="selectTheme('food')">
-                        <div class="theme-icon">&#x1F35C;</div>
-                        <div class="theme-name">美食寻味</div>
-                        <div class="theme-desc">舌尖上的旅行</div>
-                    </div>
-                    <div class="theme-item" onclick="selectTheme('adventure')">
-                        <div class="theme-icon">&#x26F0;</div>
-                        <div class="theme-name">户外探险</div>
-                        <div class="theme-desc">挑战自我极限</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🎲</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">随性自由</div>
+                        <div style="font-size: 12px; color: #718096;">走到哪玩到哪</div>
                     </div>
                 </div>
             </div>
             
-            <!-- 旅行偏好 -->
-            <div class="preference-section">
-                <div class="section-title">
-                    <span class="section-icon">🎯</span>
-                    旅行节奏
-                </div>
-                <div class="option-grid">
-                    <div class="option-item selected">
-                        <div class="option-icon">🐌</div>
-                        <div class="option-label">慢游</div>
-                        <div class="option-desc">深度体验</div>
+            <!-- 旅行主题 -->
+            <div style="padding: 20px; background: white; margin-bottom: 10px;">
+                <div style="font-size: 16px; font-weight: 600; color: #1a365d; margin-bottom: 15px;">旅行主题（可多选）</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div style="border: 2px solid #1a365d; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #1a365d; cursor: pointer; background: #f8fafc;">
+                        <span style="margin-right: 5px;">📸</span>摄影旅拍
                     </div>
-                    <div class="option-item">
-                        <div class="option-icon">🚶</div>
-                        <div class="option-label">舒适</div>
-                        <div class="option-desc">经典路线</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🍜</span>美食探索
                     </div>
-                    <div class="option-item">
-                        <div class="option-icon">🚀</div>
-                        <div class="option-label">紧凑</div>
-                        <div class="option-desc">高效打卡</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🏛️</span>人文历史
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">⛰️</span>自然风光
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🏨</span>品质住宿
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🎨</span>艺术文创
                     </div>
                 </div>
             </div>
             
-            <button class="btn btn-primary" onclick="planRoute()">生成路线方案</button>
+            <button class="btn btn-primary" onclick="planRoute()" style="margin: 20px; width: calc(100% - 40px);">生成路线方案</button>
         </div>
         
         <!-- 足迹页面 -->
         <div class="page" id="footprint">
-            <div class="footprint-tabs">
-                <div class="footprint-tab active">旅行圈</div>
-                <div class="footprint-tab">我的足迹</div>
+            <!-- 顶部标签 -->
+            <div style="display: flex; background: white; border-bottom: 1px solid #e2e8f0; padding: 0 20px;">
+                <div style="padding: 15px 20px; border-bottom: 2px solid #1a365d; color: #1a365d; font-weight: 600; font-size: 14px;">热门</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">精选</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">最新</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">附近</div>
             </div>
             
-            <!-- 旅行圈 - 地图占一半 + 用户照片 -->
-            <div class="travel-circle">
-                <div class="travel-map-half">
-                    <div id="travel-map"></div>
+            <!-- 照片网格 -->
+            <div style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">云南·丽江</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">丽江古城夜景</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@摄影师小王</div>
+                    </div>
                 </div>
-                <div class="travel-content-half">
-                    <div class="area-photos">
-                        <div class="area-header">
-                            <div>
-                                <div class="area-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 故宫周边</div>
-                                <div class="area-subtitle">点击地图区域查看不同地点</div>
-                            </div>
-                        </div>
-                        <div class="user-photo-grid">
-                            <div class="user-photo-item" onclick="showUserProfile('user1')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@摄影师小王</div>
-                                    <div class="user-photo-location">角楼晚霞</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user2')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #74b9ff, #0984e3);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@旅行达人李</div>
-                                    <div class="user-photo-location">太和殿</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user3')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #fd79a8, #e84393);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@背包客张</div>
-                                    <div class="user-photo-location">御花园</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user4')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #fdcb6e, #e17055);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@美食探索家</div>
-                                    <div class="user-photo-location">神武门</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user5')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #55efc4, #00b894);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@历史爱好者</div>
-                                    <div class="user-photo-location">乾清宫</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user6')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@建筑摄影师</div>
-                                    <div class="user-photo-location">午门</div>
-                                </div>
-                            </div>
-                        </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #74b9ff, #0984e3);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">浙江·乌镇</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">乌镇水乡晨雾</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@旅行达人李</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #fd79a8, #e84393);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">四川·成都</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">宽窄巷子美食</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@美食探索家</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #fdcb6e, #e17055);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">北京·故宫</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">角楼晚霞</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@建筑摄影师</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #55efc4, #00b894);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">江苏·苏州</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">拙政园春色</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@园林爱好者</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">西藏·拉萨</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">布达拉宫日出</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@背包客张</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 用户主页弹窗 -->
-            <div class="user-modal" id="user-modal">
-                <div class="user-modal-content">
-                    <div class="location-modal-header">
-                        <div></div>
-                        <div class="location-modal-close" onclick="closeUserModal()">✕</div>
-                    </div>
-                    <div class="user-profile-header">
-                        <div class="user-profile-avatar">&#x1F464;</div>
-                        <div class="user-profile-info">
-                            <div class="user-profile-name" id="user-name">摄影师小王</div>
-                            <div class="user-profile-stats">📸 128张照片 · 👥 2.3万粉丝 · ❤️ 5.6万获赞</div>
-                        </div>
-                    </div>
-                    <div class="user-photos-grid">
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #74b9ff, #0984e3);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #fd79a8, #e84393);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #fdcb6e, #e17055);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #55efc4, #00b894);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 我的足迹 -->
-            <div class="my-footprint-content" style="display: none;">
+        </div>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number">12</div>
