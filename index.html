@@ -1340,18 +1340,168 @@
             <div class="map-container">
                 <div id="real-map"></div>
                 <div class="map-overlay">
-                    <button class="map-filter-btn" onclick="filterMap('attraction')">📍 景点</button>
-                    <button class="map-filter-btn" onclick="filterMap('photo')">📸 摄影</button>
-                    <button class="map-filter-btn" onclick="filterMap('hidden')">🏞️ 小众</button>
-                    <button class="map-filter-btn" onclick="filterMap('food')">🍜 美食</button>
+                    <button class="map-filter-btn" onclick="filterMap('attraction')">景点</button>
+                    <button class="map-filter-btn" onclick="filterMap('photo')">摄影</button>
+                    <button class="map-filter-btn" onclick="filterMap('hidden')">小众</button>
+                    <button class="map-filter-btn" onclick="filterMap('food')">美食</button>
                 </div>
             </div>
             
-            <!-- 自驾规划入口 -->
+            <!-- 景点推荐 -->
+            <div class="spot-section">
+                <div class="section-header">
+                    <div class="section-title">热门景点</div>
+                    <div class="section-more">查看更多 ></div>
+                </div>
+                <div class="spot-grid">
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+                            故宫
+                            <div class="spot-badge">热门</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">故宫博物院</div>
+                            <div class="spot-location">📍 东城区</div>
+                            <div class="spot-stats">
+                                <span>4.9</span>
+                                <span>12.5万</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">
+                            颐和园
+                            <div class="spot-badge">5A</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">颐和园</div>
+                            <div class="spot-location">📍 海淀区</div>
+                            <div class="spot-stats">
+                                <span>4.8</span>
+                                <span>8.3万</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #fd79a8, #e84393);">
+                            798
+                            <div class="spot-badge">艺术</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">798艺术区</div>
+                            <div class="spot-location">📍 朝阳区</div>
+                            <div class="spot-stats">
+                                <span>4.7</span>
+                                <span>5.1万</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #00b894, #00cec9);">
+                            香山
+                            <div class="spot-badge">自然</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">香山公园</div>
+                            <div class="spot-location">📍 海淀区</div>
+                            <div class="spot-stats">
+                                <span>4.6</span>
+                                <span>6.7万</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 摄影点推荐 -->
+            <div class="spot-section">
+                <div class="section-header">
+                    <div class="section-title">摄影秘境</div>
+                    <div class="section-more">查看更多 ></div>
+                </div>
+                <div class="spot-grid">
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #a29bfe, #6c5ce7);">
+                            角楼
+                            <div class="spot-badge">摄影</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">角楼晚霞</div>
+                            <div class="spot-location">📍 故宫西北角</div>
+                            <div class="spot-stats">
+                                <span>4.9</span>
+                                <span>2.3万</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #fdcb6e, #e17055);">
+                            国贸
+                            <div class="spot-badge">夜景</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">国贸CBD</div>
+                            <div class="spot-location">📍 朝阳区</div>
+                            <div class="spot-stats">
+                                <span>4.8</span>
+                                <span>1.8万</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 小众秘境 -->
+            <div class="spot-section">
+                <div class="section-header">
+                    <div class="section-title">小众秘境</div>
+                    <div class="section-more">查看更多 ></div>
+                </div>
+                <div class="spot-grid">
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #55efc4, #00b894);">
+                            琉璃厂
+                            <div class="spot-badge">小众</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">琉璃厂古文化街</div>
+                            <div class="spot-location">📍 西城区</div>
+                            <div class="spot-stats">
+                                <span>4.5</span>
+                                <span>3.2万</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spot-card">
+                        <div class="spot-image" style="background: linear-gradient(135deg, #ff7675, #d63031);">
+                            法源寺
+                            <div class="spot-badge">古刹</div>
+                        </div>
+                        <div class="spot-info">
+                            <div class="spot-name">法源寺</div>
+                            <div class="spot-location">📍 宣武区</div>
+                            <div class="spot-stats">
+                                <span>4.7</span>
+                                <span>1.5万</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 规划页面 -->
+        <div class="page" id="plan">
+            <div class="plan-header">
+                <div class="plan-title">自驾路线规划</div>
+                <div class="plan-subtitle">多目的地智能规划，生成最优路线</div>
+            </div>
+            
+            <!-- 自驾规划核心功能 -->
             <div class="drive-plan-section">
                 <div class="drive-plan-header">
-                    <div class="drive-plan-title">🚗 自驾路线规划</div>
-                    <div class="drive-plan-subtitle">添加多个目的地，生成最优路线</div>
+                    <div class="drive-plan-title">路线规划</div>
+                    <div class="drive-plan-subtitle">添加多个途经城市，生成完整自驾方案</div>
                 </div>
                 <div class="drive-plan-input">
                     <div class="drive-stop">
@@ -1365,12 +1515,11 @@
                     <button class="add-stop-btn" onclick="addStop()">+ 添加途经点</button>
                 </div>
                 <div class="drive-stops" id="drive-stops"></div>
-                <button class="btn btn-primary" onclick="planRoute()">🗺️ 规划路线</button>
             </div>
             
-            <!-- 旅行主题 -->
+            <!-- 旅行主题选择 -->
             <div class="theme-section">
-                <div class="section-title">🎯 旅行主题</div>
+                <div class="section-title">旅行主题</div>
                 <div class="theme-grid">
                     <div class="theme-item" onclick="selectTheme('family')">
                         <div class="theme-icon">👨‍👩‍👧‍👦</div>
@@ -1405,89 +1554,6 @@
                 </div>
             </div>
             
-            <!-- 推荐路线 -->
-            <div class="route-section">
-                <div class="section-header">
-                    <div class="section-title">🛣️ 推荐自驾路线</div>
-                    <div class="section-more">查看更多 ></div>
-                </div>
-                <div class="route-list">
-                    <div class="route-card">
-                        <div class="route-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                            <div class="route-duration">3天2晚</div>
-                        </div>
-                        <div class="route-info">
-                            <div class="route-name">北京-承德-坝上草原</div>
-                            <div class="route-tags">
-                                <span class="tag">草原</span>
-                                <span class="tag">避暑</span>
-                                <span class="tag">亲子</span>
-                            </div>
-                            <div class="route-distance">全程约 450 公里</div>
-                        </div>
-                    </div>
-                    <div class="route-card">
-                        <div class="route-image" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">
-                            <div class="route-duration">5天4晚</div>
-                        </div>
-                        <div class="route-info">
-                            <div class="route-name">北京-张家口-乌兰察布</div>
-                            <div class="route-tags">
-                                <span class="tag">火山</span>
-                                <span class="tag">草原</span>
-                                <span class="tag">摄影</span>
-                            </div>
-                            <div class="route-distance">全程约 600 公里</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 规划页面 -->
-        <div class="page" id="plan">
-            <div class="plan-header">
-                <div class="plan-title">智能行程规划</div>
-                <div class="plan-subtitle">AI为你定制专属旅程</div>
-            </div>
-            
-            <div class="step-indicator">
-                <div class="step active">
-                    <div class="step-number">1</div>
-                    <div class="step-label">目的地</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-label">偏好</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-label">时间</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-label">生成</div>
-                </div>
-            </div>
-            
-            <!-- 目的地选择 -->
-            <div class="destination-section">
-                <div class="section-title">
-                    <span class="section-icon">📍</span>
-                    选择目的地
-                </div>
-                <div class="destination-input">
-                    <input type="text" class="dest-input" placeholder="输入城市或景点名称">
-                    <button class="add-dest-btn">+ 添加</button>
-                </div>
-                <div class="selected-destinations">
-                    <div class="dest-tag">
-                        北京
-                        <span class="remove">✕</span>
-                    </div>
-                </div>
-            </div>
-            
             <!-- 旅行偏好 -->
             <div class="preference-section">
                 <div class="section-title">
@@ -1513,40 +1579,7 @@
                 </div>
             </div>
             
-            <div class="preference-section">
-                <div class="section-title">
-                    <span class="section-icon">🎨</span>
-                    旅行主题
-                </div>
-                <div class="option-grid">
-                    <div class="option-item selected">
-                        <div class="option-icon">📸</div>
-                        <div class="option-label">摄影</div>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon">🍜</div>
-                        <div class="option-label">美食</div>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon">🏛️</div>
-                        <div class="option-label">文化</div>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon">🌲</div>
-                        <div class="option-label">自然</div>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon">🏙️</div>
-                        <div class="option-label">城市</div>
-                    </div>
-                    <div class="option-item">
-                        <div class="option-icon">⛺</div>
-                        <div class="option-label">户外</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn btn-primary">下一步：选择时间</button>
+            <button class="btn btn-primary" onclick="planRoute()">生成路线方案</button>
         </div>
         
         <!-- 足迹页面 -->
