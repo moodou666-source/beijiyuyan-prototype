@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>北京语燕 - 旅行规划</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
@@ -152,18 +154,16 @@
             border-color: white;
         }
         
-        /* 地图区域 - 接入真实地图 */
+        /* 地图区域 - 真实地图 */
         .map-container {
             height: 250px;
-            background: #e8f4f8;
             position: relative;
-            overflow: hidden;
+            z-index: 1;
         }
         
-        .map-real {
+        #real-map {
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect fill="%23e8f4f8" width="800" height="600"/><path fill="%23c8e6c9" d="M100,100 Q200,50 300,100 T500,100 T700,150 L700,400 Q600,450 500,400 T300,400 T100,350 Z"/><circle cx="400" cy="250" r="8" fill="%23e74c3c"/><text x="415" y="255" font-size="14" fill="%23333">北京市中心</text><circle cx="200" cy="200" r="5" fill="%233498db"/><text x="210" y="205" font-size="12" fill="%23666">故宫</text><circle cx="550" cy="180" r="5" fill="%233498db"/><text x="560" y="185" font-size="12" fill="%23666">颐和园</text><circle cx="350" cy="350" r="5" fill="%233498db"/><text x="360" y="355" font-size="12" fill="%23666">天坛</text><circle cx="600" cy="300" r="5" fill="%23e67e22"/><text x="610" y="305" font-size="12" fill="%23666">798艺术区</text><circle cx="150" cy="320" r="5" fill="%239b59b6"/><text x="160" y="325" font-size="12" fill="%23666">香山</text></svg>') center/cover;
         }
         
         .map-overlay {
@@ -174,6 +174,7 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
+            z-index: 1000;
         }
         
         .map-filter-btn {
@@ -837,12 +838,12 @@
             
             <!-- 地图区域 -->
             <div class="map-container">
-                <div class="map-real"></div>
+                <div id="real-map"></div>
                 <div class="map-overlay">
-                    <button class="map-filter-btn">📍 景点</button>
-                    <button class="map-filter-btn">📸 摄影</button>
-                    <button class="map-filter-btn">🏞️ 小众</button>
-                    <button class="map-filter-btn">🍜 美食</button>
+                    <button class="map-filter-btn" onclick="filterMap('attraction')">📍 景点</button>
+                    <button class="map-filter-btn" onclick="filterMap('photo')">📸 摄影</button>
+                    <button class="map-filter-btn" onclick="filterMap('hidden')">🏞️ 小众</button>
+                    <button class="map-filter-btn" onclick="filterMap('food')">🍜 美食</button>
                 </div>
             </div>
             
@@ -1323,7 +1324,105 @@
             city.addEventListener('click', function() {
                 document.querySelectorAll('.city-tag').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
+                
+                // 切换城市时更新地图位置
+                const cityName = this.textContent;
+                updateMapLocation(cityName);
             });
+        });
+        
+        // 初始化地图
+        let map;
+        let markers = [];
+        
+        function initMap() {
+            // 初始化地图，中心设为北京
+            map = L.map('real-map').setView([39.9042, 116.4074], 12);
+            
+            // 添加 OpenStreetMap 图层（免费，无需API Key）
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // 添加示例标记点
+            addMarkers('beijing');
+        }
+        
+        // 添加标记点
+        function addMarkers(city) {
+            // 清除现有标记
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            const spots = {
+                'beijing': [
+                    {name: '故宫', lat: 39.9163, lng: 116.3972, type: 'attraction'},
+                    {name: '颐和园', lat: 39.9999, lng: 116.2755, type: 'attraction'},
+                    {name: '天坛', lat: 39.8833, lng: 116.4121, type: 'attraction'},
+                    {name: '798艺术区', lat: 39.9854, lng: 116.4975, type: 'photo'},
+                    {name: '香山', lat: 39.9911, lng: 116.1856, type: 'hidden'},
+                    {name: '角楼', lat: 39.9169, lng: 116.3971, type: 'photo'},
+                    {name: '南锣鼓巷', lat: 39.9372, lng: 116.4031, type: 'food'},
+                    {name: '什刹海', lat: 39.9421, lng: 116.3893, type: 'attraction'}
+                ],
+                'shanghai': [
+                    {name: '外滩', lat: 31.2304, lng: 121.4737, type: 'attraction'},
+                    {name: '东方明珠', lat: 31.2397, lng: 121.4998, type: 'attraction'},
+                    {name: '田子坊', lat: 31.2104, lng: 121.4706, type: 'photo'},
+                    {name: '豫园', lat: 31.2272, lng: 121.4921, type: 'attraction'}
+                ],
+                'hangzhou': [
+                    {name: '西湖', lat: 30.2487, lng: 120.1453, type: 'attraction'},
+                    {name: '灵隐寺', lat: 30.2409, lng: 120.0983, type: 'attraction'},
+                    {name: '西溪湿地', lat: 30.2656, lng: 120.0634, type: 'hidden'}
+                ]
+            };
+            
+            const citySpots = spots[city] || spots['beijing'];
+            
+            citySpots.forEach(spot => {
+                const marker = L.marker([spot.lat, spot.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${spot.name}</b><br>点击探索更多`);
+                marker.spotType = spot.type;
+                markers.push(marker);
+            });
+        }
+        
+        // 更新地图位置
+        function updateMapLocation(cityName) {
+            const cityLocations = {
+                '北京': [39.9042, 116.4074, 'beijing'],
+                '上海': [31.2304, 121.4737, 'shanghai'],
+                '杭州': [30.2487, 120.1453, 'hangzhou'],
+                '成都': [30.5728, 104.0668, 'chengdu'],
+                '西安': [34.3416, 108.9398, 'xian'],
+                '厦门': [24.4798, 118.0894, 'xiamen'],
+                '丽江': [26.8721, 100.2299, 'lijiang']
+            };
+            
+            const location = cityLocations[cityName];
+            if (location && map) {
+                map.setView([location[0], location[1]], 12);
+                addMarkers(location[2]);
+            }
+        }
+        
+        // 地图筛选功能
+        function filterMap(type) {
+            markers.forEach(marker => {
+                if (marker.spotType === type) {
+                    marker.setOpacity(1);
+                } else {
+                    marker.setOpacity(0.3);
+                }
+            });
+        }
+        
+        // 页面加载完成后初始化地图
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
         });
     </script>
 </body>
