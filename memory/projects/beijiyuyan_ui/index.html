@@ -1428,7 +1428,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" placeholder="搜索目的地、景点、路线...">
+                    <input type="text" placeholder="搜索目的地、景点、路线..." id="search-input" oninput="handleSearch(this.value)">
                 </div>
                 <div class="location-tag" onclick="showLocationModal()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
@@ -1443,6 +1443,9 @@
                     <span>▼</span>
                 </div>
             </div>
+            
+            <!-- 搜索结果 -->
+            <div class="search-results" id="search-results" style="display:none; background:white; margin:0 15px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-height:400px; overflow-y:auto;"></div>
             
             <!-- 首页标签切换 -->
             <div class="home-tabs">
@@ -2117,7 +2120,67 @@
             // 这里可以添加地图点击事件监听
         }
         
-        // 显示用户主页
+        // 搜索处理
+        function handleSearch(keyword) {
+            const resultsContainer = document.getElementById('search-results');
+            if (!keyword.trim()) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            const results = searchPlaces(keyword);
+            showSearchResults(results);
+            resultsContainer.style.display = 'block';
+        }
+        
+        // 显示地点详情
+        function showPlaceDetail(id) {
+            let place = null;
+            
+            // 在景点中查找
+            place = attractionsData.find(a => a.id === id);
+            
+            // 在打卡点中查找
+            if (!place) {
+                place = hiddenGemsData.find(h => h.id === id);
+            }
+            
+            if (!place) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
+            modal.innerHTML = `
+                <div style="background:white;border-radius:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;position:relative;">
+                    <button onclick="this.closest('.modal').remove()" style="position:absolute;top:15px;right:15px;background:rgba(0,0,0,0.5);color:white;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;z-index:10;">×</button>
+                    <div style="padding:20px;">
+                        <div style="width:100%;height:200px;background:linear-gradient(135deg, #667eea, #764ba2);border-radius:15px;display:flex;align-items:center;justify-content:center;color:white;font-size:48px;margin-bottom:15px;">
+                            ${place.name.charAt(0)}
+                        </div>
+                        <h2 style="color:#1a365d;margin-bottom:10px;">${place.name}</h2>
+                        <div style="display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap;">
+                            <span style="background:#e6f2ff;color:#2b6cb0;padding:5px 12px;border-radius:15px;font-size:13px;">⭐ ${place.rating || '4.5'}分</span>
+                            <span style="background:#fef3c7;color:#d97706;padding:5px 12px;border-radius:15px;font-size:13px;">💰 ${place.price || '免费'}</span>
+                            <span style="background:#d1fae5;color:#059669;padding:5px 12px;border-radius:15px;font-size:13px;">📍 ${place.cityName || place.city || ''}</span>
+                        </div>
+                        <p style="color:#4a5568;line-height:1.6;margin-bottom:15px;">${place.description || ''}</p>
+                        <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:12px;border-radius:8px;margin-bottom:15px;">
+                            <strong style="color:#b45309;">💡 小贴士：</strong>
+                            <span style="color:#78350f;">${place.tips || ''}</span>
+                        </div>
+                        <div style="margin-bottom:15px;">
+                            <strong style="color:#1a365d;">📍 地址：</strong>
+                            <span style="color:#4a5568;">${place.address || ''}</span>
+                        </div>
+                        <div>
+                            <strong style="color:#1a365d;">🏷️ 类型：</strong>
+                            <span style="display:inline-block;background:#e2e8f0;color:#4a5568;padding:4px 10px;border-radius:12px;font-size:12px;">${place.category || ''}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
         function showUserProfile(userId) {
             const userNames = {
                 'user1': '摄影师小王',
@@ -2337,19 +2400,22 @@
         // 从OSS加载景点数据
         let attractionsData = [];
         let routesData = [];
+        let hiddenGemsData = [];
         let currentCity = 'beijing';
         
         async function loadDataFromOSS() {
             try {
                 console.log('🚀 正在从OSS加载数据...');
                 
-                let attractionsUrl, routesUrl;
+                let attractionsUrl, routesUrl, hiddenGemsUrl;
                 if (currentCity === 'jiangsu') {
-                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_attractions.json';
+                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_complete.json';
                     routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_routes.json';
+                    hiddenGemsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_hidden_gems.json';
                 } else {
                     attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/attractions.json';
                     routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/routes.json';
+                    hiddenGemsUrl = null;
                 }
                 
                 // 加载景点数据
@@ -2369,7 +2435,16 @@
                         attractionsData = attractionsJson.attractions || [];
                     }
                     console.log(`✅ 加载了 ${attractionsData.length} 个景点`);
-                    updateAttractionsUI();
+                }
+                
+                // 加载特色打卡点
+                if (hiddenGemsUrl) {
+                    const hiddenGemsResponse = await fetch(hiddenGemsUrl);
+                    if (hiddenGemsResponse.ok) {
+                        const hiddenGemsJson = await hiddenGemsResponse.json();
+                        hiddenGemsData = hiddenGemsJson.places || [];
+                        console.log(`✅ 加载了 ${hiddenGemsData.length} 个特色打卡点`);
+                    }
                 }
                 
                 // 加载路线数据
@@ -2378,14 +2453,60 @@
                     const routesJson = await routesResponse.json();
                     routesData = routesJson.routes || [];
                     console.log(`✅ 加载了 ${routesData.length} 条路线`);
-                    updateRoutesUI();
                 }
+                
+                updateAttractionsUI();
+                updateRoutesUI();
                 
             } catch (error) {
                 console.error('❌ 加载数据失败:', error);
                 // 使用默认数据
                 console.log('⚠️ 使用默认数据');
             }
+        }
+        
+        // 搜索功能
+        function searchPlaces(keyword) {
+            if (!keyword) return [];
+            
+            const results = [];
+            const allPlaces = [...attractionsData, ...hiddenGemsData];
+            
+            allPlaces.forEach(place => {
+                if (place.name && place.name.includes(keyword)) {
+                    results.push(place);
+                } else if (place.cityName && place.cityName.includes(keyword)) {
+                    results.push(place);
+                } else if (place.category && place.category.includes(keyword)) {
+                    results.push(place);
+                }
+            });
+            
+            return results;
+        }
+        
+        // 显示搜索结果
+        function showSearchResults(results) {
+            const container = document.querySelector('.search-results');
+            if (!container) return;
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:#718096;">没有找到相关结果</div>';
+                return;
+            }
+            
+            container.innerHTML = results.map(place => `
+                <div style="padding:15px;border-bottom:1px solid #e2e8f0;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="showPlaceDetail('${place.id}')">
+                    <div style="width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg, #667eea, #764ba2);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;">
+                        ${place.name.charAt(0)}
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;color:#1a365d;">${place.name}</div>
+                        <div style="font-size:12px;color:#718096;">${place.cityName || place.city || ''} · ${place.category || ''}</div>
+                        <div style="font-size:12px;color:#d69e2e;">⭐ ${place.rating || '4.5'}</div>
+                    </div>
+                </div>
+            `).join('');
         }
         
         // 切换城市
