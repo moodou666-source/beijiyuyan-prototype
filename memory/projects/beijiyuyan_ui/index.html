@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>北京雨燕 - 自驾旅行规划</title>
+    <title>北阴雨燕 - 自驾旅行规划</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- 高德地图 -->
@@ -1320,7 +1320,7 @@
 <body>
     <div class="app-container">
         <!-- 状态栏 -->
-        <div class="status-bar">北京雨燕</div>
+        <div class="status-bar">北阴雨燕</div>
         
         <!-- 首页 -->
         <div class="page active" id="home">
@@ -1843,9 +1843,9 @@
                         <div class="location-city-icon">🏔️</div>
                         <div class="location-city-name">丽江</div>
                     </div>
-                    <div class="location-city-item" onclick="selectCity('大理')">
-                        <div class="location-city-icon">🌊</div>
-                        <div class="location-city-name">大理</div>
+                    <div class="location-city-item" onclick="switchCity('jiangsu')">
+                        <div class="location-city-icon">🌸</div>
+                        <div class="location-city-name">江苏</div>
                     </div>
                 </div>
             </div>
@@ -2135,9 +2135,187 @@
             });
         }
         
-        // 页面加载完成后初始化地图
+        // 从OSS加载景点数据
+        let attractionsData = [];
+        let routesData = [];
+        let currentCity = 'beijing';
+        
+        async function loadDataFromOSS() {
+            try {
+                console.log('🚀 正在从OSS加载数据...');
+                
+                let attractionsUrl, routesUrl;
+                if (currentCity === 'jiangsu') {
+                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_attractions.json';
+                    routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/jiangsu_routes.json';
+                } else {
+                    attractionsUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/attractions.json';
+                    routesUrl = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com/data/routes.json';
+                }
+                
+                // 加载景点数据
+                const attractionsResponse = await fetch(attractionsUrl);
+                if (attractionsResponse.ok) {
+                    const attractionsJson = await attractionsResponse.json();
+                    if (attractionsJson.cities) {
+                        // 江苏数据结构
+                        attractionsData = [];
+                        attractionsJson.cities.forEach(city => {
+                            city.attractions.forEach(attr => {
+                                attr.cityName = city.name;
+                                attractionsData.push(attr);
+                            });
+                        });
+                    } else {
+                        attractionsData = attractionsJson.attractions || [];
+                    }
+                    console.log(`✅ 加载了 ${attractionsData.length} 个景点`);
+                    updateAttractionsUI();
+                }
+                
+                // 加载路线数据
+                const routesResponse = await fetch(routesUrl);
+                if (routesResponse.ok) {
+                    const routesJson = await routesResponse.json();
+                    routesData = routesJson.routes || [];
+                    console.log(`✅ 加载了 ${routesData.length} 条路线`);
+                    updateRoutesUI();
+                }
+                
+            } catch (error) {
+                console.error('❌ 加载数据失败:', error);
+                // 使用默认数据
+                console.log('⚠️ 使用默认数据');
+            }
+        }
+        
+        // 切换城市
+        function switchCity(city) {
+            currentCity = city;
+            const cityNames = {
+                'beijing': '北京',
+                'shanghai': '上海',
+                'hangzhou': '杭州',
+                'jiangsu': '江苏'
+            };
+            document.getElementById('current-location').textContent = cityNames[city] || '北京';
+            closeLocationModal();
+            updateMapLocation(cityNames[city] || '北京');
+            loadDataFromOSS();
+        }
+        
+        // 更新景点UI
+        function updateAttractionsUI() {
+            // 更新首页景点卡片
+            const sections = {
+                '热门景点': document.querySelector('.section:nth-of-type(1) .card-scroll'),
+                '摄影秘境': document.querySelector('.section:nth-of-type(2) .card-scroll'),
+                '小众秘境': document.querySelector('.section:nth-of-type(3) .card-scroll')
+            };
+            
+            // 清空现有内容
+            Object.values(sections).forEach(section => {
+                if (section) section.innerHTML = '';
+            });
+            
+            // 按分类填充数据
+            attractionsData.forEach(attraction => {
+                const section = sections[attraction.category];
+                if (section) {
+                    const card = createAttractionCard(attraction);
+                    section.appendChild(card);
+                }
+            });
+        }
+        
+        // 创建景点卡片
+        function createAttractionCard(attraction) {
+            const card = document.createElement('div');
+            card.className = 'attraction-card';
+            card.style.cssText = 'min-width: 280px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s;';
+            
+            const cityLabel = attraction.cityName ? `<div style="position: absolute; top: 10px; left: 10px; background: rgba(255,107,53,0.9); color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;">${attraction.cityName}</div>` : '';
+            
+            card.innerHTML = `
+                <div style="position: relative; height: 160px;">
+                    <img src="${attraction.image}" alt="${attraction.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    ${cityLabel}
+                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px;">
+                        ⭐ ${attraction.rating}
+                    </div>
+                </div>
+                <div style="padding: 15px;">
+                    <h4 style="font-size: 16px; margin-bottom: 8px; color: #1a365d;">${attraction.name}</h4>
+                    <p style="font-size: 13px; color: #718096; margin-bottom: 10px; line-height: 1.4;">${attraction.description.substring(0, 50)}...</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #e53e3e; font-weight: 600;">${attraction.price}</span>
+                        <span style="font-size: 12px; color: #718096;">${attraction.openTime}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                showAttractionDetail(attraction);
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+            
+            return card;
+        }
+        
+        // 显示景点详情
+        function showAttractionDetail(attraction) {
+            const detailHtml = `
+                <div style="padding: 20px;">
+                    <img src="${attraction.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
+                    <h2 style="color: #1a365d; margin-bottom: 10px;">${attraction.name}</h2>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <span style="background: #e6f2ff; color: #2b6cb0; padding: 5px 12px; border-radius: 15px; font-size: 13px;">⭐ ${attraction.rating}分</span>
+                        <span style="background: #fef3c7; color: #d97706; padding: 5px 12px; border-radius: 15px; font-size: 13px;">💰 ${attraction.price}</span>
+                        <span style="background: #d1fae5; color: #059669; padding: 5px 12px; border-radius: 15px; font-size: 13px;">🕐 ${attraction.openTime}</span>
+                        ${attraction.cityName ? `<span style="background: #fce7f3; color: #be185d; padding: 5px 12px; border-radius: 15px; font-size: 13px;">📍 ${attraction.cityName}</span>` : ''}
+                    </div>
+                    <p style="color: #4a5568; line-height: 1.6; margin-bottom: 15px;">${attraction.description}</p>
+                    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong style="color: #b45309;">💡 小贴士：</strong>
+                        <span style="color: #78350f;">${attraction.tips}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #1a365d;">📍 地址：</strong>
+                        <span style="color: #4a5568;">${attraction.address}</span>
+                    </div>
+                </div>
+            `;
+            
+            // 创建弹窗显示详情
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
+                    <button onclick="this.closest('.oss-detail-modal').remove()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; z-index: 10;">×</button>
+                    ${detailHtml}
+                </div>
+            `;
+            modal.className = 'oss-detail-modal';
+            document.body.appendChild(modal);
+        }
+        
+        // 更新路线UI
+        function updateRoutesUI() {
+            // 可以在这里更新规划页面的推荐路线
+            console.log('路线数据已加载，可用于路线规划');
+        }
+        
+        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
+            loadDataFromOSS(); // 从OSS加载数据
         });
     </script>
 </body>
