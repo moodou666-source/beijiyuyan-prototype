@@ -6,6 +6,8 @@
     <title>北京语燕 - 旅行规划</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- 高德地图 -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=d1265c13d318d355f582397eb9d168a0"></script>
     <style>
         * {
             margin: 0;
@@ -1336,14 +1338,18 @@
         let markers = [];
         
         function initMap() {
-            // 初始化地图，中心设为北京
-            map = L.map('real-map').setView([39.9042, 116.4074], 12);
+            // 使用高德地图
+            map = new AMap.Map('real-map', {
+                zoom: 12,
+                center: [116.4074, 39.9042], // 北京
+                viewMode: '2D'
+            });
             
-            // 添加 OpenStreetMap 图层（免费，无需API Key）
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19
-            }).addTo(map);
+            // 添加地图控件
+            AMap.plugin(['AMap.ToolBar', 'AMap.Scale'], function() {
+                map.addControl(new AMap.ToolBar());
+                map.addControl(new AMap.Scale());
+            });
             
             // 添加示例标记点
             addMarkers('beijing');
@@ -1352,59 +1358,71 @@
         // 添加标记点
         function addMarkers(city) {
             // 清除现有标记
-            markers.forEach(marker => map.removeLayer(marker));
+            map.clearMap();
             markers = [];
             
             const spots = {
                 'beijing': [
-                    {name: '故宫', lat: 39.9163, lng: 116.3972, type: 'attraction'},
-                    {name: '颐和园', lat: 39.9999, lng: 116.2755, type: 'attraction'},
-                    {name: '天坛', lat: 39.8833, lng: 116.4121, type: 'attraction'},
-                    {name: '798艺术区', lat: 39.9854, lng: 116.4975, type: 'photo'},
-                    {name: '香山', lat: 39.9911, lng: 116.1856, type: 'hidden'},
-                    {name: '角楼', lat: 39.9169, lng: 116.3971, type: 'photo'},
-                    {name: '南锣鼓巷', lat: 39.9372, lng: 116.4031, type: 'food'},
-                    {name: '什刹海', lat: 39.9421, lng: 116.3893, type: 'attraction'}
+                    {name: '故宫', lng: 116.3972, lat: 39.9163, type: 'attraction'},
+                    {name: '颐和园', lng: 116.2755, lat: 39.9999, type: 'attraction'},
+                    {name: '天坛', lng: 116.4121, lat: 39.8833, type: 'attraction'},
+                    {name: '798艺术区', lng: 116.4975, lat: 39.9854, type: 'photo'},
+                    {name: '香山', lng: 116.1856, lat: 39.9911, type: 'hidden'},
+                    {name: '角楼', lng: 116.3971, lat: 39.9169, type: 'photo'},
+                    {name: '南锣鼓巷', lng: 116.4031, lat: 39.9372, type: 'food'},
+                    {name: '什刹海', lng: 116.3893, lat: 39.9421, type: 'attraction'}
                 ],
                 'shanghai': [
-                    {name: '外滩', lat: 31.2304, lng: 121.4737, type: 'attraction'},
-                    {name: '东方明珠', lat: 31.2397, lng: 121.4998, type: 'attraction'},
-                    {name: '田子坊', lat: 31.2104, lng: 121.4706, type: 'photo'},
-                    {name: '豫园', lat: 31.2272, lng: 121.4921, type: 'attraction'}
+                    {name: '外滩', lng: 121.4737, lat: 31.2304, type: 'attraction'},
+                    {name: '东方明珠', lng: 121.4998, lat: 31.2397, type: 'attraction'},
+                    {name: '田子坊', lng: 121.4706, lat: 31.2104, type: 'photo'},
+                    {name: '豫园', lng: 121.4921, lat: 31.2272, type: 'attraction'}
                 ],
                 'hangzhou': [
-                    {name: '西湖', lat: 30.2487, lng: 120.1453, type: 'attraction'},
-                    {name: '灵隐寺', lat: 30.2409, lng: 120.0983, type: 'attraction'},
-                    {name: '西溪湿地', lat: 30.2656, lng: 120.0634, type: 'hidden'}
+                    {name: '西湖', lng: 120.1453, lat: 30.2487, type: 'attraction'},
+                    {name: '灵隐寺', lng: 120.0983, lat: 30.2409, type: 'attraction'},
+                    {name: '西溪湿地', lng: 120.0634, lat: 30.2656, type: 'hidden'}
                 ]
             };
             
             const citySpots = spots[city] || spots['beijing'];
             
             citySpots.forEach(spot => {
-                const marker = L.marker([spot.lat, spot.lng])
-                    .addTo(map)
-                    .bindPopup(`<b>${spot.name}</b><br>点击探索更多`);
+                const marker = new AMap.Marker({
+                    position: [spot.lng, spot.lat],
+                    title: spot.name,
+                    label: {
+                        content: spot.name,
+                        offset: new AMap.Pixel(0, -30)
+                    }
+                });
+                
+                marker.setMap(map);
                 marker.spotType = spot.type;
                 markers.push(marker);
+                
+                // 点击事件
+                marker.on('click', function() {
+                    alert('📍 ' + spot.name + '\n\n这里可以查看详细信息、导航、收藏等');
+                });
             });
         }
         
         // 更新地图位置
         function updateMapLocation(cityName) {
             const cityLocations = {
-                '北京': [39.9042, 116.4074, 'beijing'],
-                '上海': [31.2304, 121.4737, 'shanghai'],
-                '杭州': [30.2487, 120.1453, 'hangzhou'],
-                '成都': [30.5728, 104.0668, 'chengdu'],
-                '西安': [34.3416, 108.9398, 'xian'],
-                '厦门': [24.4798, 118.0894, 'xiamen'],
-                '丽江': [26.8721, 100.2299, 'lijiang']
+                '北京': [116.4074, 39.9042, 'beijing'],
+                '上海': [121.4737, 31.2304, 'shanghai'],
+                '杭州': [120.1453, 30.2487, 'hangzhou'],
+                '成都': [104.0668, 30.5728, 'chengdu'],
+                '西安': [108.9398, 34.3416, 'xian'],
+                '厦门': [118.0894, 24.4798, 'xiamen'],
+                '丽江': [100.2299, 26.8721, 'lijiang']
             };
             
             const location = cityLocations[cityName];
             if (location && map) {
-                map.setView([location[0], location[1]], 12);
+                map.setZoomAndCenter(12, [location[0], location[1]]);
                 addMarkers(location[2]);
             }
         }
@@ -1413,9 +1431,9 @@
         function filterMap(type) {
             markers.forEach(marker => {
                 if (marker.spotType === type) {
-                    marker.setOpacity(1);
+                    marker.show();
                 } else {
-                    marker.setOpacity(0.3);
+                    marker.hide();
                 }
             });
         }
