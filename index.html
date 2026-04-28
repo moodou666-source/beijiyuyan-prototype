@@ -2066,6 +2066,112 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         
+        /* 城市选择页面 */
+        .city-select-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 12000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .city-select-page.active {
+            display: flex;
+        }
+        
+        .city-select-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+        }
+        
+        .city-select-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .city-select-close {
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .city-search {
+            padding: 0 20px 15px;
+        }
+        
+        .city-search-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f5f5f5;
+            border-radius: 25px;
+            padding: 12px 20px;
+        }
+        
+        .city-search-input input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        .city-tabs {
+            display: flex;
+            gap: 20px;
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .city-tab {
+            font-size: 16px;
+            color: #999;
+            padding-bottom: 10px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .city-tab.active {
+            color: #333;
+            font-weight: 600;
+            border-bottom-color: #333;
+        }
+        
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .city-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .city-item-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .city-item-name {
+            font-size: 16px;
+            color: #333;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -2406,11 +2512,106 @@
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
         </div>
         
+        <!-- 城市选择页面 -->
+        <div class="city-select-page" id="citySelectPage">
+            <div class="city-select-header">
+                <div class="city-select-title">圆周精选城市</div>
+                <div class="city-select-close" onclick="closeCitySelect()">✕</div>
+            </div>
+            
+            <div class="city-search">
+                <div class="city-search-input">
+                    <span>🔍</span>
+                    <input type="text" placeholder="搜索城市/国家名称">
+                </div>
+            </div>
+            
+            <div class="city-tabs">
+                <div class="city-tab active" onclick="switchCityTab(this)">国内</div>
+                <div class="city-tab" onclick="switchCityTab(this)">国际/中国港澳台</div>
+            </div>
+            
+            <div class="city-grid">
+                <div class="city-item" onclick="selectCity('上海')">
+                    <img src="https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=100" alt="上海" class="city-item-img">
+                    <div class="city-item-name">上海</div>
+                </div>
+                <div class="city-item" onclick="selectCity('北京')">
+                    <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=100" alt="北京" class="city-item-img">
+                    <div class="city-item-name">北京</div>
+                </div>
+                <div class="city-item" onclick="selectCity('杭州')">
+                    <img src="https://images.unsplash.com/photo-1565354785692-8e63643a54c6?w=100" alt="杭州" class="city-item-img">
+                    <div class="city-item-name">杭州</div>
+                </div>
+                <div class="city-item" onclick="selectCity('苏州')">
+                    <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=100" alt="苏州" class="city-item-img">
+                    <div class="city-item-name">苏州</div>
+                </div>
+                <div class="city-item" onclick="selectCity('广州')">
+                    <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=100" alt="广州" class="city-item-img">
+                    <div class="city-item-name">广州</div>
+                </div>
+                <div class="city-item" onclick="selectCity('深圳')">
+                    <img src="https://images.unsplash.com/photo-1598255281883-f0d6003b94d2?w=100" alt="深圳" class="city-item-img">
+                    <div class="city-item-name">深圳</div>
+                </div>
+                <div class="city-item" onclick="selectCity('香港')">
+                    <img src="https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=100" alt="香港" class="city-item-img">
+                    <div class="city-item-name">香港特别行政区</div>
+                </div>
+                <div class="city-item" onclick="selectCity('泉州')">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=100" alt="泉州" class="city-item-img">
+                    <div class="city-item-name">泉州</div>
+                </div>
+                <div class="city-item" onclick="selectCity('成都')">
+                    <img src="https://images.unsplash.com/photo-1565354785692-8e63643a54c6?w=100" alt="成都" class="city-item-img">
+                    <div class="city-item-name">成都</div>
+                </div>
+                <div class="city-item" onclick="selectCity('重庆')">
+                    <img src="https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=100" alt="重庆" class="city-item-img">
+                    <div class="city-item-name">重庆</div>
+                </div>
+                <div class="city-item" onclick="selectCity('武汉')">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100" alt="武汉" class="city-item-img">
+                    <div class="city-item-name">武汉</div>
+                </div>
+                <div class="city-item" onclick="selectCity('长沙')">
+                    <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=100" alt="长沙" class="city-item-img">
+                    <div class="city-item-name">长沙</div>
+                </div>
+                <div class="city-item" onclick="selectCity('青岛')">
+                    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=100" alt="青岛" class="city-item-img">
+                    <div class="city-item-name">青岛</div>
+                </div>
+                <div class="city-item" onclick="selectCity('西安')">
+                    <img src="https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=100" alt="西安" class="city-item-img">
+                    <div class="city-item-name">西安</div>
+                </div>
+                <div class="city-item" onclick="selectCity('沈阳')">
+                    <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=100" alt="沈阳" class="city-item-img">
+                    <div class="city-item-name">沈阳</div>
+                </div>
+                <div class="city-item" onclick="selectCity('哈尔滨')">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=100" alt="哈尔滨" class="city-item-img">
+                    <div class="city-item-name">哈尔滨</div>
+                </div>
+                <div class="city-item" onclick="selectCity('洛阳')">
+                    <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=100" alt="洛阳" class="city-item-img">
+                    <div class="city-item-name">洛阳</div>
+                </div>
+                <div class="city-item" onclick="selectCity('大同')">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=100" alt="大同" class="city-item-img">
+                    <div class="city-item-name">大同</div>
+                </div>
+            </div>
+        </div>
+        
         <!-- 探索页面 -->
         <div class="explore-page" id="explorePage">
             <div class="explore-header">
                 <div class="explore-location">
-                    <div>
+                    <div onclick="showCitySelect()">
                         <span class="location-name">芜湖市</span>
                         <span class="location-dropdown">▼</span>
                     </div>
@@ -2901,6 +3102,30 @@
         function showExplorePage() {
             document.getElementById('explorePage').classList.add('active');
             initExploreMap();
+        }
+        
+        // 显示城市选择
+        function showCitySelect() {
+            document.getElementById('citySelectPage').classList.add('active');
+        }
+        
+        // 关闭城市选择
+        function closeCitySelect() {
+            document.getElementById('citySelectPage').classList.remove('active');
+        }
+        
+        // 切换城市标签
+        function switchCityTab(element) {
+            document.querySelectorAll('.city-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+        
+        // 选择城市
+        function selectCity(city) {
+            alert(`已选择城市：${city}`);
+            closeCitySelect();
         }
         
         // 初始化探索地图
