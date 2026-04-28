@@ -1917,6 +1917,155 @@
             z-index: 100;
         }
         
+        /* 探索页面 */
+        .explore-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 11000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .explore-page.active {
+            display: flex;
+        }
+        
+        .explore-header {
+            padding: 15px 20px;
+            background: white;
+            z-index: 100;
+        }
+        
+        .explore-location {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .location-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .location-dropdown {
+            font-size: 14px;
+            color: #999;
+            margin-left: 5px;
+        }
+        
+        .explore-weather {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .explore-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .explore-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #666;
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .category-tab.active {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .explore-map {
+            flex: 1;
+            position: relative;
+        }
+        
+        .explore-map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .explore-bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            z-index: 10;
+        }
+        
+        .bottom-sheet-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .location-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .marker-icon {
+            width: 32px;
+            height: 32px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .marker-label {
+            font-size: 12px;
+            color: #333;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -2255,6 +2404,53 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 探索页面 -->
+        <div class="explore-page" id="explorePage">
+            <div class="explore-header">
+                <div class="explore-location">
+                    <div>
+                        <span class="location-name">芜湖市</span>
+                        <span class="location-dropdown">▼</span>
+                    </div>
+                    <div class="explore-icons">
+                        <div class="explore-icon">🔍</div>
+                        <div class="explore-icon">👤</div>
+                    </div>
+                </div>
+                <div class="explore-weather">雨 13° - 23° 🌧️</div>
+            </div>
+            
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="selectCategory(this)">
+                    <span>🌳</span>
+                    <span>景点</span>
+                </div>
+                <div class="category-tab" onclick="selectCategory(this)">
+                    <span>🍴</span>
+                    <span>美食</span>
+                </div>
+                <div class="category-tab" onclick="selectCategory(this)">
+                    <span>🥤</span>
+                    <span>饮品</span>
+                </div>
+                <div class="category-tab" onclick="selectCategory(this)">
+                    <span>🛍️</span>
+                    <span>购物</span>
+                </div>
+                <div class="category-tab" onclick="selectCategory(this)">
+                    <span>🏨</span>
+                    <span>住宿</span>
+                </div>
+            </div>
+            
+            <div class="explore-map">
+                <div id="exploreMap" class="explore-map-container"></div>
+                <div class="explore-bottom-sheet">
+                    <div class="bottom-sheet-title">鸠江区</div>
+                </div>
+            </div>
         </div>
         
         <!-- 找搭子页面 -->
@@ -2697,8 +2893,50 @@
             event.target.closest('.nav-item').classList.add('active');
             
             if (tab === 'explore') {
-                alert('探索页面\n\n将包含：\n- 热门目的地\n- 推荐行程\n- 旅行攻略');
+                showExplorePage();
             }
+        }
+        
+        // 显示探索页面
+        function showExplorePage() {
+            document.getElementById('explorePage').classList.add('active');
+            initExploreMap();
+        }
+        
+        // 初始化探索地图
+        function initExploreMap() {
+            const map = L.map('exploreMap').setView([31.3526, 118.4329], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加景点标记
+            const spots = [
+                {name: '鸠兹演艺小镇', lat: 31.36, lng: 118.44},
+                {name: '芜湖市博物馆', lat: 31.355, lng: 118.435},
+                {name: '罗兰小镇', lat: 31.365, lng: 118.445},
+                {name: '赭山公园', lat: 31.345, lng: 118.425},
+                {name: '芜湖古城', lat: 31.34, lng: 118.42}
+            ];
+            
+            spots.forEach(spot => {
+                L.marker([spot.lat, spot.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div class="location-marker"><div class="marker-icon">🌳</div><div class="marker-label">${spot.name}</div></div>`,
+                        iconSize: [80, 50]
+                    })
+                }).addTo(map);
+            });
+        }
+        
+        // 选择分类
+        function selectCategory(element) {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
         }
         
         // 显示创建弹窗
