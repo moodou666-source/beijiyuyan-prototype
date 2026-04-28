@@ -189,6 +189,7 @@
             position: relative;
             margin-bottom: 15px;
             border-radius: 20px;
+            overflow: hidden;
         }
         
         .trip-card {
@@ -196,10 +197,8 @@
             border-radius: 20px;
             padding: 20px;
             position: relative;
-            overflow: hidden;
             min-height: 160px;
-            transition: transform 0.3s;
-            z-index: 2;
+            transition: transform 0.3s ease;
         }
         
         .trip-card.swiped {
@@ -213,13 +212,11 @@
             bottom: 0;
             width: 80px;
             background: #ff6b6b;
-            border-radius: 0 20px 20px 0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 28px;
-            z-index: 1;
         }
         
         .trip-card.yellow {
@@ -239,6 +236,21 @@
             gap: 4px;
             color: #666;
             font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .trip-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+        
+        .trip-icon-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #999;
         }
         
         .trip-users {
@@ -425,6 +437,10 @@
                         <div class="trip-info">
                             <div>01至05.04 4天3晚</div>
                             <div>21个地点</div>
+                        </div>
+                        <div class="trip-icons">
+                            <div class="trip-icon-item">📋 清单</div>
+                            <div class="trip-icon-item">🌤 天气</div>
                         </div>
                         <div class="trip-users">
                             <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="用户" class="user-avatar">
