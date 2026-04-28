@@ -2172,6 +2172,174 @@
             color: #333;
         }
         
+        /* 添加至行程弹窗 */
+        .add-trip-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 13000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .add-trip-modal.active {
+            display: flex;
+        }
+        
+        .add-trip-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .add-trip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .add-trip-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .add-trip-new {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .add-trip-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 15px;
+            background: #f8f4ff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .add-trip-notice-icon {
+            font-size: 20px;
+            color: #9c27b0;
+        }
+        
+        .add-trip-notice-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .new-trip-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .new-trip-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .new-trip-img {
+            width: 80px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .create-btn {
+            padding: 10px 24px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            float: right;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        
+        .trip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .trip-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 16px;
+        }
+        
+        .trip-list-info {
+            flex: 1;
+        }
+        
+        .trip-list-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .trip-list-detail {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .trip-list-img {
+            width: 60px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        
+        .trip-list-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        .finish-btn {
+            width: 100%;
+            padding: 16px;
+            background: #ccc;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -2512,6 +2680,55 @@
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
         </div>
         
+        <!-- 添加至行程弹窗 -->
+        <div class="add-trip-modal" id="addTripModal">
+            <div class="add-trip-content">
+                <div class="add-trip-header">
+                    <div class="add-trip-title">添加至行程</div>
+                    <div class="add-trip-new" onclick="createNewTrip()">
+                        <span>+</span>
+                        <span>新建</span>
+                    </div>
+                </div>
+                
+                <div class="add-trip-notice">
+                    <div class="add-trip-notice-icon">✦</div>
+                    <div class="add-trip-notice-text">
+                        该地点位于「芜湖市」，暂无该城市行程，是否创建新的行程？
+                    </div>
+                </div>
+                
+                <div class="new-trip-card">
+                    <div class="new-trip-name">芜湖市行程</div>
+                    <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=200" alt="芜湖" class="new-trip-img">
+                </div>
+                
+                <button class="create-btn" onclick="createCityTrip()">立即创建</button>
+                
+                <div class="trip-list">
+                    <div class="trip-list-item">
+                        <div class="trip-list-info">
+                            <div class="trip-list-name">苏州市经典必玩3天行程</div>
+                            <div class="trip-list-detail">05.01至05.04 4天3晚<br>21个地点</div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=100" alt="苏州" class="trip-list-img">
+                        <div class="trip-list-radio"></div>
+                    </div>
+                    
+                    <div class="trip-list-item">
+                        <div class="trip-list-info">
+                            <div class="trip-list-name">苏湖景五日文艺之旅</div>
+                            <div class="trip-list-detail">5天4晚<br>27个地点</div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=100" alt="苏湖" class="trip-list-img">
+                        <div class="trip-list-radio"></div>
+                    </div>
+                </div>
+                
+                <button class="finish-btn" onclick="finishAddTrip()">完成</button>
+            </div>
+        </div>
+        
         <!-- 城市选择页面 -->
         <div class="city-select-page" id="citySelectPage">
             <div class="city-select-header">
@@ -2648,7 +2865,7 @@
             
             <div class="explore-map">
                 <div id="exploreMap" class="explore-map-container"></div>
-                <div class="explore-bottom-sheet">
+                <div class="explore-bottom-sheet" onclick="showAddTripModal()">
                     <div class="bottom-sheet-title">鸠江区</div>
                 </div>
             </div>
@@ -3126,6 +3343,32 @@
         function selectCity(city) {
             alert(`已选择城市：${city}`);
             closeCitySelect();
+        }
+        
+        // 显示添加至行程弹窗
+        function showAddTripModal() {
+            document.getElementById('addTripModal').classList.add('active');
+        }
+        
+        // 关闭添加至行程弹窗
+        function closeAddTripModal() {
+            document.getElementById('addTripModal').classList.remove('active');
+        }
+        
+        // 创建新行程
+        function createNewTrip() {
+            alert('创建新行程');
+        }
+        
+        // 创建城市行程
+        function createCityTrip() {
+            alert('已创建芜湖市行程');
+            closeAddTripModal();
+        }
+        
+        // 完成添加
+        function finishAddTrip() {
+            closeAddTripModal();
         }
         
         // 初始化探索地图
