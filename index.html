@@ -1776,6 +1776,147 @@
             z-index: 100;
         }
         
+        /* 找搭子页面 */
+        .find-companion-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .find-companion-page.active {
+            display: flex;
+        }
+        
+        .companion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            color: white;
+        }
+        
+        .companion-back {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .companion-title {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .companion-skip {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+        }
+        
+        .companion-content {
+            flex: 1;
+            padding: 20px;
+            color: white;
+        }
+        
+        .companion-section {
+            margin-bottom: 25px;
+        }
+        
+        .companion-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .companion-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .companion-option {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .companion-option:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .companion-option.selected {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .companion-spots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .companion-spot-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+        }
+        
+        .companion-spot-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .companion-spot-name {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .companion-spot-remove {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .companion-done-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 374px;
+            padding: 16px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -2114,6 +2255,68 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 找搭子页面 -->
+        <div class="find-companion-page" id="findCompanionPage">
+            <div class="companion-header">
+                <div class="companion-back" onclick="closeFindCompanion()">←</div>
+                <div class="companion-title">你的身份</div>
+                <div class="companion-skip" onclick="closeFindCompanion()">稍后再选</div>
+            </div>
+            
+            <div class="companion-content">
+                <div class="companion-section">
+                    <div class="companion-section-title">选3个技能点</div>
+                    <div class="companion-options">
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🚗 会开车</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">📷 拍照好</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">📖 会外语</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">💰 会讲价</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🚑 会急救</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">💵 A钱快</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">📅 擅长计划</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🧭 方向感强</div>
+                    </div>
+                </div>
+                
+                <div class="companion-section">
+                    <div class="companion-section-title">选3个个性标签</div>
+                    <div class="companion-options">
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🐼 性格好</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">😊 好说话</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">💪 能吃苦</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🐦 早起鸟</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🌙 夜猫子</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🌶️ 不吃辣</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🧳 旅游达人</div>
+                        <div class="companion-option" onclick="toggleCompanionOption(this)">🥬 素食主义</div>
+                    </div>
+                </div>
+                
+                <div class="companion-section">
+                    <div class="companion-section-title">选3个最爱的地点</div>
+                    <div class="companion-spots">
+                        <div class="companion-spot-item">
+                            <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=100" alt="章太炎故居" class="companion-spot-img">
+                            <div class="companion-spot-name">章太炎故居</div>
+                            <div class="companion-spot-remove" onclick="removeCompanionSpot(this)">✕</div>
+                        </div>
+                        <div class="companion-spot-item">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100" alt="秋娟馄饨店" class="companion-spot-img">
+                            <div class="companion-spot-name">秋娟馄饨店</div>
+                            <div class="companion-spot-remove" onclick="removeCompanionSpot(this)">✕</div>
+                        </div>
+                        <div class="companion-spot-item">
+                            <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=100" alt="哑巴生煎" class="companion-spot-img">
+                            <div class="companion-spot-name">哑巴生煎</div>
+                            <div class="companion-spot-remove" onclick="removeCompanionSpot(this)">✕</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="companion-done-btn" onclick="finishCompanion()">选好了</button>
         </div>
         
         <!-- 长图分享页面 -->
@@ -3028,8 +3231,29 @@
         
         // 找搭子
         function findCompanion() {
-            alert('找搭子\n\n寻找同频旅友');
             closeShareModal();
+            document.getElementById('findCompanionPage').classList.add('active');
+        }
+        
+        // 关闭找搭子
+        function closeFindCompanion() {
+            document.getElementById('findCompanionPage').classList.remove('active');
+        }
+        
+        // 切换搭子选项
+        function toggleCompanionOption(element) {
+            element.classList.toggle('selected');
+        }
+        
+        // 移除搭子地点
+        function removeCompanionSpot(element) {
+            element.closest('.companion-spot-item').remove();
+        }
+        
+        // 完成找搭子
+        function finishCompanion() {
+            alert('已保存你的偏好设置\n\n将为你推荐合适的旅友！');
+            closeFindCompanion();
         }
         
         // 行程求助
