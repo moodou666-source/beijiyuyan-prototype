@@ -1616,6 +1616,237 @@
             color: #999;
         }
         
+        /* 笔记详情页面 */
+        .note-detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 15000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .note-detail-page.active {
+            display: flex;
+        }
+        
+        .note-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .note-detail-close {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .note-detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .note-detail-more {
+            font-size: 20px;
+            color: #999;
+        }
+        
+        .note-detail-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .note-detail-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .note-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .note-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .note-user-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .note-user-location {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .note-follow-btn {
+            padding: 6px 16px;
+            background: white;
+            border: 1px solid #ff2442;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #ff2442;
+            cursor: pointer;
+        }
+        
+        .note-text-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .note-expand {
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .note-date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        
+        .note-comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .note-comments-count {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .note-comments-more {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .note-comment-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .note-comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .note-comment-content {
+            flex: 1;
+        }
+        
+        .note-comment-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .note-comment-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+        
+        .note-comment-date {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .note-comment-like {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .note-open-app {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 30px;
+            background: #ff2442;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        .note-bottom-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .note-comment-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #999;
+            flex: 1;
+        }
+        
+        .note-actions-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .note-action-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -2839,6 +3070,84 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 笔记详情页面 -->
+        <div class="note-detail-page" id="noteDetailPage">
+            <div class="note-detail-header">
+                <div class="note-detail-close" onclick="closeNoteDetail()">✕</div>
+                <div class="note-detail-title">芜湖鸠兹小镇我想给差评 - 小红书</div>
+                <div class="note-detail-more">⋯</div>
+            </div>
+            
+            <div class="note-detail-content">
+                <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=800" alt="鸠兹演艺小镇" class="note-detail-img">
+                
+                <div class="note-user-info">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="用户" class="note-user-avatar">
+                    <div style="flex: 1;">
+                        <div class="note-user-name">将酱弡</div>
+                        <div class="note-user-location">📍 鸠兹演艺小镇</div>
+                    </div>
+                    <button class="note-follow-btn">关注</button>
+                </div>
+                
+                <div class="note-text-content">
+                    <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">芜湖鸠兹小镇我想给差评</div>
+                    但看完晚上的表演，表演和氛围感还是不错的。给他个三颗星吧。鱼灯，孔明灯，打铁花很好看。<br><br>
+                    但是太费爸了，小朋友全程要抱起来才能看的着。...
+                    <div class="note-expand">展开全文</div>
+                </div>
+                
+                <div class="note-date">02-20</div>
+                
+                <div class="note-comments-header">
+                    <div class="note-comments-count">62条精选评论</div>
+                    <div class="note-comments-more">查看更多 ></div>
+                </div>
+                
+                <div class="note-comment-item">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="用户" class="note-comment-avatar">
+                    <div class="note-comment-content">
+                        <div class="note-comment-name">俞百万是只西高地</div>
+                        <div class="note-comment-text">我去了芜湖古镇，真的就是避雷了</div>
+                        <div class="note-comment-date">02-20 安徽</div>
+                    </div>
+                    <div class="note-comment-like">♡</div>
+                </div>
+                
+                <div class="note-comment-item">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="用户" class="note-comment-avatar">
+                    <div class="note-comment-content">
+                        <div class="note-comment-name">可惜...</div>
+                        <div class="note-comment-text">古镇能看到鱼灯嘛</div>
+                    </div>
+                    <div class="note-comment-like">♡</div>
+                </div>
+            </div>
+            
+            <button class="note-open-app" onclick="openInApp()">小红书 App内打开</button>
+            
+            <div class="note-bottom-actions">
+                <div class="note-comment-input">
+                    <span>✏️</span>
+                    <span>说点什么...</span>
+                </div>
+                <div class="note-actions-right">
+                    <div class="note-action-item">
+                        <span>♡</span>
+                        <span>33</span>
+                    </div>
+                    <div class="note-action-item">
+                        <span>⭐</span>
+                        <span>10</span>
+                    </div>
+                    <div class="note-action-item">
+                        <span>💬</span>
+                        <span>62</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- 景点详情底部卡片 -->
@@ -4298,7 +4607,17 @@
         
         // 打开笔记
         function openNote(title) {
-            alert(`打开笔记：${title}`);
+            document.getElementById('noteDetailPage').classList.add('active');
+        }
+        
+        // 关闭笔记详情
+        function closeNoteDetail() {
+            document.getElementById('noteDetailPage').classList.remove('active');
+        }
+        
+        // 在小红书App内打开
+        function openInApp() {
+            alert('正在打开小红书App...');
         }
         
         // 显示景点底部卡片
