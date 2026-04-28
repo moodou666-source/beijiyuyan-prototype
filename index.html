@@ -319,6 +319,93 @@
             font-size: 28px;
             margin-top: -20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        
+        /* 创建弹窗 */
+        .create-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .create-modal.active {
+            display: flex;
+        }
+        
+        .create-content {
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .create-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .create-option {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .create-option:hover {
+            transform: scale(1.02);
+        }
+        
+        .create-option.primary {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .create-option-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .create-option-desc {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .create-option-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin: 0 auto;
+            cursor: pointer;
         }
         
         /* 页面切换 */
@@ -434,10 +521,42 @@
                 <div class="nav-item-icon">🧳</div>
                 <div class="nav-item-label">行程</div>
             </div>
-            <div class="add-btn" onclick="addTrip()">+</div>
+            <div class="add-btn" onclick="showCreateModal()">+</div>
             <div class="nav-item" onclick="switchTab('explore')">
                 <div class="nav-item-icon">🧭</div>
                 <div class="nav-item-label">探索</div>
+            </div>
+        </div>
+        
+        <!-- 创建弹窗 -->
+        <div class="create-modal" id="createModal">
+            <div class="create-content">
+                <div class="create-options">
+                    <div class="create-option primary" onclick="createNewPlan()">
+                        <div>
+                            <div class="create-option-title">创建新的计划</div>
+                        </div>
+                        <div class="create-option-icon">⊕</div>
+                    </div>
+                    
+                    <div class="create-option" onclick="smartImport()">
+                        <div>
+                            <div class="create-option-title">智能导入地点/行程</div>
+                            <div class="create-option-desc">粘贴笔记链接、行程文本，<br>或上传图片进行识别</div>
+                        </div>
+                        <div class="create-option-icon">🔗</div>
+                    </div>
+                    
+                    <div class="create-option" onclick="collectIdentify()">
+                        <div>
+                            <div class="create-option-title">「采集」识别</div>
+                            <div class="create-option-desc">识别同时收藏你的生活</div>
+                        </div>
+                        <div class="create-option-icon">📷</div>
+                    </div>
+                </div>
+                
+                <div class="close-btn" onclick="closeCreateModal()">✕</div>
             </div>
         </div>
     </div>
@@ -455,9 +574,32 @@
             }
         }
         
-        // 添加行程
-        function addTrip() {
-            alert('创建新行程\n\n将包含：\n- 选择目的地\n- 设置日期\n- 添加同伴');
+        // 显示创建弹窗
+        function showCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+        
+        // 关闭创建弹窗
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+        
+        // 创建新计划
+        function createNewPlan() {
+            alert('创建新计划\n\n将包含：\n- 选择目的地\n- 设置日期\n- 添加同伴');
+            closeCreateModal();
+        }
+        
+        // 智能导入
+        function smartImport() {
+            alert('智能导入\n\n支持：\n- 粘贴小红书/马蜂窝链接\n- 粘贴行程文本\n- 上传图片识别地点');
+            closeCreateModal();
+        }
+        
+        // 采集识别
+        function collectIdentify() {
+            alert('采集识别\n\n功能：\n- 拍照识别地点\n- 自动收藏到行程\n- 记录旅行足迹');
+            closeCreateModal();
         }
         
         // 更新时间
