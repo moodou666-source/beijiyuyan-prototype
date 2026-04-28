@@ -620,6 +620,144 @@
             z-index: 100;
         }
         
+        /* 日历弹窗 */
+        .calendar-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 4000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .calendar-modal.active {
+            display: flex;
+        }
+        
+        .calendar-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .flexible-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: #1a1a1a;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        
+        .timezone-info {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .month-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+        
+        .calendar-day-header {
+            font-size: 13px;
+            color: #999;
+            padding: 10px 0;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .calendar-day:hover {
+            background: #f0f0f0;
+        }
+        
+        .calendar-day.today {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .calendar-day.selected {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .confirm-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -825,9 +963,9 @@
                 
                 <div class="date-section">
                     <div class="date-title">你想去多久？</div>
-                    <div class="date-input" onclick="selectDate()">
+                    <div class="date-input" onclick="showCalendar()">
                         <div class="date-icon">📅</div>
-                        <div class="date-input-text">开始日期-结束日期</div>
+                        <div class="date-input-text" id="dateRangeText">开始日期-结束日期</div>
                     </div>
                 </div>
                 
@@ -847,6 +985,23 @@
                 </div>
             </div>
             <button class="smart-plan-btn" onclick="smartPlan()">智能规划</button>
+        </div>
+        
+        <!-- 日历弹窗 -->
+        <div class="calendar-modal" id="calendarModal">
+            <div class="calendar-content">
+                <div class="calendar-header">
+                    <div class="calendar-title">你想去多久？</div>
+                    <div class="flexible-toggle">
+                        <span>灵活天数</span>
+                        <div class="toggle-switch" id="flexibleToggle" onclick="toggleFlexible()"></div>
+                    </div>
+                </div>
+                <div class="timezone-info">时区: 北京 GMT +8:00</div>
+                <div class="month-title">2026年4月</div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                <button class="confirm-btn" onclick="confirmDate()">确定</button>
+            </div>
         </div>
     </div>
 
@@ -969,9 +1124,93 @@
             updateSelectedDestinations();
         }
         
+        // 显示日历
+        function showCalendar() {
+            document.getElementById('calendarModal').classList.add('active');
+            generateCalendar();
+        }
+        
+        // 关闭日历
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+        }
+        
+        // 切换灵活天数
+        function toggleFlexible() {
+            document.getElementById('flexibleToggle').classList.toggle('active');
+        }
+        
+        // 生成日历
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            
+            let html = '';
+            
+            // 星期标题
+            days.forEach(day => {
+                html += `<div class="calendar-day-header">${day}</div>`;
+            });
+            
+            // 4月从星期三开始（1号）
+            for (let i = 0; i < 2; i++) {
+                html += '<div class="calendar-day"></div>';
+            }
+            
+            // 日期
+            for (let i = 1; i <= 30; i++) {
+                const isToday = i === 28;
+                const className = isToday ? 'calendar-day today' : 'calendar-day';
+                html += `<div class="${className}" onclick="selectDay(${i})">${i}</div>`;
+            }
+            
+            grid.innerHTML = html;
+        }
+        
         // 选择日期
-        function selectDate() {
-            alert('日期选择器\n\n将包含：\n- 日历选择\n- 开始日期\n- 结束日期\n- 天数计算');
+        let selectedStartDate = null;
+        let selectedEndDate = null;
+        
+        function selectDay(day) {
+            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                selectedStartDate = day;
+                selectedEndDate = null;
+            } else if (selectedStartDate && !selectedEndDate) {
+                if (day >= selectedStartDate) {
+                    selectedEndDate = day;
+                } else {
+                    selectedStartDate = day;
+                }
+            }
+            updateCalendarSelection();
+        }
+        
+        // 更新日历选中状态
+        function updateCalendarSelection() {
+            const days = document.querySelectorAll('.calendar-day');
+            days.forEach((day, index) => {
+                day.classList.remove('selected');
+                const dayNum = parseInt(day.textContent);
+                if (dayNum) {
+                    if (selectedStartDate && selectedEndDate) {
+                        if (dayNum >= selectedStartDate && dayNum <= selectedEndDate) {
+                            day.classList.add('selected');
+                        }
+                    } else if (selectedStartDate && dayNum === selectedStartDate) {
+                        day.classList.add('selected');
+                    }
+                }
+            });
+        }
+        
+        // 确认日期
+        function confirmDate() {
+            if (selectedStartDate && selectedEndDate) {
+                const text = `4月${selectedStartDate}日-4月${selectedEndDate}日`;
+                document.getElementById('dateRangeText').textContent = text;
+                document.getElementById('dateRangeText').style.color = '#333';
+            }
+            closeCalendar();
         }
         
         // 切换偏好
