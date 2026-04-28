@@ -188,7 +188,6 @@
         .trip-card-wrapper {
             position: relative;
             margin-bottom: 15px;
-            overflow: hidden;
             border-radius: 20px;
         }
         
@@ -200,6 +199,7 @@
             overflow: hidden;
             min-height: 160px;
             transition: transform 0.3s;
+            z-index: 2;
         }
         
         .trip-card.swiped {
@@ -212,12 +212,13 @@
             top: 0;
             bottom: 0;
             width: 80px;
-            background: #ff4444;
+            background: #ff6b6b;
+            border-radius: 0 20px 20px 0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             z-index: 1;
         }
         
@@ -436,7 +437,8 @@
                 </div>
                 
                 <div class="trip-card-wrapper">
-                    <div class="trip-card yellow">
+                    <div class="delete-action">🗑</div>
+                    <div class="trip-card yellow" id="tripCard2" ontouchstart="handleTouchStart(event, 'tripCard2')" ontouchmove="handleTouchMove(event, 'tripCard2')" ontouchend="handleTouchEnd(event, 'tripCard2')">
                         <div class="trip-title">苏湖景五日文艺之旅</div>
                         <div class="trip-info">
                             <div>5天4晚</div>
