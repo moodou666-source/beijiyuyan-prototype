@@ -492,6 +492,58 @@
             color: #999;
         }
         
+        .clear-btn {
+            width: 20px;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .search-suggestions {
+            margin-top: 20px;
+        }
+        
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .suggestion-info {
+            flex: 1;
+        }
+        
+        .suggestion-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .suggestion-location {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .add-suggestion-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        
         /* 页面切换 */
         .page {
             display: none;
@@ -654,8 +706,10 @@
                 <div class="create-plan-title">你想去哪里？</div>
                 <div class="destination-input">
                     <div class="destination-icon">📍</div>
-                    <input type="text" placeholder="输入目的地或告诉我你的想法" id="destinationInput">
+                    <input type="text" placeholder="输入目的地或告诉我你的想法" id="destinationInput" oninput="handleInput()">
+                    <div class="clear-btn" onclick="clearInput()" id="clearBtn" style="display: none;">✕</div>
                 </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
             </div>
         </div>
     </div>
@@ -692,6 +746,65 @@
         // 关闭创建计划页面
         function closeCreatePlanPage() {
             document.getElementById('createPlanPage').classList.remove('active');
+        }
+        
+        // 目的地数据
+        const destinations = [
+            { name: '无锡市', location: '中国江苏省无锡市' },
+            { name: '蔚县', location: '中国河北省张家口市蔚县' },
+            { name: '平武县', location: '中国四川省绵阳市平武县' },
+            { name: '锡耶纳', location: '意大利托斯卡纳区锡耶纳' },
+            { name: '锡林郭勒盟', location: '中国内蒙古自治区锡林郭勒盟' }
+        ];
+        
+        // 处理输入
+        function handleInput() {
+            const input = document.getElementById('destinationInput');
+            const clearBtn = document.getElementById('clearBtn');
+            const suggestions = document.getElementById('searchSuggestions');
+            
+            if (input.value.length > 0) {
+                clearBtn.style.display = 'flex';
+                showSuggestions(input.value);
+            } else {
+                clearBtn.style.display = 'none';
+                suggestions.innerHTML = '';
+            }
+        }
+        
+        // 清除输入
+        function clearInput() {
+            document.getElementById('destinationInput').value = '';
+            document.getElementById('clearBtn').style.display = 'none';
+            document.getElementById('searchSuggestions').innerHTML = '';
+        }
+        
+        // 显示搜索建议
+        function showSuggestions(query) {
+            const suggestions = document.getElementById('searchSuggestions');
+            const filtered = destinations.filter(d => 
+                d.name.includes(query) || d.location.includes(query)
+            );
+            
+            if (filtered.length === 0) {
+                suggestions.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">未找到相关地点</div>';
+                return;
+            }
+            
+            suggestions.innerHTML = filtered.map(dest => `
+                <div class="suggestion-item">
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">${dest.name}</div>
+                        <div class="suggestion-location">${dest.location}</div>
+                    </div>
+                    <div class="add-suggestion-btn" onclick="addDestination('${dest.name}')">+</div>
+                </div>
+            `).join('');
+        }
+        
+        // 添加目的地
+        function addDestination(name) {
+            alert(`已添加：${name}\n\n继续创建行程...`);
         }
         
         // 创建空计划
