@@ -1446,7 +1446,101 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 20px;
+            padding: 10px 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        /* 景点详情底部卡片 */
+        .spot-bottom-card {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            z-index: 14000;
+            display: none;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .spot-bottom-card.active {
+            display: block;
+        }
+        
+        .spot-bottom-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .spot-bottom-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .spot-bottom-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .spot-bottom-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .spot-bottom-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .spot-bottom-tag.hot {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+        
+        .spot-bottom-img {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        
+        .spot-bottom-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .spot-bottom-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
             background: #f5f5f5;
             border: none;
             border-radius: 20px;
@@ -2680,6 +2774,70 @@
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
         </div>
         
+        <!-- 景点详情底部卡片 -->
+        <div class="spot-bottom-card" id="spotBottomCard">
+            <div class="spot-bottom-header">
+                <div class="spot-bottom-name">鸠兹演艺小镇</div>
+                <div class="spot-bottom-close" onclick="closeSpotBottomCard()">✕</div>
+            </div>
+            
+            <div class="spot-bottom-tags">
+                <div class="spot-bottom-tag hot">🔥 芜湖市景点top18</div>
+                <div class="spot-bottom-tag">👥 1.4k人规划</div>
+                <div class="spot-bottom-tag">🏔️ 风景名胜</div>
+                <div class="spot-bottom-tag">📍 270.0公里</div>
+            </div>
+            
+            <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=800" alt="鸠兹演艺小镇" class="spot-bottom-img">
+            
+            <div class="spot-section-title">
+                地点介绍
+                <span class="ai-badge">AI生成</span>
+            </div>
+            
+            <div class="spot-description">
+                鸠兹演艺小镇位于安徽芜湖鸠江区，主打徽派建筑与传统文化表演。白天可游古镇，傍晚灯光亮起后有打铁花、徽商剧等特色演出，表演集中在19:00后。门票59元，建议提前查看...
+                <span style="color: #2196F3;">展开</span>
+            </div>
+            
+            <div class="spot-reviews">
+                <div class="review-header">
+                    <div class="spot-section-title" style="margin: 0;">真实评价</div>
+                    <div class="review-mood">
+                        <span>67%来过的用户心情</span>
+                        <span style="color: #ff9800;">美滋滋</span>
+                        <span class="review-mood-emoji">😊</span>
+                    </div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-tag">Wow</div>
+                    <div class="review-text">
+                        <strong>表演精彩：</strong>表演和氛围感还是不错的。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="spot-bottom-actions">
+                <button class="spot-bottom-action" onclick="addToTrip()">
+                    <span>+</span>
+                    <span>添加至</span>
+                </button>
+                <button class="spot-bottom-action" onclick="favoriteSpot()">
+                    <span>⭐</span>
+                    <span>收藏</span>
+                </button>
+                <button class="spot-bottom-action" onclick="checkInSpot()">
+                    <span>✓</span>
+                    <span>打卡</span>
+                </button>
+                <button class="spot-bottom-action" onclick="navigateSpot()">
+                    <span>🧭</span>
+                    <span>导航</span>
+                </button>
+            </div>
+        </div>
+        
         <!-- 添加至行程弹窗 -->
         <div class="add-trip-modal" id="addTripModal">
             <div class="add-trip-content">
@@ -2865,7 +3023,7 @@
             
             <div class="explore-map">
                 <div id="exploreMap" class="explore-map-container"></div>
-                <div class="explore-bottom-sheet" onclick="showAddTripModal()">
+                <div class="explore-bottom-sheet" onclick="showSpotBottomCard()">
                     <div class="bottom-sheet-title">鸠江区</div>
                 </div>
             </div>
@@ -4006,6 +4164,21 @@
         // 打卡景点
         function checkInSpot() {
             alert('打卡成功！');
+        }
+        
+        // 导航到景点
+        function navigateSpot() {
+            alert('开始导航');
+        }
+        
+        // 显示景点底部卡片
+        function showSpotBottomCard() {
+            document.getElementById('spotBottomCard').classList.add('active');
+        }
+        
+        // 关闭景点底部卡片
+        function closeSpotBottomCard() {
+            document.getElementById('spotBottomCard').classList.remove('active');
         }
         
         // 创建空计划
