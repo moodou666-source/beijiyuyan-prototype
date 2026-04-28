@@ -328,6 +328,90 @@
             padding: 20px;
             color: #718096;
         }
+        
+        /* 详情页面 */
+        .detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+        
+        .detail-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 50px 15px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .detail-back {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .detail-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .detail-section h3 {
+            font-size: 18px;
+            color: #1a365d;
+            margin-bottom: 10px;
+        }
+        
+        .detail-section p {
+            color: #718096;
+            line-height: 1.6;
+        }
+        
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .detail-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .detail-btn.primary {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+        }
+        
+        .detail-btn.secondary {
+            background: #f7fafc;
+            color: #1a365d;
+            border: 2px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -527,19 +611,19 @@
         
         <!-- 底部导航 -->
         <div class="tab-bar">
-            <div class="tab-item active">
+            <div class="tab-item active" onclick="switchTab('home', this)">
                 <div class="tab-icon">🏠</div>
                 <div class="tab-label">首页</div>
             </div>
-            <div class="tab-item">
+            <div class="tab-item" onclick="switchTab('map', this)">
                 <div class="tab-icon">🗺️</div>
                 <div class="tab-label">地图</div>
             </div>
-            <div class="tab-item">
+            <div class="tab-item" onclick="switchTab('camera', this)">
                 <div class="tab-icon">📷</div>
                 <div class="tab-label">拍摄</div>
             </div>
-            <div class="tab-item">
+            <div class="tab-item" onclick="switchTab('profile', this)">
                 <div class="tab-icon">👤</div>
                 <div class="tab-label">我的</div>
             </div>
@@ -547,27 +631,126 @@
     </div>
 
     <script>
+        // 全局地图变量
+        let map;
+        
         // 初始化地图
         function initMap() {
-            const map = L.map('map').setView([32.0603, 118.7969], 12);
+            map = L.map('map').setView([32.0603, 118.7969], 12);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap'
             }).addTo(map);
             
             // 添加标记点
-            const spots = [
-                {name: '中山陵', lat: 32.0550, lng: 118.8496},
-                {name: '夫子庙', lat: 32.0224, lng: 118.7947},
-                {name: '拙政园', lat: 31.3162, lng: 120.6264}
-            ];
+            updateMapMarkers('南京');
+        }
+        
+        // 更新地图标记
+        function updateMapMarkers(city) {
+            if (!map) return;
             
-            spots.forEach(spot => {
-                L.marker([spot.lat, spot.lng])
+            // 清除现有标记
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+            
+            const data = cityData[city] || cityData['南京'];
+            
+            data.forEach(spot => {
+                // 根据城市设置大致坐标（实际应用中应该使用真实坐标）
+                const cityCoords = {
+                    '南京': [32.0603, 118.7969],
+                    '苏州': [31.2989, 120.5853],
+                    '扬州': [32.3942, 119.4127],
+                    '无锡': [31.4912, 120.3119]
+                };
+                
+                const baseCoords = cityCoords[city] || cityCoords['南京'];
+                const randomOffset = () => (Math.random() - 0.5) * 0.1;
+                
+                L.marker([baseCoords[0] + randomOffset(), baseCoords[1] + randomOffset()])
                     .addTo(map)
-                    .bindPopup(spot.name);
+                    .bindPopup(`<b>${spot.name}</b><br>⭐ ${spot.rating}<br>📷 ${spot.params.focal}`);
             });
         }
+        
+        // 城市数据
+        const cityData = {
+            '南京': [
+                {
+                    name: '中山陵',
+                    location: '南京市玄武区紫金山南麓',
+                    rating: '4.9',
+                    tags: ['历史建筑', '摄影圣地', '5A景区'],
+                    image: 'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800',
+                    params: { focal: '24-70mm', time: '日出/日落', aperture: 'f/8-f/11' },
+                    stats: { likes: '2.3k', comments: '186', photos: '1.2k' }
+                },
+                {
+                    name: '夫子庙秦淮河',
+                    location: '南京市秦淮区夫子庙',
+                    rating: '4.8',
+                    tags: ['夜景', '人文', '美食街'],
+                    image: 'https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=800',
+                    params: { focal: '35mm', time: '蓝调时刻', aperture: 'f/2.8' },
+                    stats: { likes: '1.8k', comments: '142', photos: '956' }
+                },
+                {
+                    name: '玄武湖',
+                    location: '南京市玄武区玄武巷1号',
+                    rating: '4.7',
+                    tags: ['湖泊', '自然风光', '休闲'],
+                    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
+                    params: { focal: '16-35mm', time: '上午9-11点', aperture: 'f/5.6-f/8' },
+                    stats: { likes: '1.5k', comments: '98', photos: '823' }
+                }
+            ],
+            '苏州': [
+                {
+                    name: '拙政园',
+                    location: '苏州市姑苏区东北街178号',
+                    rating: '4.9',
+                    tags: ['古典园林', '世界遗产', '四季皆宜'],
+                    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
+                    params: { focal: '16-35mm', time: '上午9-11点', aperture: 'f/5.6-f/8' },
+                    stats: { likes: '3.1k', comments: '234', photos: '2.1k' }
+                },
+                {
+                    name: '虎丘',
+                    location: '苏州市姑苏区虎丘山门内8号',
+                    rating: '4.8',
+                    tags: ['历史遗迹', '摄影圣地', '5A景区'],
+                    image: 'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800',
+                    params: { focal: '24-70mm', time: '下午3-5点', aperture: 'f/8-f/11' },
+                    stats: { likes: '2.1k', comments: '167', photos: '1.5k' }
+                }
+            ],
+            '扬州': [
+                {
+                    name: '瘦西湖',
+                    location: '扬州市邗江区大虹桥路28号',
+                    rating: '4.8',
+                    tags: ['湖泊景观', '园林', '5A景区'],
+                    image: 'https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=800',
+                    params: { focal: '24-105mm', time: '清晨6-8点', aperture: 'f/5.6-f/8' },
+                    stats: { likes: '1.9k', comments: '145', photos: '1.1k' }
+                }
+            ],
+            '无锡': [
+                {
+                    name: '鼋头渚',
+                    location: '无锡市滨湖区鼋渚路1号',
+                    rating: '4.9',
+                    tags: ['樱花', '湖泊', '摄影圣地'],
+                    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
+                    params: { focal: '70-200mm', time: '樱花季3-4月', aperture: 'f/2.8-f/4' },
+                    stats: { likes: '2.8k', comments: '198', photos: '2.3k' }
+                }
+            ]
+        };
         
         // 城市选择
         function selectCity(element, city) {
@@ -576,13 +759,174 @@
             });
             element.classList.add('active');
             
-            // 这里可以添加切换城市后的数据加载逻辑
-            console.log('切换到城市:', city);
+            // 加载城市数据
+            loadCityData(city);
+            
+            // 更新地图位置
+            updateMapForCity(city);
+        }
+        
+        // 加载城市数据
+        function loadCityData(city) {
+            const data = cityData[city] || cityData['南京'];
+            const container = document.querySelector('.content-section');
+            
+            let html = `
+                <div class="section-title">
+                    <span>🔥</span>
+                    <span>${city}热门打卡点</span>
+                </div>
+            `;
+            
+            data.forEach(spot => {
+                html += `
+                    <div class="spot-card" onclick="showSpotDetail('${spot.name}')">
+                        <img src="${spot.image}" alt="${spot.name}" class="spot-image" loading="lazy">
+                        <div class="spot-content">
+                            <div class="spot-header">
+                                <div class="spot-name">${spot.name}</div>
+                                <div class="spot-rating">⭐ ${spot.rating}</div>
+                            </div>
+                            <div class="spot-location">
+                                <span>📍</span>
+                                <span>${spot.location}</span>
+                            </div>
+                            <div class="spot-tags">
+                                ${spot.tags.map(tag => `<span class="spot-tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="photo-params">
+                                <div class="param-title">📷 拍摄参数建议</div>
+                                <div class="param-grid">
+                                    <div class="param-item">
+                                        <div class="param-value">${spot.params.focal}</div>
+                                        <div class="param-label">推荐焦段</div>
+                                    </div>
+                                    <div class="param-item">
+                                        <div class="param-value">${spot.params.time}</div>
+                                        <div class="param-label">最佳时间</div>
+                                    </div>
+                                    <div class="param-item">
+                                        <div class="param-value">${spot.params.aperture}</div>
+                                        <div class="param-label">建议光圈</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="spot-stats" style="margin-top: 10px;">
+                                <div class="spot-stat">
+                                    <span>👍</span>
+                                    <span>${spot.stats.likes}</span>
+                                </div>
+                                <div class="spot-stat">
+                                    <span>💬</span>
+                                    <span>${spot.stats.comments}</span>
+                                </div>
+                                <div class="spot-stat">
+                                    <span>📸</span>
+                                    <span>${spot.stats.photos}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // 更新地图标记
+            updateMapMarkers(city);
+        }
+        
+        // 更新地图位置
+        function updateMapForCity(city) {
+            const cityLocations = {
+                '南京': [32.0603, 118.7969],
+                '苏州': [31.2989, 120.5853],
+                '扬州': [32.3942, 119.4127],
+                '无锡': [31.4912, 120.3119],
+                '杭州': [30.2741, 120.1551],
+                '上海': [31.2304, 121.4737]
+            };
+            
+            const location = cityLocations[city];
+            if (location && map) {
+                map.setView(location, 12);
+                updateMapMarkers(city);
+            }
+        }
+        
+        // 显示打卡点详情
+        function showSpotDetail(spotName) {
+            // 创建详情页面
+            const detailHtml = `
+                <div class="detail-page" id="detail-page">
+                    <div class="detail-header">
+                        <div class="detail-back" onclick="closeDetail()">←</div>
+                        <div class="detail-title">${spotName}</div>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-section">
+                            <h3>📍 位置信息</h3>
+                            <p>正在加载详细位置信息...</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3>📷 拍摄指南</h3>
+                            <p>正在加载专业拍摄建议...</p>
+                        </div>
+                        <div class="detail-section">
+                            <h3>🖼️ 用户作品</h3>
+                            <p>正在加载用户实拍照片...</p>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="detail-btn primary" onclick="alert('导航功能开发中')">🧭 导航去这里</button>
+                            <button class="detail-btn secondary" onclick="alert('收藏功能开发中')">⭐ 收藏</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', detailHtml);
+        }
+        
+        // 关闭详情页
+        function closeDetail() {
+            const detailPage = document.getElementById('detail-page');
+            if (detailPage) {
+                detailPage.remove();
+            }
+        }
+        
+        // 切换标签页
+        function switchTab(tab, element) {
+            // 更新导航状态
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            // 根据标签切换内容
+            switch(tab) {
+                case 'home':
+                    document.querySelector('.content-section').style.display = 'block';
+                    document.querySelector('.map-section').style.height = '200px';
+                    break;
+                case 'map':
+                    document.querySelector('.content-section').style.display = 'none';
+                    document.querySelector('.map-section').style.height = 'calc(100vh - 150px)';
+                    if (map) map.invalidateSize();
+                    break;
+                case 'camera':
+                    alert('拍摄功能开发中\n\n将包含：\n- 拍摄参数计算器\n- 构图辅助线\n- 滤镜预览');
+                    break;
+                case 'profile':
+                    alert('个人中心开发中\n\n将包含：\n- 我的作品\n- 打卡记录\n- 收藏夹\n- 设置');
+                    break;
+            }
         }
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
+            loadCityData('南京');
         });
     </script>
 </body>
