@@ -745,6 +745,31 @@
             color: white;
         }
         
+        .calendar-day.holiday {
+            background: #1a1a1a;
+            color: white;
+            border-radius: 50%;
+        }
+        
+        .calendar-day.holiday-name {
+            background: #333;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .calendar-day.rest {
+            color: #4caf50;
+        }
+        
+        .calendar-day.work {
+            color: #f44336;
+        }
+        
+        .day-label {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        
         .confirm-btn {
             width: 100%;
             padding: 16px;
@@ -998,7 +1023,7 @@
                     </div>
                 </div>
                 <div class="timezone-info">时区: 北京 GMT +8:00</div>
-                <div class="month-title">2026年4月</div>
+                <div class="month-title">2026年5月</div>
                 <div class="calendar-grid" id="calendarGrid"></div>
                 <button class="confirm-btn" onclick="confirmDate()">确定</button>
             </div>
@@ -1152,16 +1177,42 @@
                 html += `<div class="calendar-day-header">${day}</div>`;
             });
             
-            // 4月从星期三开始（1号）
-            for (let i = 0; i < 2; i++) {
+            // 5月从星期四开始（1号）
+            for (let i = 0; i < 4; i++) {
                 html += '<div class="calendar-day"></div>';
             }
             
+            // 5月节假日数据
+            const holidays = {
+                1: { type: 'holiday-name', label: '节' },
+                2: { type: 'holiday', label: '假' },
+                3: { type: 'holiday', label: '假' },
+                4: { type: 'rest', label: '假' },
+                5: { type: 'rest', label: '假' },
+                9: { type: 'work', label: '班' },
+                10: { type: 'rest', label: '休' },
+                16: { type: 'rest', label: '休' },
+                17: { type: 'rest', label: '休' },
+                23: { type: 'rest', label: '休' },
+                24: { type: 'rest', label: '休' },
+                30: { type: 'rest', label: '休' },
+                31: { type: 'rest', label: '休' }
+            };
+            
             // 日期
-            for (let i = 1; i <= 30; i++) {
-                const isToday = i === 28;
-                const className = isToday ? 'calendar-day today' : 'calendar-day';
-                html += `<div class="${className}" onclick="selectDay(${i})">${i}</div>`;
+            for (let i = 1; i <= 31; i++) {
+                const holiday = holidays[i];
+                let className = 'calendar-day';
+                let content = i.toString();
+                
+                if (holiday) {
+                    className += ` ${holiday.type}`;
+                    if (holiday.label) {
+                        content = `<div>${i}</div><div class="day-label">${holiday.label}</div>`;
+                    }
+                }
+                
+                html += `<div class="${className}" onclick="selectDay(${i})">${content}</div>`;
             }
             
             grid.innerHTML = html;
