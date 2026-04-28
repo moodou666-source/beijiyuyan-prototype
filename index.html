@@ -1649,6 +1649,133 @@
             color: #666;
         }
         
+        /* 长图分享页面 */
+        .long-image-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f0f0f0;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .long-image-page.active {
+            display: flex;
+        }
+        
+        .long-image-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+        }
+        
+        .long-image-cancel {
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .long-image-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .itinerary-card {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .itinerary-brand {
+            font-size: 12px;
+            color: #999;
+            letter-spacing: 2px;
+        }
+        
+        .itinerary-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .itinerary-subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .itinerary-divider {
+            border-top: 2px dotted #ccc;
+            margin: 20px 0;
+        }
+        
+        .day-section-long {
+            margin-bottom: 25px;
+        }
+        
+        .day-title-long {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .day-title-long span {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+        
+        .spot-list-long {
+            list-style: none;
+        }
+        
+        .spot-item-long {
+            font-size: 16px;
+            color: #333;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .spot-item-long:last-child {
+            border-bottom: none;
+        }
+        
+        .save-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 40px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1987,6 +2114,65 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 长图分享页面 -->
+        <div class="long-image-page" id="longImagePage">
+            <div class="long-image-header">
+                <div class="long-image-cancel" onclick="closeLongImage()">取消</div>
+            </div>
+            <div class="long-image-content">
+                <div class="itinerary-card">
+                    <div class="itinerary-header">
+                        <div class="itinerary-brand">PI TRAVEL</div>
+                        <div class="itinerary-brand">ITINERARY</div>
+                    </div>
+                    
+                    <div class="itinerary-title">苏州市经典必玩3天行程</div>
+                    <div class="itinerary-subtitle">柠檬派 的05.01至05.04 4天3晚行程单</div>
+                    
+                    <div class="itinerary-divider"></div>
+                    
+                    <div class="day-section-long">
+                        <div class="day-title-long">05.01<span>/周五</span></div>
+                        <ul class="spot-list-long">
+                            <li class="spot-item-long">拙政园</li>
+                            <li class="spot-item-long">苏州博物馆(本馆)</li>
+                            <li class="spot-item-long">狮子林</li>
+                            <li class="spot-item-long">平江路</li>
+                            <li class="spot-item-long">拙林里糖粥</li>
+                            <li class="spot-item-long">观前街</li>
+                            <li class="spot-item-long">稻山村·苏州菜(石路店)</li>
+                            <li class="spot-item-long">章太炎故居</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="itinerary-divider"></div>
+                    
+                    <div class="day-section-long">
+                        <div class="day-title-long">05.02<span>/周六</span></div>
+                        <ul class="spot-list-long">
+                            <li class="spot-item-long">虎丘山风景区</li>
+                            <li class="spot-item-long">寒山寺</li>
+                            <li class="spot-item-long">西园寺</li>
+                            <li class="spot-item-long">留园</li>
+                            <li class="spot-item-long">七里山塘景区</li>
+                            <li class="spot-item-long">秋娟馄饨店</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="itinerary-divider"></div>
+                    
+                    <div class="day-section-long">
+                        <div class="day-title-long">05.03<span>/周日</span></div>
+                        <ul class="spot-list-long">
+                            <li class="spot-item-long">双塔市集TTD-MARKET</li>
+                            <li class="spot-item-long">网师园</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <button class="save-btn" onclick="saveToAlbum()">保存到相册</button>
         </div>
         
         <!-- 分享弹窗 -->
@@ -2825,8 +3011,19 @@
         
         // 长图分享
         function shareLongImage() {
-            alert('长图分享\n\n生成行程单长图');
             closeShareModal();
+            document.getElementById('longImagePage').classList.add('active');
+        }
+        
+        // 关闭长图分享
+        function closeLongImage() {
+            document.getElementById('longImagePage').classList.remove('active');
+        }
+        
+        // 保存到相册
+        function saveToAlbum() {
+            alert('行程单已保存到相册');
+            closeLongImage();
         }
         
         // 找搭子
