@@ -783,6 +783,141 @@
             cursor: pointer;
         }
         
+        /* 行程结果页面 */
+        .trip-result-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .trip-result-page.active {
+            display: flex;
+        }
+        
+        .trip-map {
+            height: 50vh;
+            background: #f0f0f0;
+            position: relative;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .trip-details {
+            padding: 20px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .day-section {
+            margin-bottom: 25px;
+        }
+        
+        .day-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .spot-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spot-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .spot-info {
+            flex: 1;
+        }
+        
+        .spot-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .spot-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .loading-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+        
+        .loading-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .loading-dot {
+            width: 6px;
+            height: 6px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        .cancel-btn {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1026,6 +1161,61 @@
                 <div class="month-title">2026年5月</div>
                 <div class="calendar-grid" id="calendarGrid"></div>
                 <button class="confirm-btn" onclick="confirmDate()">确定</button>
+            </div>
+        </div>
+        
+        <!-- 行程结果页面 -->
+        <div class="trip-result-page" id="tripResultPage">
+            <div class="trip-map">
+                <div id="resultMap" class="map-container"></div>
+            </div>
+            <div class="trip-details">
+                <div class="spot-item">
+                    <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=200" alt="山塘街" class="spot-image">
+                    <div class="spot-info">
+                        <div class="spot-desc">山塘街人气小吃店，推荐荠菜鲜肉大馄饨，性价比高。🍜</div>
+                    </div>
+                </div>
+                
+                <div class="day-section">
+                    <div class="day-title">DAY 3 现代都市与市集漫步</div>
+                    
+                    <div class="spot-item">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=200" alt="双塔市集" class="spot-image">
+                        <div class="spot-info">
+                            <div class="spot-name">1.双塔市集 TTD-MARKET</div>
+                            <div class="spot-desc">网红改造菜场，充满设计感，集合了小吃、文创和市井烟火气。早餐好去处。🥢</div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-item">
+                        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=200" alt="网师园" class="spot-image">
+                        <div class="spot-info">
+                            <div class="spot-name">2.网师园</div>
+                            <div class="spot-desc">小巧精致的典型宅园，以"夜花园"项目闻名（夜间需另购票）。日间游玩约1小时...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-item">
+                        <div class="spot-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 30px;">👤</div>
+                        <div class="spot-info">
+                            <div class="spot-name">3.十全街</div>
+                            <div class="spot-desc">潮流与文艺结合的小资街道，遍布咖啡馆、买手店和特色餐厅，适合逛街。☕</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading-bar">
+                <div class="loading-text">
+                    <div class="loading-dots">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                    <span>我在飞速整理资料，请稍候</span>
+                </div>
+                <button class="cancel-btn" onclick="cancelLoading()">取消</button>
             </div>
         </div>
     </div>
@@ -1276,10 +1466,81 @@
                 .map(tag => tag.textContent.trim()).join('、');
             
             if (dests) {
-                alert(`智能规划\n\n目的地：${dests}\n偏好：${preferences || '未选择'}\n\n将为您生成：\n- 每日行程\n- 景点推荐\n- 路线优化`);
+                showTripResult();
             } else {
                 alert('请先选择目的地');
             }
+        }
+        
+        // 显示行程结果
+        function showTripResult() {
+            document.getElementById('tripResultPage').classList.add('active');
+            initResultMap();
+        }
+        
+        // 初始化结果地图
+        function initResultMap() {
+            const map = L.map('resultMap').setView([31.2989, 120.5853], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加标记点（模拟3天的路线）
+            const day1Points = [
+                {lat: 31.30, lng: 120.59, num: 1},
+                {lat: 31.31, lng: 120.60, num: 2},
+                {lat: 31.29, lng: 120.58, num: 3}
+            ];
+            
+            const day2Points = [
+                {lat: 31.32, lng: 120.57, num: 1},
+                {lat: 31.28, lng: 120.61, num: 2}
+            ];
+            
+            const day3Points = [
+                {lat: 31.305, lng: 120.595, num: 1},
+                {lat: 31.295, lng: 120.585, num: 2},
+                {lat: 31.315, lng: 120.605, num: 3}
+            ];
+            
+            // 添加Day1标记（蓝色）
+            day1Points.forEach(point => {
+                L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background:#2196F3;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;">${point.num}</div>`,
+                        iconSize: [24, 24]
+                    })
+                }).addTo(map);
+            });
+            
+            // 添加Day2标记（绿色）
+            day2Points.forEach(point => {
+                L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background:#4CAF50;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;">${point.num}</div>`,
+                        iconSize: [24, 24]
+                    })
+                }).addTo(map);
+            });
+            
+            // 添加Day3标记（绿色）
+            day3Points.forEach(point => {
+                L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background:#4CAF50;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;">${point.num}</div>`,
+                        iconSize: [24, 24]
+                    })
+                }).addTo(map);
+            });
+        }
+        
+        // 取消加载
+        function cancelLoading() {
+            document.getElementById('tripResultPage').classList.remove('active');
         }
         
         // 创建空计划
