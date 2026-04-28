@@ -1534,6 +1534,121 @@
             cursor: pointer;
         }
         
+        /* 分享弹窗 */
+        .share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .share-modal.active {
+            display: flex;
+        }
+        
+        .share-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px;
+        }
+        
+        .share-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .share-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        
+        .share-feature.blue {
+            background: #e3f2fd;
+        }
+        
+        .share-feature.yellow {
+            background: #fff8e1;
+        }
+        
+        .share-feature.purple {
+            background: #f3e5f5;
+        }
+        
+        .share-feature.green {
+            background: #e8f5e9;
+        }
+        
+        .share-feature-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .share-feature-text {
+            flex: 1;
+        }
+        
+        .share-feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .share-feature-desc {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .share-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 20px 0;
+        }
+        
+        .share-options {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .share-option-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .share-option-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1871,6 +1986,75 @@
             
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
+            <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 分享弹窗 -->
+        <div class="share-modal" id="shareModal">
+            <div class="share-content">
+                <div class="share-features">
+                    <div class="share-feature blue" onclick="coEdit()">
+                        <div class="share-feature-icon">👥</div>
+                        <div class="share-feature-text">
+                            <div class="share-feature-title">共同编辑</div>
+                            <div class="share-feature-desc">多人共同编辑</div>
+                        </div>
+                    </div>
+                    
+                    <div class="share-feature yellow" onclick="shareLongImage()">
+                        <div class="share-feature-icon">📄</div>
+                        <div class="share-feature-text">
+                            <div class="share-feature-title">长图分享</div>
+                            <div class="share-feature-desc">行程单导出长图</div>
+                        </div>
+                    </div>
+                    
+                    <div class="share-feature purple" onclick="findCompanion()">
+                        <div class="share-feature-icon">🤝</div>
+                        <div class="share-feature-text">
+                            <div class="share-feature-title">找搭子</div>
+                            <div class="share-feature-desc">寻找同频旅友</div>
+                        </div>
+                    </div>
+                    
+                    <div class="share-feature green" onclick="tripHelp()">
+                        <div class="share-feature-icon">💡</div>
+                        <div class="share-feature-text">
+                            <div class="share-feature-title">行程求助</div>
+                            <div class="share-feature-desc">集思广益</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="share-divider"></div>
+                
+                <div class="share-options">
+                    <div class="share-option" onclick="copyLink()">
+                        <div class="share-option-icon">🔗</div>
+                        <div class="share-option-label">复制链接</div>
+                    </div>
+                    
+                    <div class="share-option" onclick="shareToWechat()">
+                        <div class="share-option-icon">💬</div>
+                        <div class="share-option-label">微信好友</div>
+                    </div>
+                    
+                    <div class="share-option" onclick="shareToMoments()">
+                        <div class="share-option-icon">📱</div>
+                        <div class="share-option-label">朋友圈</div>
+                    </div>
+                    
+                    <div class="share-option" onclick="shareByCode()">
+                        <div class="share-option-icon">🔑</div>
+                        <div class="share-option-label">口令分享</div>
+                    </div>
+                    
+                    <div class="share-option" onclick="moreOptions()">
+                        <div class="share-option-icon">⋯</div>
+                        <div class="share-option-label">更多</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- 添加至弹窗 -->
@@ -2621,6 +2805,70 @@
         function confirmAddTo() {
             alert(`已添加至 ${selectedDayOption}`);
             document.getElementById('addToModal').classList.remove('active');
+        }
+        
+        // 显示分享弹窗
+        function showShareModal() {
+            document.getElementById('shareModal').classList.add('active');
+        }
+        
+        // 关闭分享弹窗
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+        }
+        
+        // 共同编辑
+        function coEdit() {
+            alert('共同编辑\n\n邀请好友一起编辑行程');
+            closeShareModal();
+        }
+        
+        // 长图分享
+        function shareLongImage() {
+            alert('长图分享\n\n生成行程单长图');
+            closeShareModal();
+        }
+        
+        // 找搭子
+        function findCompanion() {
+            alert('找搭子\n\n寻找同频旅友');
+            closeShareModal();
+        }
+        
+        // 行程求助
+        function tripHelp() {
+            alert('行程求助\n\n向社区求助行程建议');
+            closeShareModal();
+        }
+        
+        // 复制链接
+        function copyLink() {
+            alert('链接已复制到剪贴板');
+            closeShareModal();
+        }
+        
+        // 分享到微信好友
+        function shareToWechat() {
+            alert('分享到微信好友');
+            closeShareModal();
+        }
+        
+        // 分享到朋友圈
+        function shareToMoments() {
+            alert('分享到朋友圈');
+            closeShareModal();
+        }
+        
+        // 口令分享
+        function shareByCode() {
+            alert('生成分享口令');
+            closeShareModal();
+        }
+        
+        // 更多选项
+        function moreOptions() {
+            alert('更多分享选项');
+            closeShareModal();
         }
         
         // 收藏景点
