@@ -13,14 +13,14 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
+            background: #fff;
             overflow-x: hidden;
         }
         
         .app-container {
             max-width: 414px;
             margin: 0 auto;
-            background: white;
+            background: #fff;
             min-height: 100vh;
             position: relative;
             padding-bottom: 80px;
@@ -29,17 +29,17 @@
         /* 状态栏 */
         .status-bar {
             height: 44px;
-            background: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 15px;
+            padding: 0 20px;
             font-size: 15px;
             font-weight: 600;
         }
         
         .status-time {
             font-weight: 700;
+            font-size: 16px;
         }
         
         .status-icons {
@@ -53,8 +53,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 15px;
-            background: white;
+            padding: 8px 20px;
         }
         
         .logo {
@@ -66,13 +65,11 @@
         .logo-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
+            background: #00b4d8;
+            border-radius: 8px 0 8px 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 18px;
         }
         
         .logo-text {
@@ -83,41 +80,43 @@
         
         .header-icons {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
         
         .header-icon {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            color: #666;
+            color: #333;
         }
         
         /* 内容区域 */
         .content {
-            padding: 15px;
+            padding: 10px 20px;
         }
         
         /* 精选专题 */
         .section-title {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 8px;
             margin-bottom: 15px;
+            margin-top: 10px;
         }
         
         .section-title-text {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: #333;
         }
         
         .section-title-arrow {
             color: #999;
-            font-size: 18px;
+            font-size: 20px;
+            margin-top: 2px;
         }
         
         /* 横向滚动 */
@@ -126,7 +125,7 @@
             gap: 12px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
         
         .horizontal-scroll::-webkit-scrollbar {
@@ -134,12 +133,17 @@
         }
         
         .topic-card {
-            min-width: 280px;
-            height: 180px;
+            min-width: 140px;
+            height: 190px;
             border-radius: 16px;
             overflow: hidden;
             position: relative;
             background: #f0f0f0;
+            flex-shrink: 0;
+        }
+        
+        .topic-card:first-child {
+            min-width: 140px;
         }
         
         .topic-card img {
@@ -153,23 +157,25 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 15px;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+            padding: 12px;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
             color: white;
         }
         
         .topic-tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
             padding: 4px 10px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             border-radius: 12px;
             font-size: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             backdrop-filter: blur(5px);
         }
         
         .topic-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             line-height: 1.4;
         }
@@ -180,29 +186,30 @@
         }
         
         .trip-card {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            background: #e8f4f8;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 15px;
             position: relative;
             overflow: hidden;
+            min-height: 160px;
         }
         
         .trip-card.yellow {
-            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            background: #f5f5dc;
         }
         
         .trip-title {
             font-size: 20px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .trip-info {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
             color: #666;
             font-size: 14px;
         }
@@ -210,41 +217,41 @@
         .trip-users {
             display: flex;
             align-items: center;
-            margin-top: 15px;
+            margin-top: 12px;
         }
         
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             border: 2px solid white;
-            margin-right: -8px;
+            margin-right: -6px;
         }
         
         .add-user-btn {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: white;
-            border: 2px dashed #ccc;
+            border: 1px dashed #ccc;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #999;
-            font-size: 18px;
-            margin-left: 5px;
+            font-size: 14px;
+            margin-left: 4px;
         }
         
         .trip-image {
             position: absolute;
-            right: -20px;
-            bottom: -20px;
-            width: 150px;
-            height: 150px;
-            border-radius: 20px;
+            right: -10px;
+            bottom: -10px;
+            width: 140px;
+            height: 110px;
+            border-radius: 16px;
             overflow: hidden;
-            transform: rotate(-10deg);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: rotate(-8deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         .trip-image img {
@@ -263,7 +270,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            color: #666;
             font-size: 20px;
         }
         
@@ -292,7 +299,7 @@
             gap: 4px;
             color: #999;
             cursor: pointer;
-            padding: 5px 20px;
+            padding: 5px 30px;
         }
         
         .nav-item.active {
@@ -300,7 +307,7 @@
         }
         
         .nav-item-icon {
-            font-size: 24px;
+            font-size: 22px;
         }
         
         .nav-item-label {
@@ -308,8 +315,8 @@
         }
         
         .add-btn {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: #333;
             border-radius: 50%;
             display: flex;
@@ -318,7 +325,7 @@
             color: white;
             font-size: 28px;
             margin-top: -20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -326,8 +333,9 @@
     <div class="app-container">
         <!-- 状态栏 -->
         <div class="status-bar">
-            <div class="status-time">9:41</div>
+            <div class="status-time">18:22</div>
             <div class="status-icons">
+                <span>▲</span>
                 <span>📶</span>
                 <span>📡</span>
                 <span>🔋</span>
@@ -337,7 +345,7 @@
         <!-- 顶部导航 -->
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">🧳</div>
+                <div class="logo-icon"></div>
                 <div class="logo-text">北京雨燕</div>
             </div>
             <div class="header-icons">
@@ -356,15 +364,7 @@
             
             <div class="horizontal-scroll">
                 <div class="topic-card">
-                    <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600" alt="旅行报告">
-                    <div class="topic-overlay">
-                        <div class="topic-tag">🎁 五一旅行</div>
-                        <div class="topic-title">五一旅行鉴定报告</div>
-                    </div>
-                </div>
-                
-                <div class="topic-card">
-                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600" alt="风景">
+                    <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400" alt="旅行报告">
                     <div class="topic-overlay">
                         <div class="topic-tag">👀 有点意思</div>
                         <div class="topic-title">这些风景，真不是AI！</div>
@@ -372,7 +372,7 @@
                 </div>
                 
                 <div class="topic-card">
-                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="美食">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400" alt="美食">
                     <div class="topic-overlay">
                         <div class="topic-tag">😋 吃点好的</div>
                         <div class="topic-title">旅游，就是换个地方吃外卖？</div>
@@ -414,7 +414,7 @@
                     <div class="trip-image">
                         <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300" alt="风景">
                     </div>
-                    <div class="delete-btn">🗑️</div>
+                    <div class="delete-btn">🗑</div>
                 </div>
             </div>
         </div>
