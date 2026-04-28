@@ -408,6 +408,90 @@
             cursor: pointer;
         }
         
+        /* 创建计划页面 */
+        .create-plan-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f5f5f5;
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .create-plan-page.active {
+            display: flex;
+        }
+        
+        .create-plan-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+        }
+        
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .create-empty-btn {
+            padding: 8px 16px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .create-plan-content {
+            flex: 1;
+            padding: 30px 20px;
+        }
+        
+        .create-plan-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .destination-input {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            gap: 12px;
+        }
+        
+        .destination-icon {
+            font-size: 24px;
+            color: #667eea;
+        }
+        
+        .destination-input input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .destination-input input::placeholder {
+            color: #999;
+        }
+        
         /* 页面切换 */
         .page {
             display: none;
@@ -532,7 +616,7 @@
         <div class="create-modal" id="createModal">
             <div class="create-content">
                 <div class="create-options">
-                    <div class="create-option primary" onclick="createNewPlan()">
+                    <div class="create-option primary" onclick="showCreatePlanPage()">
                         <div>
                             <div class="create-option-title">创建新的计划</div>
                         </div>
@@ -557,6 +641,21 @@
                 </div>
                 
                 <div class="close-btn" onclick="closeCreateModal()">✕</div>
+            </div>
+        </div>
+        
+        <!-- 创建计划页面 -->
+        <div class="create-plan-page" id="createPlanPage">
+            <div class="create-plan-header">
+                <div class="back-btn" onclick="closeCreatePlanPage()">←</div>
+                <button class="create-empty-btn" onclick="createEmptyPlan()">创建空计划</button>
+            </div>
+            <div class="create-plan-content">
+                <div class="create-plan-title">你想去哪里？</div>
+                <div class="destination-input">
+                    <div class="destination-icon">📍</div>
+                    <input type="text" placeholder="输入目的地或告诉我你的想法" id="destinationInput">
+                </div>
             </div>
         </div>
     </div>
@@ -584,10 +683,31 @@
             document.getElementById('createModal').classList.remove('active');
         }
         
+        // 显示创建计划页面
+        function showCreatePlanPage() {
+            closeCreateModal();
+            document.getElementById('createPlanPage').classList.add('active');
+        }
+        
+        // 关闭创建计划页面
+        function closeCreatePlanPage() {
+            document.getElementById('createPlanPage').classList.remove('active');
+        }
+        
+        // 创建空计划
+        function createEmptyPlan() {
+            const destination = document.getElementById('destinationInput').value;
+            if (destination) {
+                alert(`创建计划：${destination}\n\n将包含：\n- 设置日期\n- 添加地点\n- 邀请同伴`);
+            } else {
+                alert('创建空计划\n\n将包含：\n- 设置日期\n- 添加地点\n- 邀请同伴');
+            }
+            closeCreatePlanPage();
+        }
+        
         // 创建新计划
         function createNewPlan() {
-            alert('创建新计划\n\n将包含：\n- 选择目的地\n- 设置日期\n- 添加同伴');
-            closeCreateModal();
+            showCreatePlanPage();
         }
         
         // 智能导入
