@@ -494,7 +494,219 @@
                 <div class="nav-item-label">探索</div>
             </div>
         </div>
+        <!-- 创建计划页面 -->
+        <div class="create-plan-page" id="createPlanPage" style="display: none;">
+            <div class="create-header">
+                <div class="create-back" onclick="closeCreatePlan()">←</div>
+                <button class="create-empty-btn">创建空计划</button>
+            </div>
+            
+            <div class="create-content">
+                <div class="create-section">
+                    <div class="create-section-title">你想去哪里？</div>
+                    <div class="selected-tags">
+                        <div class="selected-tag">
+                            <span>苏州市</span>
+                            <span class="tag-remove">✕</span>
+                        </div>
+                        <div class="selected-tag">
+                            <span>扬州市</span>
+                            <span class="tag-remove">✕</span>
+                        </div>
+                    </div>
+                    <div class="destination-input">
+                        <span class="input-icon">📍</span>
+                        <input type="text" placeholder="输入目的地或告诉我你的想法">
+                    </div>
+                </div>
+                
+                <div class="create-section">
+                    <div class="create-section-title">你想去多久？</div>
+                    <div class="date-input-box">
+                        <span class="input-icon">📅</span>
+                        <span class="date-placeholder">开始日期-结束日期</span>
+                    </div>
+                </div>
+                
+                <div class="create-section">
+                    <div class="create-section-title">旅行偏好</div>
+                    <div class="preference-tags">
+                        <div class="preference-tag">📍 经典必玩</div>
+                        <div class="preference-tag">🍽️ 吃吃喝喝</div>
+                        <div class="preference-tag">🕵️ 小众探索</div>
+                        <div class="preference-tag">📸 拍照出片</div>
+                        <div class="preference-tag">🛍️ 逛街购物</div>
+                        <div class="preference-tag">🚶 citywalk</div>
+                        <div class="preference-tag">🏔️ 自然风光</div>
+                        <div class="preference-tag">🎨 文艺展览</div>
+                        <div class="preference-tag">🏛️ 历史古建</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="smart-plan-btn">智能规划</button>
+        </div>
     </div>
+    
+    <style>
+        /* 创建计划页面 */
+        .create-plan-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f5f5f5;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .create-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #f5f5f5;
+        }
+        
+        .create-back {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            width: 40px;
+        }
+        
+        .create-empty-btn {
+            padding: 8px 16px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .create-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .create-section {
+            margin-bottom: 30px;
+        }
+        
+        .create-section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .selected-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .selected-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: #e8e8e8;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .tag-remove {
+            color: #999;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .destination-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: white;
+            border-radius: 16px;
+        }
+        
+        .input-icon {
+            font-size: 20px;
+            color: #999;
+        }
+        
+        .destination-input input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 15px;
+            outline: none;
+            color: #333;
+        }
+        
+        .destination-input input::placeholder {
+            color: #ccc;
+        }
+        
+        .date-input-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: white;
+            border-radius: 16px;
+        }
+        
+        .date-placeholder {
+            color: #ccc;
+            font-size: 15px;
+        }
+        
+        .preference-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .preference-tag {
+            padding: 10px 18px;
+            background: white;
+            border-radius: 24px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        .preference-tag:hover {
+            border-color: #333;
+        }
+        
+        .smart-plan-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 374px;
+            padding: 16px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
     
     <script>
         let touchStartX = 0;
@@ -527,6 +739,14 @@
                 card.classList.remove('swiped');
                 card.style.transform = '';
             }
+        }
+        
+        function showCreateModal() {
+            document.getElementById('createPlanPage').style.display = 'flex';
+        }
+        
+        function closeCreatePlan() {
+            document.getElementById('createPlanPage').style.display = 'none';
         }
     </script>
 </body>
