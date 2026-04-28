@@ -185,14 +185,40 @@
             margin-top: 25px;
         }
         
+        .trip-card-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
         .trip-card {
             background: #e8f4f8;
             border-radius: 20px;
             padding: 20px;
-            margin-bottom: 15px;
             position: relative;
             overflow: hidden;
             min-height: 160px;
+            transition: transform 0.3s;
+        }
+        
+        .trip-card.swiped {
+            transform: translateX(-80px);
+        }
+        
+        .delete-action {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            background: #ff4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            z-index: 1;
         }
         
         .trip-card.yellow {
@@ -310,6 +336,11 @@
             font-size: 22px;
         }
         
+        .nav-item-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
         .nav-item-label {
             font-size: 11px;
         }
@@ -386,35 +417,39 @@
                     <div class="section-title-text">我的行程</div>
                 </div>
                 
-                <div class="trip-card">
-                    <div class="trip-title">苏湖景五日文艺之旅</div>
-                    <div class="trip-info">
-                        <div>5天4晚</div>
-                        <div>27个地点</div>
-                    </div>
-                    <div class="trip-users">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="用户" class="user-avatar">
-                        <div class="add-user-btn">+</div>
-                    </div>
-                    <div class="trip-image">
-                        <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=300" alt="风景">
+                <div class="trip-card-wrapper">
+                    <div class="delete-action">🗑</div>
+                    <div class="trip-card" id="tripCard1" ontouchstart="handleTouchStart(event, 'tripCard1')" ontouchmove="handleTouchMove(event, 'tripCard1')" ontouchend="handleTouchEnd(event, 'tripCard1')">
+                        <div class="trip-title">苏州市经典必玩3天行程</div>
+                        <div class="trip-info">
+                            <div>01至05.04 4天3晚</div>
+                            <div>21个地点</div>
+                        </div>
+                        <div class="trip-users">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="用户" class="user-avatar">
+                            <div class="add-user-btn">+</div>
+                        </div>
+                        <div class="trip-image">
+                            <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=300" alt="风景">
+                        </div>
                     </div>
                 </div>
                 
-                <div class="trip-card yellow">
-                    <div class="trip-title">京文艺小众五日行</div>
-                    <div class="trip-info">
-                        <div>5天4晚</div>
-                        <div>18个地点</div>
+                <div class="trip-card-wrapper">
+                    <div class="trip-card yellow">
+                        <div class="trip-title">苏湖景五日文艺之旅</div>
+                        <div class="trip-info">
+                            <div>5天4晚</div>
+                            <div>27个地点</div>
+                        </div>
+                        <div class="trip-users">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="用户" class="user-avatar">
+                            <div class="add-user-btn">+</div>
+                        </div>
+                        <div class="trip-image">
+                            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300" alt="风景">
+                        </div>
                     </div>
-                    <div class="trip-users">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="用户" class="user-avatar">
-                        <div class="add-user-btn">+</div>
-                    </div>
-                    <div class="trip-image">
-                        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300" alt="风景">
-                    </div>
-                    <div class="delete-btn">🗑</div>
                 </div>
             </div>
         </div>
@@ -422,15 +457,59 @@
         <!-- 底部导航 -->
         <div class="bottom-nav">
             <div class="nav-item active">
-                <div class="nav-item-icon">🧳</div>
+                <div class="nav-item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M3 9h18M9 21V9"/>
+                    </svg>
+                </div>
                 <div class="nav-item-label">行程</div>
             </div>
             <div class="add-btn">+</div>
             <div class="nav-item">
-                <div class="nav-item-icon">🧭</div>
+                <div class="nav-item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/>
+                    </svg>
+                </div>
                 <div class="nav-item-label">探索</div>
             </div>
         </div>
     </div>
+    
+    <script>
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        let isSwiping = false;
+        
+        function handleTouchStart(event, cardId) {
+            touchStartX = event.touches[0].clientX;
+            isSwiping = true;
+        }
+        
+        function handleTouchMove(event, cardId) {
+            if (!isSwiping) return;
+            touchCurrentX = event.touches[0].clientX;
+            const diff = touchStartX - touchCurrentX;
+            
+            if (diff > 0 && diff < 80) {
+                document.getElementById(cardId).style.transform = `translateX(-${diff}px)`;
+            }
+        }
+        
+        function handleTouchEnd(event, cardId) {
+            isSwiping = false;
+            const diff = touchStartX - touchCurrentX;
+            const card = document.getElementById(cardId);
+            
+            if (diff > 40) {
+                card.classList.add('swiped');
+            } else {
+                card.classList.remove('swiped');
+                card.style.transform = '';
+            }
+        }
+    </script>
 </body>
 </html>
