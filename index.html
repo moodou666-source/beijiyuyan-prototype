@@ -1257,6 +1257,204 @@
             background: #ffebee;
         }
         
+        /* 景点详情页面 */
+        .spot-detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 8000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .spot-detail-page.active {
+            display: flex;
+        }
+        
+        .spot-map {
+            height: 45vh;
+            position: relative;
+        }
+        
+        .spot-map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .spot-detail-card-popup {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+        
+        .spot-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .spot-detail-name-large {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .spot-detail-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .spot-tags-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .spot-tag-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .spot-tag-item.hot {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+        
+        .spot-gallery {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .spot-gallery::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .spot-gallery-img {
+            min-width: 200px;
+            height: 150px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .spot-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spot-section-title .ai-badge {
+            font-size: 12px;
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .spot-description {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .spot-reviews {
+            margin-bottom: 20px;
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .review-mood {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .review-mood-emoji {
+            font-size: 24px;
+        }
+        
+        .review-item {
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .review-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f5e9;
+            color: #4caf50;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .review-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .spot-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .spot-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1593,6 +1791,83 @@
             </div>
             
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
+            <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
+        </div>
+        
+        <!-- 景点详情页面 -->
+        <div class="spot-detail-page" id="spotDetailPage">
+            <div class="spot-map">
+                <div id="spotMap" class="spot-map-container"></div>
+            </div>
+            
+            <div class="spot-detail-card-popup">
+                <div class="spot-detail-header">
+                    <div class="spot-detail-name-large">章太炎故居</div>
+                    <div class="spot-detail-close" onclick="closeSpotDetail()">✕</div>
+                </div>
+                
+                <div class="spot-tags-row">
+                    <div class="spot-tag-item hot">🔥 本月正火</div>
+                    <div class="spot-tag-item">👥 947人规划</div>
+                    <div class="spot-tag-item">🏛️ 纪念馆</div>
+                    <div class="spot-tag-item">📍 227.6公里</div>
+                </div>
+                
+                <div class="spot-gallery">
+                    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=400" alt="故居" class="spot-gallery-img">
+                    <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=400" alt="建筑" class="spot-gallery-img">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400" alt="室内" class="spot-gallery-img">
+                </div>
+                
+                <div class="spot-section-title">
+                    地点介绍
+                    <span class="ai-badge">AI生成</span>
+                </div>
+                
+                <div class="spot-description">
+                    章太炎故居位于苏州市姑苏区锦帆路38号，是一座融合中西风格的民国建筑，现为古吴轩书店所在地。故居内保留章太炎晚年的讲学场所和起居室，二楼书房独具特色，三楼设有...
+                    <span style="color: #2196F3;">展开</span>
+                </div>
+                
+                <div class="spot-reviews">
+                    <div class="review-header">
+                        <div class="spot-section-title" style="margin: 0;">真实评价</div>
+                        <div class="review-mood">
+                            <span>67%来过的用户心情</span>
+                            <span style="color: #ff9800;">美滋滋</span>
+                            <span class="review-mood-emoji">😊</span>
+                        </div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-tag">Wow</div>
+                        <div class="review-text">
+                            <strong>历史感浓厚：</strong>感受才子唐伯虎的生活痕迹，桃花坞街区
+                        </div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-text">
+                            <strong>文化气息浓：</strong>章太炎是鲁迅的老师，此处是章太炎晚年...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="spot-actions">
+                <button class="spot-action-btn" onclick="addToTrip()">
+                    <span>+</span>
+                    <span>添加至</span>
+                </button>
+                <button class="spot-action-btn" onclick="favoriteSpot()">
+                    <span>⭐</span>
+                    <span>收藏</span>
+                </button>
+                <button class="spot-action-btn" onclick="checkInSpot()">
+                    <span>✓</span>
+                    <span>打卡</span>
+                </button>
+            </div>
         </div>
         
         <!-- 编辑行程页面 -->
@@ -2181,6 +2456,65 @@
         // 删除景点
         function deleteSpot() {
             alert('删除景点');
+        }
+        
+        // 显示景点详情
+        function showSpotDetail() {
+            document.getElementById('spotDetailPage').classList.add('active');
+            initSpotMap();
+        }
+        
+        // 关闭景点详情
+        function closeSpotDetail() {
+            document.getElementById('spotDetailPage').classList.remove('active');
+        }
+        
+        // 初始化景点地图
+        function initSpotMap() {
+            const map = L.map('spotMap').setView([31.3162, 120.6264], 16);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加路线
+            const routePoints = [
+                [31.318, 120.624],
+                [31.317, 120.625],
+                [31.3162, 120.6264],
+                [31.315, 120.627],
+                [31.314, 120.628]
+            ];
+            
+            L.polyline(routePoints, {
+                color: '#2196F3',
+                weight: 4,
+                opacity: 0.8
+            }).addTo(map);
+            
+            // 添加标记
+            L.marker([31.3162, 120.6264], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div style="background:#4CAF50;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">🌳</div>',
+                    iconSize: [32, 32]
+                })
+            }).addTo(map).bindPopup('章太炎故居');
+        }
+        
+        // 添加至行程
+        function addToTrip() {
+            alert('添加至行程');
+        }
+        
+        // 收藏景点
+        function favoriteSpot() {
+            alert('收藏景点');
+        }
+        
+        // 打卡景点
+        function checkInSpot() {
+            alert('打卡成功！');
         }
         
         // 创建空计划
