@@ -1455,6 +1455,85 @@
             cursor: pointer;
         }
         
+        /* 添加至弹窗 */
+        .add-to-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .add-to-modal.active {
+            display: flex;
+        }
+        
+        .add-to-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px;
+        }
+        
+        .add-to-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .day-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .day-option {
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .day-option.current {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .day-option:not(.current) {
+            color: #999;
+        }
+        
+        .day-option-label {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .confirm-circle-btn {
+            width: 60px;
+            height: 60px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1792,6 +1871,26 @@
             
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
+        </div>
+        
+        <!-- 添加至弹窗 -->
+        <div class="add-to-modal" id="addToModal">
+            <div class="add-to-content">
+                <div class="add-to-title">你想添加至哪一天</div>
+                <div class="day-options">
+                    <div class="day-option current" onclick="selectDayOption(this, '05.01')">
+                        <span>05.01 周五</span>
+                        <span class="day-option-label">当前</span>
+                    </div>
+                    <div class="day-option" onclick="selectDayOption(this, '05.02')">
+                        <span>05.02 周六</span>
+                    </div>
+                    <div class="day-option" onclick="selectDayOption(this, '05.03')">
+                        <span>05.03 周日</span>
+                    </div>
+                </div>
+                <div class="confirm-circle-btn" onclick="confirmAddTo()">✓</div>
+            </div>
         </div>
         
         <!-- 景点详情页面 -->
@@ -2504,7 +2603,24 @@
         
         // 添加至行程
         function addToTrip() {
-            alert('添加至行程');
+            document.getElementById('addToModal').classList.add('active');
+        }
+        
+        // 选择日期选项
+        let selectedDayOption = '05.01';
+        
+        function selectDayOption(element, day) {
+            document.querySelectorAll('.day-option').forEach(opt => {
+                opt.classList.remove('current');
+            });
+            element.classList.add('current');
+            selectedDayOption = day;
+        }
+        
+        // 确认添加
+        function confirmAddTo() {
+            alert(`已添加至 ${selectedDayOption}`);
+            document.getElementById('addToModal').classList.remove('active');
         }
         
         // 收藏景点
