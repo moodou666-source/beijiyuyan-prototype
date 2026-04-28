@@ -1338,12 +1338,33 @@
         
         .spot-detail-header {
             position: relative;
-            height: 250px;
+            height: 300px;
             background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
             display: flex;
             align-items: flex-end;
             padding: 20px;
             color: white;
+            overflow: hidden;
+        }
+        
+        .spot-detail-header-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6;
+        }
+        
+        .spot-detail-header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(26,54,93,0.8) 100%);
         }
         
         .spot-detail-back {
@@ -1359,12 +1380,15 @@
             justify-content: center;
             cursor: pointer;
             font-size: 18px;
+            z-index: 10;
         }
         
         .spot-detail-title {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 8px;
+            position: relative;
+            z-index: 5;
         }
         
         .spot-detail-location {
@@ -1373,6 +1397,30 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .spot-detail-gallery {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 15px;
+            background: #f7fafc;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .spot-detail-gallery::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .spot-detail-gallery-item {
+            flex: 0 0 280px;
+            height: 180px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            scroll-snap-align: start;
         }
         
         .spot-detail-content {
@@ -1821,12 +1869,20 @@
         <!-- 景点详情页面 -->
         <div class="spot-detail-page" id="spot-detail-page">
             <div class="spot-detail-header" id="spot-detail-header">
+                <div class="spot-detail-header-image" id="spot-detail-header-image"></div>
+                <div class="spot-detail-header-overlay"></div>
                 <div class="spot-detail-back" onclick="closeSpotDetail()">←</div>
-                <div>
+                <div style="position: relative; z-index: 5;">
                     <div class="spot-detail-title" id="spot-detail-title">景点名称</div>
                     <div class="spot-detail-location" id="spot-detail-location">📍 位置信息</div>
                 </div>
             </div>
+            
+            <!-- 图片画廊 -->
+            <div class="spot-detail-gallery" id="spot-detail-gallery">
+                <!-- 动态生成 -->
+            </div>
+            
             <div class="spot-detail-content">
                 <div class="spot-detail-section">
                     <div class="spot-detail-section-title">📋 景点介绍</div>
@@ -2345,6 +2401,46 @@
             `;
         }
         
+        // 景点图片数据（使用渐变色作为占位符，实际项目中替换为真实图片URL）
+        const spotImages = {
+            '故宫博物院': [
+                'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                'linear-gradient(135deg, #f093fb, #f5576c)',
+                'linear-gradient(135deg, #4facfe, #00f2fe)',
+                'linear-gradient(135deg, #43e97b, #38f9d7)'
+            ],
+            '颐和园': [
+                'linear-gradient(135deg, #74b9ff, #0984e3)',
+                'linear-gradient(135deg, #a29bfe, #6c5ce7)',
+                'linear-gradient(135deg, #fd79a8, #e84393)',
+                'linear-gradient(135deg, #fdcb6e, #e17055)'
+            ],
+            '中山陵': [
+                'linear-gradient(135deg, #38a169, #2f855a)',
+                'linear-gradient(135deg, #4299e1, #3182ce)',
+                'linear-gradient(135deg, #d69e2e, #b7791f)',
+                'linear-gradient(135deg, #9f7aea, #805ad5)'
+            ],
+            '苏州园林': [
+                'linear-gradient(135deg, #0bc5ea, #00b5d8)',
+                'linear-gradient(135deg, #ed64a6, #d53f8c)',
+                'linear-gradient(135deg, #48bb78, #38a169)',
+                'linear-gradient(135deg, #ed8936, #dd6b20)'
+            ],
+            '夫子庙秦淮河': [
+                'linear-gradient(135deg, #667eea, #764ba2)',
+                'linear-gradient(135deg, #f093fb, #f5576c)',
+                'linear-gradient(135deg, #4facfe, #00f2fe)',
+                'linear-gradient(135deg, #43e97b, #38f9d7)'
+            ],
+            '瘦西湖': [
+                'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                'linear-gradient(135deg, #74b9ff, #0984e3)',
+                'linear-gradient(135deg, #fd79a8, #e84393)',
+                'linear-gradient(135deg, #00b894, #00cec9)'
+            ]
+        };
+        
         // 景点详情数据
         const spotDetailData = {
             '故宫博物院': {
@@ -2441,6 +2537,16 @@
             // 更新标签
             const tagsContainer = document.getElementById('spot-detail-tags');
             tagsContainer.innerHTML = data.tags.map(tag => `<span class="spot-detail-tag">${tag}</span>`).join('');
+            
+            // 更新头部背景图
+            const images = spotImages[spotName] || ['linear-gradient(135deg, #1a365d, #2c5282)'];
+            document.getElementById('spot-detail-header-image').style.background = images[0];
+            
+            // 更新图片画廊
+            const gallery = document.getElementById('spot-detail-gallery');
+            gallery.innerHTML = images.map(img => 
+                `<div class="spot-detail-gallery-item" style="background: ${img};"></div>`
+            ).join('');
             
             // 显示详情页面
             document.getElementById('spot-detail-page').classList.add('active');
