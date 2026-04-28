@@ -505,8 +505,119 @@
             cursor: pointer;
         }
         
-        .search-suggestions {
-            margin-top: 20px;
+        .selected-destinations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .destination-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .destination-tag .remove {
+            width: 18px;
+            height: 18px;
+            background: #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .date-section {
+            margin-top: 25px;
+        }
+        
+        .date-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .date-input {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            gap: 12px;
+        }
+        
+        .date-icon {
+            font-size: 24px;
+        }
+        
+        .date-input-text {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .preferences-section {
+            margin-top: 25px;
+        }
+        
+        .preferences-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .preferences-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .preference-tag {
+            padding: 10px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .preference-tag:hover {
+            border-color: #333;
+        }
+        
+        .preference-tag.selected {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .smart-plan-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 374px;
+            padding: 16px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
         }
         
         .suggestion-item {
@@ -704,13 +815,38 @@
             </div>
             <div class="create-plan-content">
                 <div class="create-plan-title">你想去哪里？</div>
+                <div class="selected-destinations" id="selectedDestinations"></div>
                 <div class="destination-input">
                     <div class="destination-icon">📍</div>
                     <input type="text" placeholder="输入目的地或告诉我你的想法" id="destinationInput" oninput="handleInput()">
                     <div class="clear-btn" onclick="clearInput()" id="clearBtn" style="display: none;">✕</div>
                 </div>
                 <div class="search-suggestions" id="searchSuggestions"></div>
+                
+                <div class="date-section">
+                    <div class="date-title">你想去多久？</div>
+                    <div class="date-input" onclick="selectDate()">
+                        <div class="date-icon">📅</div>
+                        <div class="date-input-text">开始日期-结束日期</div>
+                    </div>
+                </div>
+                
+                <div class="preferences-section">
+                    <div class="preferences-title">旅行偏好</div>
+                    <div class="preferences-grid">
+                        <div class="preference-tag" onclick="togglePreference(this)">📍 经典必玩</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🍽️ 吃吃喝喝</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🕵️ 小众探索</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">📸 拍照出片</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🛍️ 逛街购物</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🚶 citywalk</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🏔️ 自然风光</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🎨 文艺展览</div>
+                        <div class="preference-tag" onclick="togglePreference(this)">🏛️ 历史古建</div>
+                    </div>
+                </div>
             </div>
+            <button class="smart-plan-btn" onclick="smartPlan()">智能规划</button>
         </div>
     </div>
 
@@ -802,9 +938,58 @@
             `).join('');
         }
         
+        // 已选目的地
+        let selectedDestinations = [];
+        
         // 添加目的地
         function addDestination(name) {
-            alert(`已添加：${name}\n\n继续创建行程...`);
+            if (!selectedDestinations.includes(name)) {
+                selectedDestinations.push(name);
+                updateSelectedDestinations();
+            }
+            document.getElementById('destinationInput').value = '';
+            document.getElementById('searchSuggestions').innerHTML = '';
+            document.getElementById('clearBtn').style.display = 'none';
+        }
+        
+        // 更新已选目的地显示
+        function updateSelectedDestinations() {
+            const container = document.getElementById('selectedDestinations');
+            container.innerHTML = selectedDestinations.map(dest => `
+                <div class="destination-tag">
+                    ${dest}
+                    <div class="remove" onclick="removeDestination('${dest}')">✕</div>
+                </div>
+            `).join('');
+        }
+        
+        // 移除目的地
+        function removeDestination(name) {
+            selectedDestinations = selectedDestinations.filter(d => d !== name);
+            updateSelectedDestinations();
+        }
+        
+        // 选择日期
+        function selectDate() {
+            alert('日期选择器\n\n将包含：\n- 日历选择\n- 开始日期\n- 结束日期\n- 天数计算');
+        }
+        
+        // 切换偏好
+        function togglePreference(element) {
+            element.classList.toggle('selected');
+        }
+        
+        // 智能规划
+        function smartPlan() {
+            const dests = selectedDestinations.join('、');
+            const preferences = Array.from(document.querySelectorAll('.preference-tag.selected'))
+                .map(tag => tag.textContent.trim()).join('、');
+            
+            if (dests) {
+                alert(`智能规划\n\n目的地：${dests}\n偏好：${preferences || '未选择'}\n\n将为您生成：\n- 每日行程\n- 景点推荐\n- 路线优化`);
+            } else {
+                alert('请先选择目的地');
+            }
         }
         
         // 创建空计划
