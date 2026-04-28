@@ -2180,6 +2180,110 @@
             color: #999;
         }
         
+        .location-setting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .location-setting-text {
+            flex: 1;
+        }
+        
+        .location-setting-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .location-setting-desc {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .location-change-btn {
+            padding: 8px 20px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .location-close {
+            font-size: 16px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .unlock-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .unlock-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .unlock-card.dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+        }
+        
+        .unlock-card.blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .unlock-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .unlock-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .unlock-desc {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .unlock-card.dark .unlock-desc,
+        .unlock-card.blue .unlock-desc {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .continent-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f8f0;
+            border-radius: 16px;
+        }
+        
+        .continent-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -3468,6 +3572,39 @@
                 <div class="footprint-analysis">
                     <div class="footprint-analysis-title">足迹分析</div>
                     <div class="footprint-analysis-desc">根据你的打卡足迹数据生成，可能会有误差</div>
+                </div>
+                
+                <div class="location-setting">
+                    <div class="location-setting-text">
+                        <div class="location-setting-title">设置常住地可使足迹数据更精准</div>
+                        <div class="location-setting-desc">已根据IP设置常住地：盐城市</div>
+                    </div>
+                    <button class="location-change-btn" onclick="changeLocation()">更改</button>
+                    <div class="location-close" onclick="closeLocationSetting()">✕</div>
+                </div>
+                
+                <div class="unlock-cards">
+                    <div class="unlock-card">
+                        <div class="unlock-icon">🔒</div>
+                        <div class="unlock-title">「去过最远的地方」</div>
+                        <div class="unlock-desc">搜索打卡更多足迹后解锁</div>
+                    </div>
+                    
+                    <div class="unlock-card dark">
+                        <div class="unlock-icon">🔒</div>
+                        <div class="unlock-title">「去过最北/南的地方」</div>
+                        <div class="unlock-desc">搜索打卡更多足迹后解锁</div>
+                    </div>
+                    
+                    <div class="unlock-card blue">
+                        <div class="unlock-icon">🔒</div>
+                        <div class="unlock-title">「去过海拔最高的地方」</div>
+                        <div class="unlock-desc">搜索打卡更多足迹后解锁</div>
+                    </div>
+                </div>
+                
+                <div class="continent-section">
+                    <div class="continent-title">打卡七大洲</div>
                 </div>
             </div>
         </div>
@@ -5181,6 +5318,16 @@
             } else if (tab === 'photos') {
                 alert('照片页面\n\n查看你的旅行照片');
             }
+        }
+        
+        // 更改常住地
+        function changeLocation() {
+            alert('更改常住地\n\n选择你的常住城市');
+        }
+        
+        // 关闭常住地设置
+        function closeLocationSetting() {
+            document.querySelector('.location-setting').style.display = 'none';
         }
         
         // 显示景点底部卡片
