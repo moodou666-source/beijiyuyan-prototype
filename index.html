@@ -2284,6 +2284,193 @@
             color: #333;
         }
         
+        /* 足迹分享页面 */
+        .footprint-share-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 18000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .footprint-share-page.active {
+            display: flex;
+        }
+        
+        .footprint-share-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px;
+        }
+        
+        .footprint-share-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footprint-share-brand {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .footprint-brand-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footprint-brand-icon {
+            width: 32px;
+            height: 32px;
+            background: #2196F3;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .footprint-brand-text {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .footprint-brand-right {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .footprint-share-map {
+            width: 100%;
+            height: 200px;
+            background: #e3f2fd;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .footprint-share-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footprint-share-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .footprint-share-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .footprint-share-count {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .footprint-share-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .footprint-share-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .footprint-share-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .footprint-share-stat-label {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .footprint-share-stat-icon {
+            font-size: 20px;
+            color: #999;
+        }
+        
+        .footprint-share-options {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+        }
+        
+        .footprint-share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .footprint-share-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .footprint-share-icon.blue {
+            background: #2196F3;
+        }
+        
+        .footprint-share-icon.green {
+            background: #4CAF50;
+        }
+        
+        .footprint-share-icon.light-green {
+            background: #8BC34A;
+        }
+        
+        .footprint-share-icon.gray {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .footprint-share-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -3509,6 +3696,88 @@
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
         </div>
         
+        <!-- 足迹分享页面 -->
+        <div class="footprint-share-page" id="footprintSharePage">
+            <div class="footprint-share-content">
+                <div class="footprint-share-card">
+                    <div class="footprint-share-brand">
+                        <div class="footprint-brand-left">
+                            <div class="footprint-brand-icon">🧳</div>
+                            <div class="footprint-brand-text">圆周旅迹<br>PI TRAVEL</div>
+                        </div>
+                        <div class="footprint-brand-right">时间，自由<br>有用的经验</div>
+                    </div>
+                    
+                    <div class="footprint-share-map">
+                        [中国地图占位]
+                    </div>
+                    
+                    <div class="footprint-share-user">
+                        <div class="footprint-share-avatar">👤</div>
+                        <div class="footprint-share-name">柠檬派的旅行足迹</div>
+                    </div>
+                    
+                    <div class="footprint-share-count">累计打卡 0 地点</div>
+                    
+                    <div class="footprint-share-stats">
+                        <div class="footprint-share-stat">
+                            <div>
+                                <div class="footprint-share-stat-value">0</div>
+                                <div class="footprint-share-stat-label">心情 ›</div>
+                            </div>
+                            <div class="footprint-share-stat-icon">😊</div>
+                        </div>
+                        
+                        <div class="footprint-share-stat">
+                            <div>
+                                <div class="footprint-share-stat-value">0</div>
+                                <div class="footprint-share-stat-label">照片 ›</div>
+                            </div>
+                            <div class="footprint-share-stat-icon">📷</div>
+                        </div>
+                        
+                        <div class="footprint-share-stat">
+                            <div>
+                                <div class="footprint-share-stat-value">1</div>
+                                <div class="footprint-share-stat-label">国家 ›</div>
+                            </div>
+                            <div class="footprint-share-stat-icon">🌍</div>
+                        </div>
+                        
+                        <div class="footprint-share-stat">
+                            <div>
+                                <div class="footprint-share-stat-value">1</div>
+                                <div class="footprint-share-stat-label">城市 ›</div>
+                            </div>
+                            <div class="footprint-share-stat-icon">🏙️</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footprint-share-options">
+                    <div class="footprint-share-option" onclick="saveFootprintImage()">
+                        <div class="footprint-share-icon blue">⬇️</div>
+                        <div class="footprint-share-label">保存图片</div>
+                    </div>
+                    
+                    <div class="footprint-share-option" onclick="shareToWechatFriend()">
+                        <div class="footprint-share-icon green">💬</div>
+                        <div class="footprint-share-label">微信好友</div>
+                    </div>
+                    
+                    <div class="footprint-share-option" onclick="shareToMoments2()">
+                        <div class="footprint-share-icon light-green">📱</div>
+                        <div class="footprint-share-label">朋友圈</div>
+                    </div>
+                    
+                    <div class="footprint-share-option" onclick="moreShareOptions()">
+                        <div class="footprint-share-icon gray">⋯</div>
+                        <div class="footprint-share-label">更多</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- 足迹页面 -->
         <div class="footprint-page" id="footprintPage">
             <div class="footprint-header">
@@ -3520,7 +3789,7 @@
                 <div id="footprintMap" class="footprint-map-container"></div>
                 <div class="footprint-map-actions">
                     <div class="location-btn" onclick="locateMe()">📍</div>
-                    <button class="add-footprint-btn" onclick="addFootprint()">添加足迹</button>
+                    <button class="add-footprint-btn" onclick="showFootprintShare()">分享足迹</button>
                 </div>
             </div>
             
@@ -5328,6 +5597,40 @@
         // 关闭常住地设置
         function closeLocationSetting() {
             document.querySelector('.location-setting').style.display = 'none';
+        }
+        
+        // 显示足迹分享
+        function showFootprintShare() {
+            document.getElementById('footprintSharePage').classList.add('active');
+        }
+        
+        // 关闭足迹分享
+        function closeFootprintShare() {
+            document.getElementById('footprintSharePage').classList.remove('active');
+        }
+        
+        // 保存足迹图片
+        function saveFootprintImage() {
+            alert('足迹图片已保存到相册');
+            closeFootprintShare();
+        }
+        
+        // 分享给微信好友
+        function shareToWechatFriend() {
+            alert('分享给微信好友');
+            closeFootprintShare();
+        }
+        
+        // 分享到朋友圈
+        function shareToMoments2() {
+            alert('分享到朋友圈');
+            closeFootprintShare();
+        }
+        
+        // 更多分享选项
+        function moreShareOptions() {
+            alert('更多分享选项');
+            closeFootprintShare();
         }
         
         // 显示景点底部卡片
