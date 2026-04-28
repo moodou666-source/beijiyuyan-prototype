@@ -188,15 +188,15 @@ def main():
     # 创建采集器
     collector = TravelDataCollector()
     
-    # 设置微博Cookie（需要手动获取）
-    # collector.weibo_crawler.set_cookie("your_cookie_here")
+    # 设置微博Cookie（已获取）
+    cookie = "SCF=ApsAef7mHe1Fx6aDfpLVq9_L83X-wn5zT-YM3pIXCgcEOj-4qN3ykOP1aLZDPjRn_NNRGZL79n55K9kuyQjmAOI.; SUB=_2A25E9BKgDeRhGe5N7VUQ9yjJzD2IHXVniCporDV8PUNbmtAbLRjSkW9NdBsGv5Pn4dypnFU3V6dbYlX3Stkj5bvN; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFIzPM5J8RmcFbaT5zLNFCZ5NHD95QRe0qNeKMcSKMpWs4DqcjMi--NiK.Xi-2Ri--ciKnRi-zN1hecS02NSo-NeBtt; ALF=02_1779953648; _s_tentry=weibo.com; Apache=7727023717737.287.1777361724625; SINAGLOBAL=7727023717737.287.1777361724625; ULV=1777361724687:1:1:1:7727023717737.287.1777361724625:"
+    collector.weibo_crawler.set_cookie(cookie)
     
-    # 运行采集
-    # 先测试一个城市
+    # 运行采集 - 测试南京
+    print("开始采集南京数据...")
     collector.run(cities=["南京"], pages=2)
     
     print("采集完成！")
-    print("请先登录微博获取Cookie，然后重新运行")
 
 
 if __name__ == "__main__":

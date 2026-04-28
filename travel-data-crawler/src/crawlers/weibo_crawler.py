@@ -20,8 +20,13 @@ class WeiboCrawler(BaseCrawler):
         super().__init__("weibo", delay=(2, 5))
         self.base_url = "https://m.weibo.cn"
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15",
-            "Referer": "https://m.weibo.cn/",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Referer": "https://m.weibo.cn/search?containerid=100103type%3D1%26q%3D%E5%8D%97%E4%BA%AC",
+            "X-Requested-With": "XMLHttpRequest",
+            "Connection": "keep-alive",
         }
         self.session = requests.Session()
         self.session.headers.update(self.headers)
@@ -69,7 +74,21 @@ class WeiboCrawler(BaseCrawler):
                 self.stats["failed_requests"] += 1
                 return []
             
-            data = response.json()
+            # 检查返回内容是否为JSON
+            if not response.text or response.text.strip() == "":
+                logger.warning("返回内容为空")
+                self.stats["failed_requests"] += 1
+                return []
+            
+            try:
+                data = response.json()
+            except Exception as e:
+                logger.warning(f"JSON解析失败: {e}")
+                logger.warning(f"状态码: {response.status_code}")
+                logger.warning(f"URL: {response.url}")
+                logger.warning(f"内容前500字: {response.text[:500]}")
+                self.stats["failed_requests"] += 1
+                return []
             cards = data.get("data", {}).get("cards", [])
             
             results = []
