@@ -918,6 +918,162 @@
             cursor: pointer;
         }
         
+        /* 行程详情页面 */
+        .trip-detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 6000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .trip-detail-page.active {
+            display: flex;
+        }
+        
+        .detail-map {
+            height: 55vh;
+            position: relative;
+        }
+        
+        .detail-map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-switch-small {
+            width: 36px;
+            height: 20px;
+            background: #2196F3;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .toggle-switch-small::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+        }
+        
+        .map-control-text {
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .day-tabs {
+            display: flex;
+            gap: 20px;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .day-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .day-tab {
+            white-space: nowrap;
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .day-tab.active {
+            color: #333;
+            font-weight: 600;
+            border-bottom-color: #2196F3;
+        }
+        
+        .day-tab.overview {
+            color: #999;
+        }
+        
+        .spot-detail-card {
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .spot-detail-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .spot-detail-info {
+            flex: 1;
+        }
+        
+        .spot-detail-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .spot-detail-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .route-number {
+            width: 24px;
+            height: 24px;
+            background: #1a1a1a;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1218,6 +1374,41 @@
                 <button class="cancel-btn" onclick="cancelLoading()">取消</button>
             </div>
         </div>
+        
+        <!-- 行程详情页面 -->
+        <div class="trip-detail-page" id="tripDetailPage">
+            <div class="detail-map">
+                <div id="detailMap" class="detail-map-container"></div>
+                <div class="map-controls">
+                    <div class="toggle-switch-small"></div>
+                    <div class="map-control-text">推荐地点</div>
+                </div>
+            </div>
+            
+            <div class="day-tabs">
+                <div class="day-tab overview" onclick="switchDay('overview')">总览</div>
+                <div class="day-tab active" onclick="switchDay('day1')">05.01 周五</div>
+                <div class="day-tab" onclick="switchDay('day2')">05.02 周六</div>
+                <div class="day-tab" onclick="switchDay('day3')">05.03 周日</div>
+                <div class="day-tab" onclick="switchDay('plan')">待计划</div>
+            </div>
+            
+            <div class="spot-detail-card">
+                <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=200" alt="拙政园" class="spot-detail-image">
+                <div class="spot-detail-info">
+                    <div class="spot-detail-name">拙政园</div>
+                    <div class="spot-detail-tag">
+                        <span>🏔️</span>
+                        <span>风景名胜</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="route-info">
+                <div class="route-number">1</div>
+                <span>步行 0.3公里 7 min</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1466,7 +1657,7 @@
                 .map(tag => tag.textContent.trim()).join('、');
             
             if (dests) {
-                showTripResult();
+                showTripDetail();
             } else {
                 alert('请先选择目的地');
             }
@@ -1541,6 +1732,62 @@
         // 取消加载
         function cancelLoading() {
             document.getElementById('tripResultPage').classList.remove('active');
+        }
+        
+        // 显示行程详情
+        function showTripDetail() {
+            document.getElementById('tripDetailPage').classList.add('active');
+            initDetailMap();
+        }
+        
+        // 初始化详情地图
+        function initDetailMap() {
+            const map = L.map('detailMap').setView([31.2989, 120.5853], 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加路线点（模拟拙政园周边路线）
+            const routePoints = [
+                {lat: 31.3162, lng: 120.6264, num: 1, name: '拙政园'},
+                {lat: 31.315, lng: 120.627, num: 2, name: '狮子林'},
+                {lat: 31.314, lng: 120.628, num: 3, name: '平江路'},
+                {lat: 31.313, lng: 120.629, num: 4, name: '观前街'},
+                {lat: 31.312, lng: 120.63, num: 5, name: '山塘街'},
+                {lat: 31.311, lng: 120.631, num: 6, name: '留园'},
+                {lat: 31.31, lng: 120.632, num: 7, name: '虎丘'}
+            ];
+            
+            // 添加标记
+            routePoints.forEach(point => {
+                L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background:#2196F3;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">${point.num}</div>`,
+                        iconSize: [28, 28]
+                    })
+                }).addTo(map).bindPopup(point.name);
+            });
+            
+            // 添加路线连线
+            const latlngs = routePoints.map(p => [p.lat, p.lng]);
+            L.polyline(latlngs, {
+                color: '#2196F3',
+                weight: 4,
+                opacity: 0.8
+            }).addTo(map);
+        }
+        
+        // 切换日期
+        function switchDay(day) {
+            document.querySelectorAll('.day-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 这里可以加载不同日期的数据
+            console.log('切换到:', day);
         }
         
         // 创建空计划
