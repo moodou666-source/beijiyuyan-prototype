@@ -1074,6 +1074,183 @@
             font-weight: 600;
         }
         
+        /* 编辑行程页面 */
+        .edit-trip-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 7000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .edit-trip-page.active {
+            display: flex;
+        }
+        
+        .edit-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .edit-back {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .edit-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .edit-done {
+            padding: 8px 20px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .day-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 20px;
+        }
+        
+        .day-group {
+            margin-bottom: 25px;
+        }
+        
+        .day-group-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .day-group-subtitle {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .spot-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .spot-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .spot-checkbox.checked {
+            background: #2196F3;
+            border-color: #2196F3;
+            color: white;
+        }
+        
+        .spot-list-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .spot-list-info {
+            flex: 1;
+        }
+        
+        .spot-list-tag {
+            font-size: 11px;
+            color: #4CAF50;
+            margin-bottom: 3px;
+        }
+        
+        .spot-list-tag.food {
+            color: #FF9800;
+        }
+        
+        .spot-list-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .spot-list-route {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .add-spot-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            margin-top: 15px;
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .edit-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .edit-action-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .edit-action-btn.danger {
+            color: #f44336;
+        }
+        
         .suggestion-item {
             display: flex;
             align-items: center;
@@ -1407,6 +1584,119 @@
             <div class="route-info">
                 <div class="route-number">1</div>
                 <span>步行 0.3公里 7 min</span>
+            </div>
+            
+            <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
+        </div>
+        
+        <!-- 编辑行程页面 -->
+        <div class="edit-trip-page" id="editTripPage">
+            <div class="edit-header">
+                <div class="edit-back" onclick="closeEditTrip()">←</div>
+                <div class="edit-title">已选择1项</div>
+                <button class="edit-done" onclick="finishEdit()">完成</button>
+            </div>
+            
+            <div class="day-list">
+                <div class="day-group">
+                    <div class="day-group-title">
+                        05.02 周六
+                        <span class="day-group-subtitle">虎丘山塘与古寺禅意</span>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox checked" onclick="toggleSpot(this)">✓</div>
+                        <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=100" alt="虎丘" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">1.虎丘山风景区</div>
+                            <div class="spot-list-route">
+                                <span>🚗</span>
+                                <span>3.8公里·15分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=100" alt="寒山寺" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">2.寒山寺</div>
+                            <div class="spot-list-route">
+                                <span>🚗</span>
+                                <span>1.8公里·22分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=100" alt="西园寺" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">3.西园寺</div>
+                            <div class="spot-list-route">
+                                <span>🚶</span>
+                                <span>0.9公里·18分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=100" alt="留园" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">4.留园</div>
+                            <div class="spot-list-route">
+                                <span>🚗</span>
+                                <span>1.2公里·17分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=100" alt="七里山塘" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">5.七里山塘景区</div>
+                            <div class="spot-list-route">
+                                <span>🚶</span>
+                                <span>0.1公里·2分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100" alt="馄饨店" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag food">吃喝</div>
+                            <div class="spot-list-name">6.秋娟馄饨店</div>
+                        </div>
+                    </div>
+                    
+                    <div class="add-spot-btn" onclick="addSpot()">
+                        <span>+</span>
+                        <span>添加</span>
+                    </div>
+                </div>
+                
+                <div class="day-group">
+                    <div class="day-group-title">
+                        05.03 周日
+                        <span class="day-group-subtitle">现代都市与市集漫步</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="edit-actions">
+                <button class="edit-action-btn" onclick="moveSpot()">移动至</button>
+                <button class="edit-action-btn" onclick="copySpot()">复制</button>
+                <button class="edit-action-btn" onclick="replaceSpot()">替换</button>
+                <button class="edit-action-btn danger" onclick="deleteSpot()">删除</button>
             </div>
         </div>
     </div>
@@ -1788,6 +2078,56 @@
             
             // 这里可以加载不同日期的数据
             console.log('切换到:', day);
+        }
+        
+        // 显示编辑行程
+        function showEditTrip() {
+            document.getElementById('editTripPage').classList.add('active');
+        }
+        
+        // 关闭编辑行程
+        function closeEditTrip() {
+            document.getElementById('editTripPage').classList.remove('active');
+        }
+        
+        // 完成编辑
+        function finishEdit() {
+            closeEditTrip();
+        }
+        
+        // 切换景点选择
+        function toggleSpot(element) {
+            element.classList.toggle('checked');
+            if (element.classList.contains('checked')) {
+                element.innerHTML = '✓';
+            } else {
+                element.innerHTML = '';
+            }
+        }
+        
+        // 添加景点
+        function addSpot() {
+            alert('添加景点\n\n将包含：\n- 搜索景点\n- 选择日期\n- 调整顺序');
+        }
+        
+        // 移动景点
+        function moveSpot() {
+            alert('移动至其他日期');
+        }
+        
+        // 复制景点
+        function copySpot() {
+            alert('复制景点');
+        }
+        
+        // 替换景点
+        function replaceSpot() {
+            alert('替换景点');
+        }
+        
+        // 删除景点
+        function deleteSpot() {
+            alert('删除景点');
         }
         
         // 创建空计划
