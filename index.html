@@ -1549,6 +1549,73 @@
             cursor: pointer;
         }
         
+        .related-notes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .note-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        
+        .note-title {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .note-source {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .info-icon {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .info-text {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .info-distance {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .info-arrow {
+            font-size: 18px;
+            color: #999;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -2815,6 +2882,64 @@
                     <div class="review-text">
                         <strong>表演精彩：</strong>表演和氛围感还是不错的。
                     </div>
+                    <div class="review-text">
+                        <strong>表演多样：</strong>鱼灯巡游看了，打铁花看了。
+                    </div>
+                    <div class="review-text">
+                        <strong>古色古香：</strong>古镇的街道充满了古色古香的气息。
+                    </div>
+                </div>
+                
+                <div class="review-item" style="background: #fff3e0;">
+                    <div class="review-tag" style="background: #ff9800; color: white;">Ohno</div>
+                    <div class="review-text">
+                        <strong>亲子体验差：</strong>但是太费爹了，小朋友全程要抱起来才能看得着。
+                    </div>
+                    <div class="review-text">
+                        <strong>蚊虫多：</strong>景区里蚊子很多！很多很多很多。
+                    </div>
+                    <div class="review-text">
+                        <strong>白天体验差：</strong>白天不是很推荐去，晚上6点到，玩到9点多差不多。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="spot-section-title">相关笔记</div>
+            <div class="related-notes">
+                <div class="note-item" onclick="openNote('芜湖鸠兹小镇我想给差评')">
+                    <div class="note-title">芜湖鸠兹小镇我想给差评</div>
+                    <div class="note-source">📕 来自小红书</div>
+                </div>
+                <div class="note-item" onclick="openNote('芜湖·夜游鸠兹古镇')">
+                    <div class="note-title">芜湖·夜游鸠兹古镇</div>
+                    <div class="note-source">📕 来自小红书</div>
+                </div>
+            </div>
+            
+            <div class="spot-section-title">实用信息</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-icon">🕐</div>
+                    <div class="info-text">营业时间</div>
+                    <div class="info-arrow">›</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <div>芜湖市鸠江区安澜路与陈棱路交叉口东北角</div>
+                        <div class="info-distance">距我 270.0 公里</div>
+                    </div>
+                    <div class="info-arrow">›</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">📞</div>
+                    <div class="info-text">0553-2293888</div>
+                    <div class="info-arrow">›</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">💬</div>
+                    <div class="info-text">反馈问题</div>
+                    <div class="info-arrow">›</div>
                 </div>
             </div>
             
@@ -4169,6 +4294,11 @@
         // 导航到景点
         function navigateSpot() {
             alert('开始导航');
+        }
+        
+        // 打开笔记
+        function openNote(title) {
+            alert(`打开笔记：${title}`);
         }
         
         // 显示景点底部卡片
