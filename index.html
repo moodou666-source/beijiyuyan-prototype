@@ -1998,6 +1998,188 @@
             color: #999;
         }
         
+        /* 足迹页面 */
+        .footprint-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 17000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .footprint-page.active {
+            display: flex;
+        }
+        
+        .footprint-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .footprint-back {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .footprint-refresh {
+            font-size: 22px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .footprint-map {
+            height: 50vh;
+            position: relative;
+        }
+        
+        .footprint-map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .footprint-map-actions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+        }
+        
+        .location-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        .add-footprint-btn {
+            padding: 12px 24px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .footprint-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            overflow-y: auto;
+        }
+        
+        .footprint-tabs {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .footprint-tab {
+            font-size: 18px;
+            color: #999;
+            padding-bottom: 8px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .footprint-tab.active {
+            color: #333;
+            font-weight: 700;
+            border-bottom-color: #333;
+        }
+        
+        .footprint-total {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        
+        .footprint-total span {
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .footprint-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .footprint-stat-card {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footprint-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footprint-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .footprint-stat-label {
+            font-size: 14px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .footprint-stat-icon {
+            font-size: 24px;
+            color: #999;
+        }
+        
+        .footprint-analysis {
+            margin-top: 20px;
+        }
+        
+        .footprint-analysis-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .footprint-analysis-desc {
+            font-size: 13px;
+            color: #999;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -2992,7 +3174,7 @@
                     <div class="section-title-text">我的行程</div>
                 </div>
                 
-                <div class="trip-card">
+                <div class="trip-card" onclick="showFootprint()">
                     <div class="trip-title">苏湖景五日文艺之旅</div>
                     <div class="trip-info">
                         <div>5天4晚</div>
@@ -3221,6 +3403,73 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 足迹页面 -->
+        <div class="footprint-page" id="footprintPage">
+            <div class="footprint-header">
+                <div class="footprint-back" onclick="closeFootprint()">←</div>
+                <div class="footprint-refresh" onclick="refreshFootprint()">↻</div>
+            </div>
+            
+            <div class="footprint-map">
+                <div id="footprintMap" class="footprint-map-container"></div>
+                <div class="footprint-map-actions">
+                    <div class="location-btn" onclick="locateMe()">📍</div>
+                    <button class="add-footprint-btn" onclick="addFootprint()">添加足迹</button>
+                </div>
+            </div>
+            
+            <div class="footprint-content">
+                <div class="footprint-tabs">
+                    <div class="footprint-tab active" onclick="switchFootprintTab(this, 'overview')">总览</div>
+                    <div class="footprint-tab" onclick="switchFootprintTab(this, 'mood')">心情</div>
+                    <div class="footprint-tab" onclick="switchFootprintTab(this, 'photos')">照片</div>
+                </div>
+                
+                <div class="footprint-total">
+                    累计打卡 <span>0</span> 地点
+                </div>
+                
+                <div class="footprint-stats">
+                    <div class="footprint-stat-card">
+                        <div class="footprint-stat-info">
+                            <div class="footprint-stat-value">0</div>
+                            <div class="footprint-stat-label">心情 ›</div>
+                        </div>
+                        <div class="footprint-stat-icon">😊</div>
+                    </div>
+                    
+                    <div class="footprint-stat-card">
+                        <div class="footprint-stat-info">
+                            <div class="footprint-stat-value">0</div>
+                            <div class="footprint-stat-label">照片 ›</div>
+                        </div>
+                        <div class="footprint-stat-icon">📷</div>
+                    </div>
+                    
+                    <div class="footprint-stat-card">
+                        <div class="footprint-stat-info">
+                            <div class="footprint-stat-value">1</div>
+                            <div class="footprint-stat-label">国家 ›</div>
+                        </div>
+                        <div class="footprint-stat-icon">🌍</div>
+                    </div>
+                    
+                    <div class="footprint-stat-card">
+                        <div class="footprint-stat-info">
+                            <div class="footprint-stat-value">1</div>
+                            <div class="footprint-stat-label">城市 ›</div>
+                        </div>
+                        <div class="footprint-stat-icon">🏙️</div>
+                    </div>
+                </div>
+                
+                <div class="footprint-analysis">
+                    <div class="footprint-analysis-title">足迹分析</div>
+                    <div class="footprint-analysis-desc">根据你的打卡足迹数据生成，可能会有误差</div>
+                </div>
+            </div>
         </div>
         
         <!-- 我的地点页面 -->
@@ -4859,6 +5108,79 @@
         // 显示城市地点
         function showCityPlaces(city) {
             alert(`查看 ${city} 的收藏地点`);
+        }
+        
+        // 显示足迹页面
+        function showFootprint() {
+            document.getElementById('footprintPage').classList.add('active');
+            initFootprintMap();
+        }
+        
+        // 关闭足迹页面
+        function closeFootprint() {
+            document.getElementById('footprintPage').classList.remove('active');
+        }
+        
+        // 初始化足迹地图
+        function initFootprintMap() {
+            const map = L.map('footprintMap').setView([35.8617, 104.1954], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加中国边界（简化版）
+            const chinaBounds = [
+                [53.5, 73.5],
+                [53.5, 135.0],
+                [18.0, 135.0],
+                [18.0, 73.5]
+            ];
+            
+            L.polygon(chinaBounds, {
+                color: '#FFD700',
+                weight: 2,
+                fillColor: '#FFD700',
+                fillOpacity: 0.2
+            }).addTo(map);
+            
+            // 添加标记点
+            L.marker([32.0603, 118.7969], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div style="background:#2196F3;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+                    iconSize: [16, 16]
+                })
+            }).addTo(map);
+        }
+        
+        // 刷新足迹
+        function refreshFootprint() {
+            alert('正在刷新足迹数据...');
+        }
+        
+        // 定位
+        function locateMe() {
+            alert('正在定位...');
+        }
+        
+        // 添加足迹
+        function addFootprint() {
+            alert('添加足迹\n\n记录你的旅行足迹');
+        }
+        
+        // 切换足迹标签
+        function switchFootprintTab(element, tab) {
+            document.querySelectorAll('.footprint-tab').forEach(t => {
+                t.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            if (tab === 'mood') {
+                alert('心情页面\n\n记录你的旅行心情');
+            } else if (tab === 'photos') {
+                alert('照片页面\n\n查看你的旅行照片');
+            }
         }
         
         // 显示景点底部卡片
