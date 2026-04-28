@@ -1318,6 +1318,164 @@
         .menu-arrow {
             color: #718096;
         }
+        
+        /* 景点详情页面 */
+        .spot-detail-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 3000;
+            overflow-y: auto;
+        }
+        
+        .spot-detail-page.active {
+            display: block;
+        }
+        
+        .spot-detail-header {
+            position: relative;
+            height: 250px;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            color: white;
+        }
+        
+        .spot-detail-back {
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .spot-detail-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .spot-detail-location {
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .spot-detail-content {
+            padding: 20px;
+        }
+        
+        .spot-detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .spot-detail-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spot-detail-desc {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #4a5568;
+        }
+        
+        .spot-detail-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .spot-detail-info-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
+        .spot-detail-info-label {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 4px;
+        }
+        
+        .spot-detail-info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        
+        .spot-detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .spot-detail-tag {
+            background: #ebf8ff;
+            color: #3182ce;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .spot-detail-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+            max-width: 414px;
+            margin: 0 auto;
+        }
+        
+        .spot-detail-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .spot-detail-btn.primary {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+        }
+        
+        .spot-detail-btn.secondary {
+            background: #f7fafc;
+            color: #1a365d;
+            border: 2px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -1657,6 +1815,77 @@
             <div class="tab-item" onclick="switchTab('profile')">
                 <div class="tab-icon">👤</div>
                 <div>我的</div>
+            </div>
+        </div>
+        
+        <!-- 景点详情页面 -->
+        <div class="spot-detail-page" id="spot-detail-page">
+            <div class="spot-detail-header" id="spot-detail-header">
+                <div class="spot-detail-back" onclick="closeSpotDetail()">←</div>
+                <div>
+                    <div class="spot-detail-title" id="spot-detail-title">景点名称</div>
+                    <div class="spot-detail-location" id="spot-detail-location">📍 位置信息</div>
+                </div>
+            </div>
+            <div class="spot-detail-content">
+                <div class="spot-detail-section">
+                    <div class="spot-detail-section-title">📋 景点介绍</div>
+                    <div class="spot-detail-desc" id="spot-detail-desc">
+                        景点详细介绍...
+                    </div>
+                </div>
+                
+                <div class="spot-detail-section">
+                    <div class="spot-detail-section-title">ℹ️ 基本信息</div>
+                    <div class="spot-detail-info-grid">
+                        <div class="spot-detail-info-item">
+                            <div class="spot-detail-info-label">开放时间</div>
+                            <div class="spot-detail-info-value" id="spot-detail-hours">08:30-17:00</div>
+                        </div>
+                        <div class="spot-detail-info-item">
+                            <div class="spot-detail-info-label">门票价格</div>
+                            <div class="spot-detail-info-value" id="spot-detail-price">¥60/人</div>
+                        </div>
+                        <div class="spot-detail-info-item">
+                            <div class="spot-detail-info-label">建议游玩</div>
+                            <div class="spot-detail-info-value" id="spot-detail-duration">3-4小时</div>
+                        </div>
+                        <div class="spot-detail-info-item">
+                            <div class="spot-detail-info-label">最佳季节</div>
+                            <div class="spot-detail-info-value" id="spot-detail-season">春秋两季</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="spot-detail-section">
+                    <div class="spot-detail-section-title">🏷️ 景点标签</div>
+                    <div class="spot-detail-tags" id="spot-detail-tags">
+                        <span class="spot-detail-tag">5A景区</span>
+                        <span class="spot-detail-tag">历史文化</span>
+                        <span class="spot-detail-tag">摄影圣地</span>
+                    </div>
+                </div>
+                
+                <div class="spot-detail-section">
+                    <div class="spot-detail-section-title">💡 游玩贴士</div>
+                    <div class="spot-detail-desc" id="spot-detail-tips">
+                        1. 建议提前在网上预约门票<br>
+                        2. 早上8点前到达可以避开人流高峰<br>
+                        3. 景区内有免费WiFi覆盖<br>
+                        4. 建议穿着舒适的步行鞋
+                    </div>
+                </div>
+            </div>
+            
+            <div style="height: 80px;"></div>
+            
+            <div class="spot-detail-actions">
+                <button class="spot-detail-btn secondary" onclick="shareSpot()">
+                    <span>📤</span> 分享
+                </button>
+                <button class="spot-detail-btn primary" onclick="navigateToSpot()">
+                    <span>🧭</span> 导航去这里
+                </button>
             </div>
         </div>
     </div>
@@ -2111,6 +2340,146 @@
                     </div>
                     <div class="spot-grid">
                         ${data.hidden.map(spot => renderSpotCard(spot)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 景点详情数据
+        const spotDetailData = {
+            '故宫博物院': {
+                desc: '故宫博物院是中国最大的古代文化艺术博物馆，建立在明清两代皇宫——紫禁城的基础上。占地面积72万平方米，建筑面积约15万平方米，有大小宫殿七十多座，房屋九千余间。是世界上现存规模最大、保存最为完整的木质结构古建筑群之一。',
+                hours: '08:30-17:00（周一闭馆）',
+                price: '¥60/人（旺季）¥40/人（淡季）',
+                duration: '3-5小时',
+                season: '四季皆宜，春秋最佳',
+                tags: ['5A景区', '世界文化遗产', '皇家建筑', '历史文化'],
+                tips: '1. 必须提前在官网预约购票<br>2. 建议从午门进入，神武门出<br>3. 可租用语音导览器（¥20）<br>4. 珍宝馆和钟表馆需另购票（¥10/馆）<br>5. 建议穿舒适的步行鞋，全程约需步行3-4公里'
+            },
+            '颐和园': {
+                desc: '颐和园是中国清朝时期皇家园林，坐落在北京西郊，与圆明园毗邻。以昆明湖、万寿山为基址，按照江南园林的设计手法建造，是保存最完整的一座皇家行宫御苑，被誉为"皇家园林博物馆"。',
+                hours: '06:00-20:00（旺季）07:00-19:00（淡季）',
+                price: '¥30/人（旺季）¥20/人（淡季）',
+                duration: '4-6小时',
+                season: '春秋两季最佳',
+                tags: ['5A景区', '皇家园林', '昆明湖', '万寿山'],
+                tips: '1. 建议从东宫门进入<br>2. 可乘船游览昆明湖（另收费）<br>3. 佛香阁是最佳观景点<br>4. 夏季荷花盛开时最美<br>5. 园区较大，建议安排半天时间'
+            },
+            '中山陵': {
+                desc: '中山陵是中国近代伟大的民主革命先行者孙中山先生的陵寝，位于南京市玄武区紫金山南麓。建筑群依山势而建，由南往北沿中轴线逐渐升高，主要建筑有博爱坊、墓道、陵门、石阶、碑亭、祭堂和墓室等。',
+                hours: '08:30-17:00（周一闭馆维护）',
+                price: '免费（需预约）',
+                duration: '2-3小时',
+                season: '春秋两季最佳',
+                tags: ['5A景区', '国父陵寝', '历史纪念', '紫金山'],
+                tips: '1. 需提前在"钟山风景区"公众号预约<br>2. 从牌坊到祭堂共有392级台阶<br>3. 景区内还有明孝陵、美龄宫等景点<br>4. 建议乘坐景区观光车（¥10/次）<br>5. 清明前后樱花盛开，景色最美'
+            },
+            '苏州园林': {
+                desc: '苏州园林是中国古典园林的代表，始建于春秋时期，形成于五代，成熟于宋代，兴旺鼎盛于明清。1997年被列入《世界遗产名录》。以拙政园、留园、网师园、环秀山庄等为代表，体现了"虽由人作，宛自天开"的艺术境界。',
+                hours: '07:30-17:30（各园略有不同）',
+                price: '拙政园¥90/人，留园¥55/人',
+                duration: '2-4小时/园',
+                season: '四季皆宜',
+                tags: ['世界遗产', '古典园林', '江南文化', '建筑艺术'],
+                tips: '1. 拙政园最大最经典，建议首选<br>2. 建议请导游或使用语音导览<br>3. 避开节假日人流高峰<br>4. 可购买园林联票更划算<br>5. 平江路、山塘街可一起游览'
+            },
+            '夫子庙秦淮河': {
+                desc: '夫子庙-秦淮河风光带是南京最繁华的地方之一，也是中国四大文庙之一。秦淮河是南京的母亲河，两岸自东晋以来便是望族聚居之地，素有"六朝金粉地，金陵帝王州"之称。夜景尤为迷人。',
+                hours: '全天开放（各景点时间不同）',
+                price: '免费（部分景点收费）',
+                duration: '2-3小时',
+                season: '四季皆宜，夜景最美',
+                tags: ['5A景区', '秦淮河', '夜景', '历史文化'],
+                tips: '1. 建议傍晚到达，先看日景再看夜景<br>2. 可乘画舫游船（¥80/人）<br>3. 夫子庙小吃街品尝南京特色美食<br>4. 元宵节期间有灯会，非常热闹<br>5. 周边有老门东、中华门等景点'
+            },
+            '瘦西湖': {
+                desc: '瘦西湖位于扬州市北郊，因湖面瘦长而得名。园林群景色怡人，融南秀北雄为一体，有"园林之盛，甲于天下"之誉。所谓"两岸花柳全依水，一路楼台直到山"，其名园胜迹，散布在窈窕曲折的一湖碧水两岸。',
+                hours: '06:00-18:00（旺季）06:30-17:30（淡季）',
+                price: '¥100/人（旺季）¥60/人（淡季）',
+                duration: '3-4小时',
+                season: '春季最佳（烟花三月）',
+                tags: ['5A景区', '扬州名片', '湖上园林', '烟花三月'],
+                tips: '1. 建议从南门进入，北门出<br>2. 春季琼花、桃花盛开最美<br>3. 可乘坐游船（另收费）<br>4. 二十四桥是必打卡点<br>5. 附近有东关街、个园可一起游览'
+            }
+        };
+        
+        // 当前选中的景点
+        let currentSpot = null;
+        
+        // 显示景点详情
+        function showSpotDetail(spotName) {
+            const data = spotDetailData[spotName];
+            if (!data) {
+                alert('景点详情正在完善中...');
+                return;
+            }
+            
+            currentSpot = spotName;
+            
+            // 更新页面内容
+            document.getElementById('spot-detail-title').textContent = spotName;
+            
+            // 查找景点位置信息
+            let location = '';
+            for (let city in citySpotData) {
+                const spots = [...citySpotData[city].hot, ...citySpotData[city].photo, ...citySpotData[city].hidden];
+                const spot = spots.find(s => s.name === spotName);
+                if (spot) {
+                    location = spot.location;
+                    break;
+                }
+            }
+            document.getElementById('spot-detail-location').textContent = '📍 ' + location;
+            
+            document.getElementById('spot-detail-desc').textContent = data.desc;
+            document.getElementById('spot-detail-hours').textContent = data.hours;
+            document.getElementById('spot-detail-price').textContent = data.price;
+            document.getElementById('spot-detail-duration').textContent = data.duration;
+            document.getElementById('spot-detail-season').textContent = data.season;
+            document.getElementById('spot-detail-tips').innerHTML = data.tips;
+            
+            // 更新标签
+            const tagsContainer = document.getElementById('spot-detail-tags');
+            tagsContainer.innerHTML = data.tags.map(tag => `<span class="spot-detail-tag">${tag}</span>`).join('');
+            
+            // 显示详情页面
+            document.getElementById('spot-detail-page').classList.add('active');
+        }
+        
+        // 关闭景点详情
+        function closeSpotDetail() {
+            document.getElementById('spot-detail-page').classList.remove('active');
+        }
+        
+        // 分享景点
+        function shareSpot() {
+            if (currentSpot) {
+                alert(`分享"${currentSpot}"到微信/朋友圈\n\n（功能开发中）`);
+            }
+        }
+        
+        // 导航到景点
+        function navigateToSpot() {
+            if (currentSpot) {
+                alert(`正在打开地图导航到"${currentSpot}"...\n\n（功能开发中）`);
+            }
+        }
+        
+        // 修改渲染函数，添加点击事件
+        function renderSpotCard(spot) {
+            return `
+                <div class="spot-card" onclick="showSpotDetail('${spot.name}')">
+                    <div class="spot-image" style="background: ${spot.color};">
+                        ${spot.name.substring(0, 2)}
+                        <div class="spot-badge">${spot.badge}</div>
+                    </div>
+                    <div class="spot-info">
+                        <div class="spot-name">${spot.name}</div>
+                        <div class="spot-location">📍 ${spot.location}</div>
+                        <div class="spot-stats">
+                            <span>${spot.rating}</span>
+                            <span>${spot.visitors}</span>
+                        </div>
                     </div>
                 </div>
             `;
