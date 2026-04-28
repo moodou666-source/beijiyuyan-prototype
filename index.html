@@ -1847,6 +1847,157 @@
             color: #666;
         }
         
+        /* 我的地点页面 */
+        .my-places-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 16000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .my-places-page.active {
+            display: flex;
+        }
+        
+        .my-places-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+        }
+        
+        .my-places-back {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .my-places-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .my-places-map {
+            height: 40vh;
+            position: relative;
+        }
+        
+        .my-places-map-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .my-places-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            overflow-y: auto;
+        }
+        
+        .my-places-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .my-places-count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .my-places-count-label {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        
+        .add-place-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 25px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .country-section {
+            margin-bottom: 20px;
+        }
+        
+        .country-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .country-stats {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .city-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .city-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        
+        .city-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .city-item-info {
+            flex: 1;
+        }
+        
+        .city-item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .city-item-count {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .city-item-arrow {
+            font-size: 20px;
+            color: #999;
+        }
+        
         /* 添加至弹窗 */
         .add-to-modal {
             position: fixed;
@@ -2797,7 +2948,7 @@
             </div>
             <div class="header-icons">
                 <div class="header-icon">🔍</div>
-                <div class="header-icon">👤</div>
+                <div class="header-icon" onclick="showMyPlaces()">👤</div>
             </div>
         </div>
         
@@ -3070,6 +3221,57 @@
             <button onclick="showEditTrip()" style="margin: 20px; padding: 12px 24px; background: #1a1a1a; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">编辑行程</button>
             <button onclick="showSpotDetail()" style="margin: 0 20px 20px; padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">查看景点详情</button>
             <button onclick="showShareModal()" style="margin: 0 20px 20px; padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;">分享行程</button>
+        </div>
+        
+        <!-- 我的地点页面 -->
+        <div class="my-places-page" id="myPlacesPage">
+            <div class="my-places-header">
+                <div class="my-places-back" onclick="closeMyPlaces()">←</div>
+                <div class="my-places-title">我的地点</div>
+                <div style="width: 24px;"></div>
+            </div>
+            
+            <div class="my-places-map">
+                <div id="myPlacesMap" class="my-places-map-container"></div>
+            </div>
+            
+            <div class="my-places-content">
+                <div class="my-places-header-info">
+                    <div>
+                        <div class="my-places-count-label">已收藏</div>
+                        <div class="my-places-count">2个地点</div>
+                    </div>
+                    <button class="add-place-btn" onclick="addPlace()">
+                        <span>+</span>
+                        <span>添加地点</span>
+                    </button>
+                </div>
+                
+                <div class="country-section">
+                    <div class="country-name">中国</div>
+                    <div class="country-stats">2 座城市 · 2 个地点</div>
+                    
+                    <div class="city-list">
+                        <div class="city-item" onclick="showCityPlaces('南京市')">
+                            <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=100" alt="南京" class="city-item-img">
+                            <div class="city-item-info">
+                                <div class="city-item-name">南京市</div>
+                                <div class="city-item-count">地点·1</div>
+                            </div>
+                            <div class="city-item-arrow">›</div>
+                        </div>
+                        
+                        <div class="city-item" onclick="showCityPlaces('安庆市')">
+                            <img src="https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=100" alt="安庆" class="city-item-img">
+                            <div class="city-item-info">
+                                <div class="city-item-name">安庆市</div>
+                                <div class="city-item-count">地点·1</div>
+                            </div>
+                            <div class="city-item-arrow">›</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- 笔记详情页面 -->
@@ -4618,6 +4820,45 @@
         // 在小红书App内打开
         function openInApp() {
             alert('正在打开小红书App...');
+        }
+        
+        // 显示我的地点
+        function showMyPlaces() {
+            document.getElementById('myPlacesPage').classList.add('active');
+            initMyPlacesMap();
+        }
+        
+        // 关闭我的地点
+        function closeMyPlaces() {
+            document.getElementById('myPlacesPage').classList.remove('active');
+        }
+        
+        // 初始化我的地点地图
+        function initMyPlacesMap() {
+            const map = L.map('myPlacesMap').setView([32.0603, 118.7969], 8);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // 添加南京市标记
+            L.marker([32.0603, 118.7969], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div style="background:#1a1a1a;color:white;padding:4px 12px;border-radius:15px;font-size:13px;font-weight:600;">南京市 1</div>',
+                    iconSize: [80, 30]
+                })
+            }).addTo(map);
+        }
+        
+        // 添加地点
+        function addPlace() {
+            alert('添加地点\n\n搜索并添加新的收藏地点');
+        }
+        
+        // 显示城市地点
+        function showCityPlaces(city) {
+            alert(`查看 ${city} 的收藏地点`);
         }
         
         // 显示景点底部卡片
