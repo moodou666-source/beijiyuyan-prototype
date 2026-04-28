@@ -1233,7 +1233,7 @@
             border-top: 1px solid #f0f0f0;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             z-index: 100;
         }
         
@@ -1247,8 +1247,14 @@
             cursor: pointer;
         }
         
+        .edit-action-btn.primary {
+            background: #1a1a1a;
+            color: white;
+        }
+        
         .edit-action-btn.danger {
             color: #f44336;
+            background: #ffebee;
         }
         
         .suggestion-item {
@@ -1593,11 +1599,46 @@
         <div class="edit-trip-page" id="editTripPage">
             <div class="edit-header">
                 <div class="edit-back" onclick="closeEditTrip()">←</div>
-                <div class="edit-title">已选择1项</div>
+                <div class="edit-title" id="selectedCount">已选择0项</div>
                 <button class="edit-done" onclick="finishEdit()">完成</button>
             </div>
             
             <div class="day-list">
+                <div class="day-group">
+                    <div class="day-group-title">
+                        05.01 周五
+                        <span class="day-group-subtitle">苏州博物馆与园林初探</span>
+                    </div>
+                    
+                    <div class="route-info" style="padding: 5px 0;">
+                        <span>🚶</span>
+                        <span>0.6公里·12分钟</span>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
+                        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=100" alt="狮子林" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">3.狮子林</div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-info" style="padding: 5px 0;">
+                        <span>🚶</span>
+                        <span>1.2公里·24分钟</span>
+                    </div>
+                    
+                    <div class="spot-list-item">
+                        <div class="spot-checkbox checked" onclick="toggleSpot(this)">✓</div>
+                        <img src="https://images.unsplash.com/photo-1529921879218-f99546d189a7?w=100" alt="平江路" class="spot-list-image">
+                        <div class="spot-list-info">
+                            <div class="spot-list-tag">景点</div>
+                            <div class="spot-list-name">4.平江路</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="day-group">
                     <div class="day-group-title">
                         05.02 周六
@@ -1605,7 +1646,7 @@
                     </div>
                     
                     <div class="spot-list-item">
-                        <div class="spot-checkbox checked" onclick="toggleSpot(this)">✓</div>
+                        <div class="spot-checkbox" onclick="toggleSpot(this)"></div>
                         <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=100" alt="虎丘" class="spot-list-image">
                         <div class="spot-list-info">
                             <div class="spot-list-tag">景点</div>
@@ -1693,9 +1734,8 @@
             </div>
             
             <div class="edit-actions">
-                <button class="edit-action-btn" onclick="moveSpot()">移动至</button>
+                <button class="edit-action-btn primary" onclick="moveSpot()">移动至</button>
                 <button class="edit-action-btn" onclick="copySpot()">复制</button>
-                <button class="edit-action-btn" onclick="replaceSpot()">替换</button>
                 <button class="edit-action-btn danger" onclick="deleteSpot()">删除</button>
             </div>
         </div>
@@ -2096,12 +2136,25 @@
         }
         
         // 切换景点选择
+        let selectedSpots = 0;
+        
         function toggleSpot(element) {
             element.classList.toggle('checked');
             if (element.classList.contains('checked')) {
                 element.innerHTML = '✓';
+                selectedSpots++;
             } else {
                 element.innerHTML = '';
+                selectedSpots--;
+            }
+            updateSelectedCount();
+        }
+        
+        // 更新选中数量
+        function updateSelectedCount() {
+            const title = document.getElementById('selectedCount');
+            if (title) {
+                title.textContent = `已选择${selectedSpots}项`;
             }
         }
         
