@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>北京雨燕 - 自驾旅行规划</title>
+    <title>北阴雨燕 - 自驾旅行规划</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- 高德地图 -->
@@ -78,7 +81,15 @@
         .tab-icon {
             width: 24px;
             height: 24px;
-            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
         }
         
         /* 页面内容 */
@@ -94,15 +105,15 @@
         
         /* 首页 */
         .home-header {
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            background: #1a365d;
             padding: 15px;
             color: white;
         }
         
         .search-bar {
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 8px 15px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 25px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -119,23 +130,110 @@
         }
         
         .search-bar input::placeholder {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.6);
         }
         
         .location-tag {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
             padding: 6px 12px;
             border-radius: 15px;
             font-size: 13px;
             cursor: pointer;
+        }
+        
+        /* 首页标签切换 */
+        .home-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 15px;
+        }
+        
+        .home-tab {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #718096;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
             transition: all 0.3s;
         }
         
-        .location-tag:hover {
-            background: rgba(255,255,255,0.3);
+        .home-tab.active {
+            color: #1a365d;
+            border-bottom-color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        /* 路线卡片 */
+        .route-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .route-card-image {
+            height: 160px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .route-card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .route-card-info {
+            padding: 15px;
+        }
+        
+        .route-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 5px;
+        }
+        
+        .route-card-subtitle {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        
+        .route-card-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .route-card-tag {
+            background: #ebf8ff;
+            color: #1a365d;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .route-card-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #718096;
         }
         
         /* 定位弹窗 */
@@ -1230,6 +1328,280 @@
             color: #718096;
         }
         
+        /* 规划结果页 */
+        .result-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 15px 20px;
+            color: white;
+            position: relative;
+        }
+        
+        .result-back {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .result-title {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .result-subtitle {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
+        /* 日期切换标签 */
+        .day-tabs {
+            display: flex;
+            background: white;
+            padding: 10px 15px;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .day-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .day-tab {
+            flex-shrink: 0;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: #f7fafc;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .day-tab.active {
+            background: #1a365d;
+            color: white;
+            border-color: #1a365d;
+        }
+        
+        .day-tab-date {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .day-tab-weekday {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+        
+        /* 结果页地图 */
+        .result-map-container {
+            height: 280px;
+            position: relative;
+        }
+        
+        #result-map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 行程概览 */
+        .trip-overview {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .trip-overview-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 10px;
+        }
+        
+        .trip-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .trip-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        
+        .trip-stat-icon {
+            font-size: 16px;
+        }
+        
+        /* 景点时间线 */
+        .spot-timeline {
+            padding: 15px 20px;
+            background: #f7fafc;
+            min-height: calc(100vh - 500px);
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #e2e8f0;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-time {
+            width: 40px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .timeline-time-start {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        
+        .timeline-time-end {
+            font-size: 11px;
+            color: #718096;
+        }
+        
+        .timeline-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a365d, #2c5282);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .timeline-dot.food {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+        
+        .timeline-dot.hotel {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        
+        .timeline-spot-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 6px;
+        }
+        
+        .timeline-spot-tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-spot-tag {
+            background: #ebf8ff;
+            color: #3182ce;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .timeline-spot-tag.food-tag {
+            background: #fef2f2;
+            color: #e53e3e;
+        }
+        
+        .timeline-spot-desc {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-spot-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .timeline-spot-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* 路线距离提示 */
+        .route-distance-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #fffbeb;
+            border-radius: 10px;
+            margin: 0 20px 15px;
+            font-size: 12px;
+            color: #92400e;
+        }
+        
+        .route-distance-hint .line {
+            flex: 1;
+            height: 1px;
+            background: #fcd34d;
+            position: relative;
+        }
+        
+        .route-distance-hint .line::after {
+            content: '→';
+            position: absolute;
+            right: -5px;
+            top: -8px;
+            color: #f59e0b;
+        }
+        
         /* 个人中心 */
         .profile-header {
             background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
@@ -1320,20 +1692,41 @@
 <body>
     <div class="app-container">
         <!-- 状态栏 -->
-        <div class="status-bar">北京雨燕</div>
+        <div class="status-bar">北阴雨燕</div>
         
         <!-- 首页 -->
         <div class="page active" id="home">
             <div class="home-header">
                 <div class="search-bar">
-                    <span>🔍</span>
-                    <input type="text" placeholder="搜索目的地、景点、路线...">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="搜索目的地、景点、路线..." id="search-input" oninput="handleSearch(this.value)">
                 </div>
                 <div class="location-tag" onclick="showLocationModal()">
-                    <span>📍</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <line x1="12" y1="2" x2="12" y2="4"></line>
+                        <line x1="12" y1="20" x2="12" y2="22"></line>
+                        <line x1="2" y1="12" x2="4" y2="12"></line>
+                        <line x1="20" y1="12" x2="22" y2="12"></line>
+                    </svg>
                     <span id="current-location">点击选择定位</span>
                     <span>▼</span>
                 </div>
+            </div>
+            
+            <!-- 搜索结果 -->
+            <div class="search-results" id="search-results" style="display:none; background:white; margin:0 15px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-height:400px; overflow-y:auto;"></div>
+            
+            <!-- 首页标签切换 -->
+            <div class="home-tabs">
+                <div class="home-tab active">推荐路线</div>
+                <div class="home-tab">附近景点</div>
+                <div class="home-tab">摄影点</div>
+                <div class="home-tab">小众秘境</div>
             </div>
             
             <!-- 地图区域 -->
@@ -1347,21 +1740,49 @@
                 </div>
             </div>
             
-            <!-- 景点推荐 -->
-            <div class="spot-section">
-                <div class="section-header">
-                    <div class="section-title">热门景点</div>
-                    <div class="section-more">查看更多 ></div>
+            <!-- 路线推荐 -->
+            <div class="route-card">
+                <div class="route-card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    古北水镇
+                    <div class="route-card-badge">热门</div>
                 </div>
-                <div class="spot-grid">
-                    <div class="spot-card">
-                        <div class="spot-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                            故宫
-                            <div class="spot-badge">热门</div>
-                        </div>
-                        <div class="spot-info">
-                            <div class="spot-name">故宫博物院</div>
-                            <div class="spot-location">📍 东城区</div>
+                <div class="route-card-info">
+                    <div class="route-card-title">古北水镇一日游</div>
+                    <div class="route-card-subtitle">古北水镇+司马台长城经典路线</div>
+                    <div class="route-card-tags">
+                        <span class="route-card-tag">摄影</span>
+                        <span class="route-card-tag">历史</span>
+                        <span class="route-card-tag">美食</span>
+                    </div>
+                    <div class="route-card-stats">
+                        <span>⏱️ 1天</span>
+                        <span>🚗 120km</span>
+                        <span>👁️ 2.5万</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="route-card">
+                <div class="route-card-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    香山红叶
+                    <div class="route-card-badge">季节</div>
+                </div>
+                <div class="route-card-info">
+                    <div class="route-card-title">香山红叶摄影之旅</div>
+                    <div class="route-card-subtitle">最佳赏秋路线，包含植物园</div>
+                    <div class="route-card-tags">
+                        <span class="route-card-tag">摄影</span>
+                        <span class="route-card-tag">自然</span>
+                    </div>
+                    <div class="route-card-stats">
+                        <span>⏱️ 半天</span>
+                        <span>🚗 30km</span>
+                        <span>👁️ 1.8万</span>
+                    </div>
+                </div>
+            </div>
+                                东城区
+                            </div>
                             <div class="spot-stats">
                                 <span>4.9</span>
                                 <span>12.5万</span>
@@ -1375,7 +1796,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">颐和园</div>
-                            <div class="spot-location">📍 海淀区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 海淀区</div>
                             <div class="spot-stats">
                                 <span>4.8</span>
                                 <span>8.3万</span>
@@ -1389,7 +1810,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">798艺术区</div>
-                            <div class="spot-location">📍 朝阳区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 朝阳区</div>
                             <div class="spot-stats">
                                 <span>4.7</span>
                                 <span>5.1万</span>
@@ -1403,7 +1824,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">香山公园</div>
-                            <div class="spot-location">📍 海淀区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 海淀区</div>
                             <div class="spot-stats">
                                 <span>4.6</span>
                                 <span>6.7万</span>
@@ -1427,7 +1848,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">角楼晚霞</div>
-                            <div class="spot-location">📍 故宫西北角</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 故宫西北角</div>
                             <div class="spot-stats">
                                 <span>4.9</span>
                                 <span>2.3万</span>
@@ -1441,7 +1862,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">国贸CBD</div>
-                            <div class="spot-location">📍 朝阳区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 朝阳区</div>
                             <div class="spot-stats">
                                 <span>4.8</span>
                                 <span>1.8万</span>
@@ -1465,7 +1886,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">琉璃厂古文化街</div>
-                            <div class="spot-location">📍 西城区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 西城区</div>
                             <div class="spot-stats">
                                 <span>4.5</span>
                                 <span>3.2万</span>
@@ -1479,7 +1900,7 @@
                         </div>
                         <div class="spot-info">
                             <div class="spot-name">法源寺</div>
-                            <div class="spot-location">📍 宣武区</div>
+                            <div class="spot-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 宣武区</div>
                             <div class="spot-stats">
                                 <span>4.7</span>
                                 <span>1.5万</span>
@@ -1492,191 +1913,145 @@
         
         <!-- 规划页面 -->
         <div class="page" id="plan">
-            <div class="plan-header">
-                <div class="plan-title">自驾路线规划</div>
-                <div class="plan-subtitle">多目的地智能规划，生成最优路线</div>
+            <div class="plan-header" style="background: #1a365d; padding: 20px; color: white;">
+                <div class="plan-title" style="font-size: 20px; font-weight: 600; margin-bottom: 5px;">路线规划</div>
+                <div class="plan-subtitle" style="font-size: 13px; opacity: 0.8;">多目的地智能规划，生成最优路线</div>
             </div>
             
-            <!-- 自驾规划核心功能 -->
-            <div class="drive-plan-section">
-                <div class="drive-plan-header">
-                    <div class="drive-plan-title">路线规划</div>
-                    <div class="drive-plan-subtitle">添加多个途经城市，生成完整自驾方案</div>
+            <!-- 步骤指示器 -->
+            <div style="display: flex; justify-content: center; padding: 20px; background: white; border-bottom: 1px solid #e2e8f0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #1a365d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">1</div>
+                    <div style="font-size: 12px; color: #1a365d;">时间</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #1a365d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">2</div>
+                    <div style="font-size: 12px; color: #1a365d;">目的地</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #d69e2e; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px;">3</div>
+                    <div style="font-size: 12px; color: #d69e2e; font-weight: 600;">偏好</div>
+                    <div style="width: 30px; height: 1px; background: #e2e8f0;"></div>
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; color: #718096; display: flex; align-items: center; justify-content: center; font-size: 12px;">4</div>
+                    <div style="font-size: 12px; color: #718096;">生成</div>
                 </div>
-                <div class="drive-plan-input">
-                    <div class="drive-stop">
-                        <span class="stop-icon start">起</span>
-                        <input type="text" placeholder="输入出发地" id="drive-start">
-                    </div>
-                    <div class="drive-stop">
-                        <span class="stop-icon end">终</span>
-                        <input type="text" placeholder="输入目的地" id="drive-end">
-                    </div>
-                    <button class="add-stop-btn" onclick="addStop()">+ 添加途经点</button>
-                </div>
-                <div class="drive-stops" id="drive-stops"></div>
             </div>
             
-            <!-- 旅行主题选择 -->
-            <div class="theme-section">
-                <div class="section-title">旅行主题</div>
-                <div class="theme-grid">
-                    <div class="theme-item" onclick="selectTheme('family')">
-                        <div class="theme-icon">👨‍👩‍👧‍👦</div>
-                        <div class="theme-name">亲子时光</div>
-                        <div class="theme-desc">适合全家出游</div>
+            <!-- 旅行节奏选择 -->
+            <div style="padding: 20px; background: white; margin-bottom: 10px;">
+                <div style="font-size: 16px; font-weight: 600; color: #1a365d; margin-bottom: 15px;">旅行节奏</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="border: 2px solid #1a365d; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; background: #f8fafc;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🐌</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">轻松休闲</div>
+                        <div style="font-size: 12px; color: #718096;">每天1-2个景点</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('study')">
-                        <div class="theme-icon">📚</div>
-                        <div class="theme-name">研学探索</div>
-                        <div class="theme-desc">知识与文化之旅</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🚶</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">充实打卡</div>
+                        <div style="font-size: 12px; color: #718096;">每天3-5个景点</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('culture')">
-                        <div class="theme-icon">🏮</div>
-                        <div class="theme-name">烟火人文</div>
-                        <div class="theme-desc">体验当地生活</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🎯</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">深度沉浸</div>
+                        <div style="font-size: 12px; color: #718096;">少而精，体验生活</div>
                     </div>
-                    <div class="theme-item" onclick="selectTheme('photo')">
-                        <div class="theme-icon">📸</div>
-                        <div class="theme-name">摄影之旅</div>
-                        <div class="theme-desc">记录美好瞬间</div>
-                    </div>
-                    <div class="theme-item" onclick="selectTheme('food')">
-                        <div class="theme-icon">🍜</div>
-                        <div class="theme-name">美食寻味</div>
-                        <div class="theme-desc">舌尖上的旅行</div>
-                    </div>
-                    <div class="theme-item" onclick="selectTheme('adventure')">
-                        <div class="theme-icon">⛰️</div>
-                        <div class="theme-name">户外探险</div>
-                        <div class="theme-desc">挑战自我极限</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🎲</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a365d;">随性自由</div>
+                        <div style="font-size: 12px; color: #718096;">走到哪玩到哪</div>
                     </div>
                 </div>
             </div>
             
-            <!-- 旅行偏好 -->
-            <div class="preference-section">
-                <div class="section-title">
-                    <span class="section-icon">🎯</span>
-                    旅行节奏
-                </div>
-                <div class="option-grid">
-                    <div class="option-item selected">
-                        <div class="option-icon">🐌</div>
-                        <div class="option-label">慢游</div>
-                        <div class="option-desc">深度体验</div>
+            <!-- 旅行主题 -->
+            <div style="padding: 20px; background: white; margin-bottom: 10px;">
+                <div style="font-size: 16px; font-weight: 600; color: #1a365d; margin-bottom: 15px;">旅行主题（可多选）</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div style="border: 2px solid #1a365d; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #1a365d; cursor: pointer; background: #f8fafc;">
+                        <span style="margin-right: 5px;">📸</span>摄影旅拍
                     </div>
-                    <div class="option-item">
-                        <div class="option-icon">🚶</div>
-                        <div class="option-label">舒适</div>
-                        <div class="option-desc">经典路线</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🍜</span>美食探索
                     </div>
-                    <div class="option-item">
-                        <div class="option-icon">🚀</div>
-                        <div class="option-label">紧凑</div>
-                        <div class="option-desc">高效打卡</div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🏛️</span>人文历史
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">⛰️</span>自然风光
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🏨</span>品质住宿
+                    </div>
+                    <div style="border: 2px solid #e2e8f0; border-radius: 20px; padding: 8px 16px; font-size: 13px; color: #4a5568; cursor: pointer;">
+                        <span style="margin-right: 5px;">🎨</span>艺术文创
                     </div>
                 </div>
             </div>
             
-            <button class="btn btn-primary" onclick="planRoute()">生成路线方案</button>
+            <button class="btn btn-primary" onclick="planRoute()" style="margin: 20px; width: calc(100% - 40px);">生成路线方案</button>
         </div>
         
         <!-- 足迹页面 -->
         <div class="page" id="footprint">
-            <div class="footprint-tabs">
-                <div class="footprint-tab active">旅行圈</div>
-                <div class="footprint-tab">我的足迹</div>
+            <!-- 顶部标签 -->
+            <div style="display: flex; background: white; border-bottom: 1px solid #e2e8f0; padding: 0 20px;">
+                <div style="padding: 15px 20px; border-bottom: 2px solid #1a365d; color: #1a365d; font-weight: 600; font-size: 14px;">热门</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">精选</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">最新</div>
+                <div style="padding: 15px 20px; color: #718096; font-size: 14px;">附近</div>
             </div>
             
-            <!-- 旅行圈 - 地图占一半 + 用户照片 -->
-            <div class="travel-circle">
-                <div class="travel-map-half">
-                    <div id="travel-map"></div>
+            <!-- 照片网格 -->
+            <div style="padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">云南·丽江</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">丽江古城夜景</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@摄影师小王</div>
+                    </div>
                 </div>
-                <div class="travel-content-half">
-                    <div class="area-photos">
-                        <div class="area-header">
-                            <div>
-                                <div class="area-title">📍 故宫周边</div>
-                                <div class="area-subtitle">点击地图区域查看不同地点</div>
-                            </div>
-                        </div>
-                        <div class="user-photo-grid">
-                            <div class="user-photo-item" onclick="showUserProfile('user1')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@摄影师小王</div>
-                                    <div class="user-photo-location">角楼晚霞</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user2')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #74b9ff, #0984e3);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@旅行达人李</div>
-                                    <div class="user-photo-location">太和殿</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user3')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #fd79a8, #e84393);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@背包客张</div>
-                                    <div class="user-photo-location">御花园</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user4')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #fdcb6e, #e17055);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@美食探索家</div>
-                                    <div class="user-photo-location">神武门</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user5')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #55efc4, #00b894);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@历史爱好者</div>
-                                    <div class="user-photo-location">乾清宫</div>
-                                </div>
-                            </div>
-                            <div class="user-photo-item" onclick="showUserProfile('user6')">
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
-                                <div class="user-photo-overlay">
-                                    <div class="user-photo-author">@建筑摄影师</div>
-                                    <div class="user-photo-location">午门</div>
-                                </div>
-                            </div>
-                        </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #74b9ff, #0984e3);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">浙江·乌镇</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">乌镇水乡晨雾</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@旅行达人李</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #fd79a8, #e84393);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">四川·成都</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">宽窄巷子美食</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@美食探索家</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #fdcb6e, #e17055);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">北京·故宫</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">角楼晚霞</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@建筑摄影师</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #55efc4, #00b894);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">江苏·苏州</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">拙政园春色</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@园林爱好者</div>
+                    </div>
+                </div>
+                <div style="border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px;">西藏·拉萨</div>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white;">
+                        <div style="font-size: 13px; font-weight: 600;">布达拉宫日出</div>
+                        <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">@背包客张</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 用户主页弹窗 -->
-            <div class="user-modal" id="user-modal">
-                <div class="user-modal-content">
-                    <div class="location-modal-header">
-                        <div></div>
-                        <div class="location-modal-close" onclick="closeUserModal()">✕</div>
-                    </div>
-                    <div class="user-profile-header">
-                        <div class="user-profile-avatar">👤</div>
-                        <div class="user-profile-info">
-                            <div class="user-profile-name" id="user-name">摄影师小王</div>
-                            <div class="user-profile-stats">📸 128张照片 · 👥 2.3万粉丝 · ❤️ 5.6万获赞</div>
-                        </div>
-                    </div>
-                    <div class="user-photos-grid">
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #74b9ff, #0984e3);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #fd79a8, #e84393);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #fdcb6e, #e17055);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #55efc4, #00b894);"></div>
-                        <div class="user-photo-large" style="background: linear-gradient(135deg, #a29bfe, #6c5ce7);"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 我的足迹 -->
-            <div class="my-footprint-content" style="display: none;">
+        </div>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number">12</div>
@@ -1728,10 +2103,68 @@
             </div>
         </div>
         
+        <!-- 规划结果页 -->
+        <div class="page" id="plan-result">
+            <div class="result-header">
+                <button class="result-back" onclick="showPlanPage()">←</button>
+                <div class="result-title">苏州4天3晚深度游</div>
+                <div class="result-subtitle">2026.05.01 - 05.04 · 自驾</div>
+            </div>
+            
+            <!-- 日期切换 -->
+            <div class="day-tabs">
+                <div class="day-tab active" onclick="switchDay(0)">
+                    <div class="day-tab-date">05.01</div>
+                    <div class="day-tab-weekday">周五</div>
+                </div>
+                <div class="day-tab" onclick="switchDay(1)">
+                    <div class="day-tab-date">05.02</div>
+                    <div class="day-tab-weekday">周六</div>
+                </div>
+                <div class="day-tab" onclick="switchDay(2)">
+                    <div class="day-tab-date">05.03</div>
+                    <div class="day-tab-weekday">周日</div>
+                </div>
+                <div class="day-tab" onclick="switchDay(3)">
+                    <div class="day-tab-date">05.04</div>
+                    <div class="day-tab-weekday">周一</div>
+                </div>
+            </div>
+            
+            <!-- 地图区域 -->
+            <div class="result-map-container">
+                <div id="result-map"></div>
+            </div>
+            
+            <!-- 行程概览 -->
+            <div class="trip-overview">
+                <div class="trip-overview-title" id="day-title">05.01 周五「园林博览与平江风雅」</div>
+                <div class="trip-stats">
+                    <div class="trip-stat">
+                        <span class="trip-stat-icon">📍</span>
+                        <span id="day-spots">7个景点</span>
+                    </div>
+                    <div class="trip-stat">
+                        <span class="trip-stat-icon">🚗</span>
+                        <span id="day-distance">约12km</span>
+                    </div>
+                    <div class="trip-stat">
+                        <span class="trip-stat-icon">⏱️</span>
+                        <span id="day-duration">8小时</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 景点时间线 -->
+            <div class="spot-timeline" id="spot-timeline">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+        
         <!-- 个人中心 -->
         <div class="page" id="profile">
             <div class="profile-header">
-                <div class="profile-avatar">👤</div>
+                <div class="profile-avatar">&#x1F464;</div>
                 <div class="profile-name">旅行者</div>
                 <div class="profile-level">Lv.5 资深旅人</div>
                 <div class="profile-stats">
@@ -1757,12 +2190,12 @@
                     <div class="menu-arrow">></div>
                 </div>
                 <div class="menu-item">
-                    <div class="menu-icon">⭐</div>
+                    <div class="menu-icon">&#x2B50;</div>
                     <div class="menu-text">收藏夹</div>
                     <div class="menu-arrow">></div>
                 </div>
                 <div class="menu-item">
-                    <div class="menu-icon">🗺️</div>
+                    <div class="menu-icon">&#x1F5FA;</div>
                     <div class="menu-text">我的路线</div>
                     <div class="menu-arrow">></div>
                 </div>
@@ -1777,19 +2210,46 @@
         <!-- 底部导航 -->
         <div class="tab-bar">
             <div class="tab-item active" onclick="switchTab('home')">
-                <div class="tab-icon">🏠</div>
+                <div class="tab-icon">
+                    <!-- 房子+指南针极简图标 -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        <circle cx="12" cy="7" r="1.5" fill="currentColor" stroke="none"></circle>
+                    </svg>
+                </div>
                 <div>首页</div>
             </div>
             <div class="tab-item" onclick="switchTab('plan')">
-                <div class="tab-icon">🗺️</div>
+                <div class="tab-icon">
+                    <!-- 地图极简图标 -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="1 6 1 22 8 18 16 22 21 18 21 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </div>
                 <div>规划</div>
             </div>
             <div class="tab-item" onclick="switchTab('footprint')">
-                <div class="tab-icon">👣</div>
+                <div class="tab-icon">
+                    <!-- 脚印极简图标 -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C8 2 6 6 6 8c0 2 1 3 2 4s2 2 2 4c0 3-2 5-2 5"></path>
+                        <path d="M12 2C16 2 18 6 18 8c0 2-1 3-2 4s-2 2-2 4c0 3 2 5 2 5"></path>
+                        <circle cx="12" cy="15" r="2"></circle>
+                    </svg>
+                </div>
                 <div>足迹</div>
             </div>
             <div class="tab-item" onclick="switchTab('profile')">
-                <div class="tab-icon">👤</div>
+                <div class="tab-icon">
+                    <!-- 用户极简图标 -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"></path>
+                    </svg>
+                </div>
                 <div>我的</div>
             </div>
         </div>
@@ -1799,14 +2259,33 @@
     <div class="location-modal" id="location-modal">
         <div class="location-modal-content">
             <div class="location-modal-header">
-                <div class="location-modal-title">📍 选择定位</div>
+                <div class="location-modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <line x1="12" y1="2" x2="12" y2="4"></line>
+                        <line x1="12" y1="20" x2="12" y2="22"></line>
+                        <line x1="2" y1="12" x2="4" y2="12"></line>
+                        <line x1="20" y1="12" x2="22" y2="12"></line>
+                    </svg>
+                    选择定位
+                </div>
                 <div class="location-modal-close" onclick="closeLocationModal()">✕</div>
             </div>
             <div class="location-search">
                 <input type="text" placeholder="搜索城市或地点">
             </div>
             <div class="location-current" onclick="useCurrentLocation()">
-                <div class="location-current-icon">📍</div>
+                <div class="location-current-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <line x1="12" y1="2" x2="12" y2="4"></line>
+                        <line x1="12" y1="20" x2="12" y2="22"></line>
+                        <line x1="2" y1="12" x2="4" y2="12"></line>
+                        <line x1="20" y1="12" x2="22" y2="12"></line>
+                    </svg>
+                </div>
                 <div class="location-current-text">
                     <div class="location-current-title">使用当前位置</div>
                     <div class="location-current-subtitle">定位到您当前所在位置</div>
@@ -1816,41 +2295,96 @@
                 <div class="location-cities-title">热门城市</div>
                 <div class="location-cities-grid">
                     <div class="location-city-item" onclick="selectCity('北京')">
-                        <div class="location-city-icon">🏛️</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
                         <div class="location-city-name">北京</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('上海')">
-                        <div class="location-city-icon">🏙️</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                <line x1="8" y1="6" x2="8.01" y2="6"></line>
+                                <line x1="16" y1="6" x2="16.01" y2="6"></line>
+                                <line x1="8" y1="10" x2="8.01" y2="10"></line>
+                                <line x1="16" y1="10" x2="16.01" y2="10"></line>
+                            </svg>
+                        </div>
                         <div class="location-city-name">上海</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('杭州')">
-                        <div class="location-city-icon">🌸</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
                         <div class="location-city-name">杭州</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('成都')">
-                        <div class="location-city-icon">🐼</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </div>
                         <div class="location-city-name">成都</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('西安')">
-                        <div class="location-city-icon">🏺</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
                         <div class="location-city-name">西安</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('厦门')">
-                        <div class="location-city-icon">🏖️</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
                         <div class="location-city-name">厦门</div>
                     </div>
                     <div class="location-city-item" onclick="selectCity('丽江')">
-                        <div class="location-city-icon">🏔️</div>
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
                         <div class="location-city-name">丽江</div>
                     </div>
-                    <div class="location-city-item" onclick="selectCity('江苏')">
-                        <div class="location-city-icon">🌊</div>
+                    <div class="location-city-item" onclick="switchCity('jiangsu')">
+                        <div class="location-city-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
                         <div class="location-city-name">江苏</div>
                     </div>
                 </div>
             </div>
             <div class="location-map-select" onclick="selectFromMap()">
-                <div class="location-map-select-icon">🗺️</div>
+                <div class="location-map-select-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="1 6 1 22 8 18 16 22 21 18 21 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </div>
                 <div class="location-map-select-title">在地图上选择</div>
                 <div class="location-map-select-subtitle">点击地图任意位置进行定位</div>
             </div>
@@ -1918,7 +2452,67 @@
             // 这里可以添加地图点击事件监听
         }
         
-        // 显示用户主页
+        // 搜索处理
+        function handleSearch(keyword) {
+            const resultsContainer = document.getElementById('search-results');
+            if (!keyword.trim()) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            const results = searchPlaces(keyword);
+            showSearchResults(results);
+            resultsContainer.style.display = 'block';
+        }
+        
+        // 显示地点详情
+        function showPlaceDetail(id) {
+            let place = null;
+            
+            // 在景点中查找
+            place = attractionsData.find(a => a.id === id);
+            
+            // 在打卡点中查找
+            if (!place) {
+                place = hiddenGemsData.find(h => h.id === id);
+            }
+            
+            if (!place) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
+            modal.innerHTML = `
+                <div style="background:white;border-radius:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;position:relative;">
+                    <button onclick="this.closest('.modal').remove()" style="position:absolute;top:15px;right:15px;background:rgba(0,0,0,0.5);color:white;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;z-index:10;">×</button>
+                    <div style="padding:20px;">
+                        <div style="width:100%;height:200px;background:linear-gradient(135deg, #667eea, #764ba2);border-radius:15px;display:flex;align-items:center;justify-content:center;color:white;font-size:48px;margin-bottom:15px;">
+                            ${place.name.charAt(0)}
+                        </div>
+                        <h2 style="color:#1a365d;margin-bottom:10px;">${place.name}</h2>
+                        <div style="display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap;">
+                            <span style="background:#e6f2ff;color:#2b6cb0;padding:5px 12px;border-radius:15px;font-size:13px;">⭐ ${place.rating || '4.5'}分</span>
+                            <span style="background:#fef3c7;color:#d97706;padding:5px 12px;border-radius:15px;font-size:13px;">💰 ${place.price || '免费'}</span>
+                            <span style="background:#d1fae5;color:#059669;padding:5px 12px;border-radius:15px;font-size:13px;">📍 ${place.cityName || place.city || ''}</span>
+                        </div>
+                        <p style="color:#4a5568;line-height:1.6;margin-bottom:15px;">${place.description || ''}</p>
+                        <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:12px;border-radius:8px;margin-bottom:15px;">
+                            <strong style="color:#b45309;">💡 小贴士：</strong>
+                            <span style="color:#78350f;">${place.tips || ''}</span>
+                        </div>
+                        <div style="margin-bottom:15px;">
+                            <strong style="color:#1a365d;">📍 地址：</strong>
+                            <span style="color:#4a5568;">${place.address || ''}</span>
+                        </div>
+                        <div>
+                            <strong style="color:#1a365d;">🏷️ 类型：</strong>
+                            <span style="display:inline-block;background:#e2e8f0;color:#4a5568;padding:4px 10px;border-radius:12px;font-size:12px;">${place.category || ''}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
         function showUserProfile(userId) {
             const userNames = {
                 'user1': '摄影师小王',
@@ -1950,18 +2544,8 @@
             stopsContainer.appendChild(stopDiv);
         }
         
-        // 规划路线
-        function planRoute() {
-            const start = document.getElementById('drive-start').value;
-            const end = document.getElementById('drive-end').value;
-            
-            if (!start || !end) {
-                alert('请输入出发地和目的地');
-                return;
-            }
-            
-            alert(`正在规划路线：${start} → ${end}\n\n途经点：${document.querySelectorAll('.drive-stop').length - 2}个\n\n功能开发中，将调用高德路径规划API`);
-        }
+        // 规划路线 - 旧版，已被覆盖
+        // function planRoute() { ... }  // 已移至下方统一实现
         
         // 选择主题
         function selectTheme(theme) {
@@ -2100,7 +2684,7 @@
                 
                 // 点击事件
                 marker.on('click', function() {
-                    alert('📍 ' + spot.name + '\n\n这里可以查看详细信息、导航、收藏等');
+                    alert('<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> ' + spot.name + '\n\n这里可以查看详细信息、导航、收藏等');
                 });
             });
         }
@@ -2135,9 +2719,514 @@
             });
         }
         
-        // 页面加载完成后初始化地图
+        // 从OSS加载景点数据
+        let attractionsData = [];
+        let routesData = [];
+        let hiddenGemsData = [];
+        let currentCity = 'beijing';
+        
+        // OSS配置
+        const OSS_BASE_URL = 'https://beijingyuyan.oss-cn-beijing.aliyuncs.com';
+        
+        // 生成签名URL（注意：实际项目中应该在服务端生成签名）
+        function getSignedUrl(objectKey) {
+            return `${OSS_BASE_URL}/${objectKey}`;
+        }
+        
+        async function loadDataFromOSS() {
+            try {
+                console.log('🚀 正在从OSS加载数据...');
+                
+                let attractionsUrl, routesUrl, hiddenGemsUrl;
+                if (currentCity === 'jiangsu') {
+                    attractionsUrl = getSignedUrl('data/jiangsu_complete.json');
+                    routesUrl = getSignedUrl('data/jiangsu_routes.json');
+                    hiddenGemsUrl = getSignedUrl('data/jiangsu_hidden_gems.json');
+                } else {
+                    attractionsUrl = getSignedUrl('data/attractions.json');
+                    routesUrl = getSignedUrl('data/routes.json');
+                    hiddenGemsUrl = null;
+                }
+                
+                console.log('加载URL:', attractionsUrl);
+                
+                // 加载景点数据
+                const attractionsResponse = await fetch(attractionsUrl);
+                console.log('景点响应状态:', attractionsResponse.status);
+                if (attractionsResponse.ok) {
+                    const attractionsJson = await attractionsResponse.json();
+                    if (attractionsJson.cities) {
+                        // 江苏数据结构
+                        attractionsData = [];
+                        attractionsJson.cities.forEach(city => {
+                            city.attractions.forEach(attr => {
+                                attr.cityName = city.name;
+                                attractionsData.push(attr);
+                            });
+                        });
+                    } else {
+                        attractionsData = attractionsJson.attractions || [];
+                    }
+                    console.log(`✅ 加载了 ${attractionsData.length} 个景点`);
+                } else {
+                    console.error('❌ 加载景点失败:', attractionsResponse.status);
+                }
+                
+                // 加载特色打卡点
+                if (hiddenGemsUrl) {
+                    const hiddenGemsResponse = await fetch(hiddenGemsUrl);
+                    if (hiddenGemsResponse.ok) {
+                        const hiddenGemsJson = await hiddenGemsResponse.json();
+                        hiddenGemsData = hiddenGemsJson.places || [];
+                        console.log(`✅ 加载了 ${hiddenGemsData.length} 个特色打卡点`);
+                    }
+                }
+                
+                // 加载路线数据
+                const routesResponse = await fetch(routesUrl);
+                if (routesResponse.ok) {
+                    const routesJson = await routesResponse.json();
+                    routesData = routesJson.routes || [];
+                    console.log(`✅ 加载了 ${routesData.length} 条路线`);
+                }
+                
+                updateAttractionsUI();
+                updateRoutesUI();
+                
+            } catch (error) {
+                console.error('❌ 加载数据失败:', error);
+                // 使用默认数据
+                console.log('⚠️ 使用默认数据');
+            }
+        }
+        
+        // 搜索功能
+        function searchPlaces(keyword) {
+            if (!keyword) return [];
+            
+            const results = [];
+            const allPlaces = [...attractionsData, ...hiddenGemsData];
+            
+            allPlaces.forEach(place => {
+                if (place.name && place.name.includes(keyword)) {
+                    results.push(place);
+                } else if (place.cityName && place.cityName.includes(keyword)) {
+                    results.push(place);
+                } else if (place.category && place.category.includes(keyword)) {
+                    results.push(place);
+                }
+            });
+            
+            return results;
+        }
+        
+        // 显示搜索结果
+        function showSearchResults(results) {
+            const container = document.querySelector('.search-results');
+            if (!container) return;
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:#718096;">没有找到相关结果</div>';
+                return;
+            }
+            
+            container.innerHTML = results.map(place => `
+                <div style="padding:15px;border-bottom:1px solid #e2e8f0;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="showPlaceDetail('${place.id}')">
+                    <div style="width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg, #667eea, #764ba2);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;">
+                        ${place.name.charAt(0)}
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;color:#1a365d;">${place.name}</div>
+                        <div style="font-size:12px;color:#718096;">${place.cityName || place.city || ''} · ${place.category || ''}</div>
+                        <div style="font-size:12px;color:#d69e2e;">⭐ ${place.rating || '4.5'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 切换城市
+        function switchCity(city) {
+            currentCity = city;
+            const cityNames = {
+                'beijing': '北京',
+                'shanghai': '上海',
+                'hangzhou': '杭州',
+                'jiangsu': '江苏'
+            };
+            document.getElementById('current-location').textContent = cityNames[city] || '北京';
+            closeLocationModal();
+            updateMapLocation(cityNames[city] || '北京');
+            loadDataFromOSS();
+        }
+        
+        // 更新景点UI
+        function updateAttractionsUI() {
+            // 更新首页景点卡片
+            const sections = {
+                '热门景点': document.querySelector('.section:nth-of-type(1) .card-scroll'),
+                '摄影秘境': document.querySelector('.section:nth-of-type(2) .card-scroll'),
+                '小众秘境': document.querySelector('.section:nth-of-type(3) .card-scroll')
+            };
+            
+            // 清空现有内容
+            Object.values(sections).forEach(section => {
+                if (section) section.innerHTML = '';
+            });
+            
+            // 按分类填充数据
+            attractionsData.forEach(attraction => {
+                const section = sections[attraction.category];
+                if (section) {
+                    const card = createAttractionCard(attraction);
+                    section.appendChild(card);
+                }
+            });
+        }
+        
+        // 创建景点卡片
+        function createAttractionCard(attraction) {
+            const card = document.createElement('div');
+            card.className = 'attraction-card';
+            card.style.cssText = 'min-width: 280px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s;';
+            
+            const cityLabel = attraction.cityName ? `<div style="position: absolute; top: 10px; left: 10px; background: rgba(255,107,53,0.9); color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;">${attraction.cityName}</div>` : '';
+            
+            card.innerHTML = `
+                <div style="position: relative; height: 160px;">
+                    <img src="${attraction.image}" alt="${attraction.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    ${cityLabel}
+                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px;">
+                        &#x2B50; ${attraction.rating}
+                    </div>
+                </div>
+                <div style="padding: 15px;">
+                    <h4 style="font-size: 16px; margin-bottom: 8px; color: #1a365d;">${attraction.name}</h4>
+                    <p style="font-size: 13px; color: #718096; margin-bottom: 10px; line-height: 1.4;">${attraction.description.substring(0, 50)}...</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #e53e3e; font-weight: 600;">${attraction.price}</span>
+                        <span style="font-size: 12px; color: #718096;">${attraction.openTime}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                showAttractionDetail(attraction);
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+            
+            return card;
+        }
+        
+        // 显示景点详情
+        function showAttractionDetail(attraction) {
+            const detailHtml = `
+                <div style="padding: 20px;">
+                    <img src="${attraction.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;">
+                    <h2 style="color: #1a365d; margin-bottom: 10px;">${attraction.name}</h2>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <span style="background: #e6f2ff; color: #2b6cb0; padding: 5px 12px; border-radius: 15px; font-size: 13px;">&#x2B50; ${attraction.rating}分</span>
+                        <span style="background: #fef3c7; color: #d97706; padding: 5px 12px; border-radius: 15px; font-size: 13px;">&#x1F4B0; ${attraction.price}</span>
+                        <span style="background: #d1fae5; color: #059669; padding: 5px 12px; border-radius: 15px; font-size: 13px;">🕐 ${attraction.openTime}</span>
+                        ${attraction.cityName ? `<span style="background: #fce7f3; color: #be185d; padding: 5px 12px; border-radius: 15px; font-size: 13px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> ${attraction.cityName}</span>` : ''}
+                    </div>
+                    <p style="color: #4a5568; line-height: 1.6; margin-bottom: 15px;">${attraction.description}</p>
+                    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong style="color: #b45309;">💡 小贴士：</strong>
+                        <span style="color: #78350f;">${attraction.tips}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #1a365d;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line></svg> 地址：</strong>
+                        <span style="color: #4a5568;">${attraction.address}</span>
+                    </div>
+                </div>
+            `;
+            
+            // 创建弹窗显示详情
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative;">
+                    <button onclick="this.closest('.oss-detail-modal').remove()" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; z-index: 10;">×</button>
+                    ${detailHtml}
+                </div>
+            `;
+            modal.className = 'oss-detail-modal';
+            document.body.appendChild(modal);
+        }
+        
+        // 更新路线UI
+        function updateRoutesUI() {
+            // 可以在这里更新规划页面的推荐路线
+            console.log('路线数据已加载，可用于路线规划');
+        }
+        
+        // 规划结果页数据
+        const planData = [
+            {
+                date: '05.01',
+                weekday: '周五',
+                title: '园林博览与平江风雅',
+                spots: 7,
+                distance: '约12km',
+                duration: '8小时',
+                route: [
+                    { name: '拙政园', type: 'attraction', startTime: '08:30', endTime: '11:00', tags: ['5A景区', '世界文化遗产'], desc: '中国四大名园之首，江南园林典范', duration: '2.5小时', distance: '0km' },
+                    { name: '苏州博物馆', type: 'attraction', startTime: '11:15', endTime: '12:30', tags: ['贝聿铭设计', '免费'], desc: '现代建筑大师贝聿铭的封山之作', duration: '1小时', distance: '步行5分钟' },
+                    { name: '狮子林', type: 'attraction', startTime: '13:30', endTime: '15:00', tags: ['假山王国', '4A景区'], desc: '以假山闻名的禅宗园林', duration: '1.5小时', distance: '步行8分钟' },
+                    { name: '东园', type: 'attraction', startTime: '15:15', endTime: '16:30', tags: ['免费', '本地生活'], desc: '苏州人日常休闲的城市公园', duration: '1小时', distance: '步行10分钟' },
+                    { name: '观前街', type: 'food', startTime: '17:00', endTime: '18:30', tags: ['美食街', '购物'], desc: '苏州最繁华的商业步行街', duration: '1.5小时', distance: '步行12分钟' },
+                    { name: '章太炎故居', type: 'attraction', startTime: '19:00', endTime: '19:45', tags: ['名人故居', '免费'], desc: '近代国学大师章太炎的故居', duration: '45分钟', distance: '步行8分钟' },
+                    { name: '稻山村·苏州菜', type: 'food', startTime: '20:00', endTime: '21:30', tags: ['苏帮菜', '老字号'], desc: '品尝正宗苏州本帮菜', duration: '1.5小时', distance: '步行5分钟' }
+                ]
+            },
+            {
+                date: '05.02',
+                weekday: '周六',
+                title: '水乡古镇与太湖风光',
+                spots: 5,
+                distance: '约68km',
+                duration: '10小时',
+                route: [
+                    { name: '周庄古镇', type: 'attraction', startTime: '08:00', endTime: '12:00', tags: ['5A景区', '中国第一水乡'], desc: '江南六大古镇之一，双桥、沈厅', duration: '4小时', distance: '自驾35km' },
+                    { name: '同里古镇', type: 'attraction', startTime: '13:30', endTime: '16:00', tags: ['5A景区', '世界遗产'], desc: '退思园、三桥、明清街', duration: '2.5小时', distance: '自驾18km' },
+                    { name: '太湖东山', type: 'attraction', startTime: '16:30', endTime: '18:00', tags: ['日落', '湖景'], desc: '太湖最美日落观赏点', duration: '1.5小时', distance: '自驾15km' },
+                    { name: '太湖三白宴', type: 'food', startTime: '18:30', endTime: '20:00', tags: ['湖鲜', '特色'], desc: '白鱼、白虾、银鱼', duration: '1.5小时', distance: '0km' }
+                ]
+            },
+            {
+                date: '05.03',
+                weekday: '周日',
+                title: '吴中第一山与金鸡湖',
+                spots: 6,
+                distance: '约25km',
+                duration: '9小时',
+                route: [
+                    { name: '虎丘', type: 'attraction', startTime: '08:30', endTime: '11:30', tags: ['5A景区', '吴中第一山'], desc: '虎丘塔、剑池、千人石', duration: '3小时', distance: '0km' },
+                    { name: '寒山寺', type: 'attraction', startTime: '12:00', endTime: '13:30', tags: ['4A景区', '古诗'], desc: '姑苏城外寒山寺，夜半钟声到客船', duration: '1.5小时', distance: '自驾8km' },
+                    { name: '留园', type: 'attraction', startTime: '14:00', endTime: '16:00', tags: ['5A景区', '四大名园'], desc: '中国四大名园之一，建筑艺术精湛', duration: '2小时', distance: '自驾5km' },
+                    { name: '金鸡湖', type: 'attraction', startTime: '16:30', endTime: '18:30', tags: ['免费', '现代苏州'], desc: '苏州现代化地标，东方之门', duration: '2小时', distance: '自驾12km' },
+                    { name: '诚品书店', type: 'attraction', startTime: '19:00', endTime: '20:30', tags: ['文创', '台湾'], desc: '大陆首家诚品书店', duration: '1.5小时', distance: '步行5分钟' }
+                ]
+            },
+            {
+                date: '05.04',
+                weekday: '周一',
+                title: '丝绸文化与 farewell',
+                spots: 4,
+                distance: '约8km',
+                duration: '5小时',
+                route: [
+                    { name: '苏州丝绸博物馆', type: 'attraction', startTime: '09:00', endTime: '11:00', tags: ['免费', '非遗'], desc: '了解苏州丝绸历史与工艺', duration: '2小时', distance: '0km' },
+                    { name: '平江路', type: 'attraction', startTime: '11:30', endTime: '13:30', tags: ['历史街区', '免费'], desc: '苏州最完整的历史街区', duration: '2小时', distance: '步行10分钟' },
+                    { name: '哑巴生煎', type: 'food', startTime: '13:30', endTime: '14:30', tags: ['老字号', '生煎'], desc: '苏州最出名的生煎包', duration: '1小时', distance: '步行5分钟' }
+                ]
+            }
+        ];
+        
+        let resultMap;
+        let currentDay = 0;
+        
+        // 显示规划结果页
+        function showPlanResult() {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('plan-result').classList.add('active');
+            
+            // 初始化结果页地图
+            setTimeout(() => {
+                initResultMap();
+                renderDayTimeline(0);
+            }, 100);
+        }
+        
+        // 返回规划页
+        function showPlanPage() {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('plan').classList.add('active');
+        }
+        
+        // 初始化结果页地图
+        function initResultMap() {
+            if (resultMap) {
+                resultMap.destroy();
+            }
+            
+            resultMap = new AMap.Map('result-map', {
+                zoom: 14,
+                center: [120.6273, 31.3256], // 苏州中心
+                viewMode: '2D'
+            });
+            
+            // 添加当前日期的路线
+            updateResultMapRoute(0);
+        }
+        
+        // 更新地图路线
+        function updateResultMapRoute(dayIndex) {
+            if (!resultMap) return;
+            
+            resultMap.clearMap();
+            
+            const dayData = planData[dayIndex];
+            const route = dayData.route;
+            
+            // 景点坐标数据（简化示例）
+            const spotCoords = {
+                '拙政园': [120.6263, 31.3254],
+                '苏州博物馆': [120.6268, 31.3260],
+                '狮子林': [120.6275, 31.3258],
+                '东园': [120.6280, 31.3245],
+                '观前街': [120.6290, 31.3230],
+                '章太炎故居': [120.6285, 31.3225],
+                '稻山村·苏州菜': [120.6288, 31.3220],
+                '周庄古镇': [120.8456, 31.1156],
+                '同里古镇': [120.7256, 31.1656],
+                '太湖东山': [120.4356, 31.0656],
+                '太湖三白宴': [120.4356, 31.0656],
+                '虎丘': [120.5756, 31.3356],
+                '寒山寺': [120.5656, 31.3156],
+                '留园': [120.5956, 31.3156],
+                '金鸡湖': [120.7356, 31.3156],
+                '诚品书店': [120.7380, 31.3180],
+                '苏州丝绸博物馆': [120.6156, 31.3256],
+                '平江路': [120.6300, 31.3200],
+                '哑巴生煎': [120.6290, 31.3210]
+            };
+            
+            // 添加标记点
+            route.forEach((spot, index) => {
+                const coords = spotCoords[spot.name];
+                if (coords) {
+                    const marker = new AMap.Marker({
+                        position: coords,
+                        title: spot.name,
+                        label: {
+                            content: `${index + 1}. ${spot.name}`,
+                            offset: new AMap.Pixel(0, -30)
+                        }
+                    });
+                    
+                    // 根据类型设置不同颜色
+                    if (spot.type === 'food') {
+                        marker.setIcon('https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png');
+                    } else {
+                        marker.setIcon('https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png');
+                    }
+                    
+                    marker.setMap(resultMap);
+                }
+            });
+            
+            // 绘制路线
+            const path = route.map(spot => spotCoords[spot.name]).filter(c => c);
+            if (path.length > 1) {
+                const polyline = new AMap.Polyline({
+                    path: path,
+                    strokeColor: '#1a365d',
+                    strokeWeight: 3,
+                    strokeStyle: 'solid'
+                });
+                polyline.setMap(resultMap);
+                
+                // 调整视野
+                resultMap.setFitView();
+            }
+        }
+        
+        // 切换日期
+        function switchDay(dayIndex) {
+            currentDay = dayIndex;
+            
+            // 更新标签状态
+            document.querySelectorAll('.day-tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index === dayIndex);
+            });
+            
+            // 更新行程信息
+            const dayData = planData[dayIndex];
+            document.getElementById('day-title').textContent = `${dayData.date} ${dayData.weekday}「${dayData.title}」`;
+            document.getElementById('day-spots').textContent = `${dayData.spots}个景点`;
+            document.getElementById('day-distance').textContent = dayData.distance;
+            document.getElementById('day-duration').textContent = dayData.duration;
+            
+            // 更新时间线
+            renderDayTimeline(dayIndex);
+            
+            // 更新地图
+            updateResultMapRoute(dayIndex);
+        }
+        
+        // 渲染时间线
+        function renderDayTimeline(dayIndex) {
+            const timeline = document.getElementById('spot-timeline');
+            const dayData = planData[dayIndex];
+            
+            let html = '';
+            dayData.route.forEach((spot, index) => {
+                const dotClass = spot.type === 'food' ? 'food' : (spot.type === 'hotel' ? 'hotel' : '');
+                const tagClass = spot.type === 'food' ? 'food-tag' : '';
+                
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-time">
+                            <div class="timeline-time-start">${spot.startTime}</div>
+                            <div class="timeline-time-end">${spot.endTime}</div>
+                        </div>
+                        <div class="timeline-dot ${dotClass}">${index + 1}</div>
+                        <div class="timeline-content">
+                            <div class="timeline-spot-name">${spot.name}</div>
+                            <div class="timeline-spot-tags">
+                                ${spot.tags.map(tag => `<span class="timeline-spot-tag ${tagClass}">${tag}</span>`).join('')}
+                            </div>
+                            <div class="timeline-spot-desc">${spot.desc}</div>
+                            <div class="timeline-spot-meta">
+                                <span>⏱️ ${spot.duration}</span>
+                                <span>🚗 ${spot.distance}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加路线距离提示（除了最后一个）
+                if (index < dayData.route.length - 1) {
+                    html += `
+                        <div class="route-distance-hint">
+                            <span>🚗</span>
+                            <span>前往下一站</span>
+                            <div class="line"></div>
+                            <span>${dayData.route[index + 1].distance}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            timeline.innerHTML = html;
+        }
+        
+        // 修改生成路线按钮事件
+        function planRoute() {
+            const start = document.getElementById('drive-start').value;
+            const end = document.getElementById('drive-end').value;
+            
+            if (!start || !end) {
+                alert('请输入出发地和目的地');
+                return;
+            }
+            
+            // 显示规划结果页
+            showPlanResult();
+        }
+        
+        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
+            loadDataFromOSS(); // 从OSS加载数据
         });
     </script>
 </body>
