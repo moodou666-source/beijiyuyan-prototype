@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>北京雨燕 - 智能规划结果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 顶部导航栏 */
+        .result-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 15px 20px;
+            color: white;
+            position: relative;
+        }
+        
+        .result-back {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .result-title {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .result-subtitle {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
+        /* 日期切换标签 */
+        .day-tabs {
+            display: flex;
+            background: white;
+            padding: 10px 15px;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .day-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .day-tab {
+            flex-shrink: 0;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: #f7fafc;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-align: center;
+            min-width: 80px;
+            transition: all 0.3s;
+        }
+        
+        .day-tab.active {
+            background: #1a365d;
+            color: white;
+            border-color: #1a365d;
+        }
+        
+        .day-tab-date {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .day-tab-weekday {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+        
+        /* 地图区域 */
+        .result-map-container {
+            height: 280px;
+            position: relative;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .map-route-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-spot-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1a365d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        .map-spot-marker.food {
+            background: #e53e3e;
+        }
+        
+        .map-spot-label {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            margin-top: 36px;
+        }
+        
+        /* 行程概览 */
+        .trip-overview {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .trip-overview-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 10px;
+        }
+        
+        .trip-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .trip-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        
+        .trip-stat-icon {
+            font-size: 16px;
+        }
+        
+        /* 景点时间线 */
+        .spot-timeline {
+            padding: 15px 20px;
+            background: #f7fafc;
+            min-height: calc(100vh - 500px);
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 0;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 67px;
+            top: 40px;
+            bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-time {
+            width: 45px;
+            text-align: right;
+            flex-shrink: 0;
+            padding-top: 8px;
+        }
+        
+        .timeline-time-start {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        
+        .timeline-time-end {
+            font-size: 11px;
+            color: #718096;
+        }
+        
+        .timeline-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a365d, #2c5282);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            z-index: 1;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .timeline-dot.food {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        
+        .timeline-spot-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 6px;
+        }
+        
+        .timeline-spot-tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-spot-tag {
+            background: #ebf8ff;
+            color: #3182ce;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .timeline-spot-tag.food-tag {
+            background: #fef2f2;
+            color: #e53e3e;
+        }
+        
+        .timeline-spot-desc {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-spot-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .timeline-spot-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* 路线距离提示 */
+        .route-distance-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #fffbeb;
+            border-radius: 10px;
+            margin: 0 0 15px 75px;
+            font-size: 12px;
+            color: #92400e;
+            width: fit-content;
+        }
+        
+        .route-distance-hint .line {
+            width: 30px;
+            height: 1px;
+            background: #fcd34d;
+            position: relative;
+        }
+        
+        .route-distance-hint .line::after {
+            content: '→';
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            color: #f59e0b;
+            font-size: 10px;
+        }
+        
+        /* 地图图例 */
+        .map-legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1a365d;
+        }
+        
+        .legend-dot.food {
+            background: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <div class="result-header">
+            <button class="result-back" onclick="history.back()">←</button>
+            <div class="result-title">苏州4天3晚深度游</div>
+            <div class="result-subtitle">2026.05.01 - 05.04 · 自驾</div>
+        </div>
+        
+        <!-- 日期切换 -->
+        <div class="day-tabs">
+            <div class="day-tab active" onclick="switchDay(0)">
+                <div class="day-tab-date">05.01</div>
+                <div class="day-tab-weekday">周五</div>
+            </div>
+            <div class="day-tab" onclick="switchDay(1)">
+                <div class="day-tab-date">05.02</div>
+                <div class="day-tab-weekday">周六</div>
+            </div>
+            <div class="day-tab" onclick="switchDay(2)">
+                <div class="day-tab-date">05.03</div>
+                <div class="day-tab-weekday">周日</div>
+            </div>
+            <div class="day-tab" onclick="switchDay(3)">
+                <div class="day-tab-date">05.04</div>
+                <div class="day-tab-weekday">周一</div>
+            </div>
+        </div>
+        
+        <!-- 地图区域 -->
+        <div class="result-map-container">
+            <div class="map-placeholder" id="map-placeholder">
+                <svg class="map-route-svg" viewBox="0 0 414 280" preserveAspectRatio="xMidYMid slice">
+                    <!-- 路线 -->
+                    <path d="M 80 200 Q 150 150 200 120 T 320 80" stroke="#1a365d" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+                    <path d="M 320 80 Q 350 100 380 140" stroke="#1a365d" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+                    <path d="M 380 140 Q 300 180 250 200" stroke="#1a365d" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+                    <path d="M 250 200 Q 200 220 150 240" stroke="#1a365d" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+                    
+                    <!-- 景点标记 -->
+                    <circle cx="80" cy="200" r="8" fill="#1a365d" stroke="white" stroke-width="2"/>
+                    <circle cx="200" cy="120" r="8" fill="#1a365d" stroke="white" stroke-width="2"/>
+                    <circle cx="320" cy="80" r="8" fill="#1a365d" stroke="white" stroke-width="2"/>
+                    <circle cx="380" cy="140" r="8" fill="#e53e3e" stroke="white" stroke-width="2"/>
+                    <circle cx="250" cy="200" r="8" fill="#1a365d" stroke="white" stroke-width="2"/>
+                    <circle cx="150" cy="240" r="8" fill="#1a365d" stroke="white" stroke-width="2"/>
+                    <circle cx="120" cy="260" r="8" fill="#e53e3e" stroke="white" stroke-width="2"/>
+                    
+                    <!-- 标签 -->
+                    <text x="80" y="190" text-anchor="middle" fill="white" font-size="10" font-weight="bold">1</text>
+                    <text x="200" y="110" text-anchor="middle" fill="white" font-size="10" font-weight="bold">2</text>
+                    <text x="320" y="70" text-anchor="middle" fill="white" font-size="10" font-weight="bold">3</text>
+                    <text x="380" y="130" text-anchor="middle" fill="white" font-size="10" font-weight="bold">4</text>
+                    <text x="250" y="190" text-anchor="middle" fill="white" font-size="10" font-weight="bold">5</text>
+                    <text x="150" y="230" text-anchor="middle" fill="white" font-size="10" font-weight="bold">6</text>
+                    <text x="120" y="250" text-anchor="middle" fill="white" font-size="10" font-weight="bold">7</text>
+                </svg>
+                
+                <!-- 地点标签 -->
+                <div style="position: absolute; left: 60px; top: 210px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">拙政园</div>
+                <div style="position: absolute; left: 180px; top: 100px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">苏州博物馆</div>
+                <div style="position: absolute; left: 300px; top: 60px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">狮子林</div>
+                <div style="position: absolute; left: 360px; top: 150px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">观前街</div>
+                <div style="position: absolute; left: 230px; top: 210px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">东园</div>
+                <div style="position: absolute; left: 130px; top: 250px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">章太炎故居</div>
+                <div style="position: absolute; left: 100px; top: 270px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">稻山村</div>
+                
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot"></div>
+                        <span>景点</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot food"></div>
+                        <span>美食</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 行程概览 -->
+        <div class="trip-overview">
+            <div class="trip-overview-title" id="day-title">05.01 周五「园林博览与平江风雅」</div>
+            <div class="trip-stats">
+                <div class="trip-stat">
+                    <span class="trip-stat-icon">📍</span>
+                    <span id="day-spots">7个景点</span>
+                </div>
+                <div class="trip-stat">
+                    <span class="trip-stat-icon">🚗</span>
+                    <span id="day-distance">约12km</span>
+                </div>
+                <div class="trip-stat">
+                    <span class="trip-stat-icon">⏱️</span>
+                    <span id="day-duration">8小时</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 景点时间线 -->
+        <div class="spot-timeline" id="spot-timeline">
+            <!-- 动态生成 -->
+        </div>
+    </div>
+    
+    <script>
+        // 规划结果页数据
+        const planData = [
+            {
+                date: '05.01',
+                weekday: '周五',
+                title: '园林博览与平江风雅',
+                spots: 7,
+                distance: '约12km',
+                duration: '8小时',
+                route: [
+                    { name: '拙政园', type: 'attraction', startTime: '08:30', endTime: '11:00', tags: ['5A景区', '世界文化遗产'], desc: '中国四大名园之首，江南园林典范', duration: '2.5小时', distance: '0km' },
+                    { name: '苏州博物馆', type: 'attraction', startTime: '11:15', endTime: '12:30', tags: ['贝聿铭设计', '免费'], desc: '现代建筑大师贝聿铭的封山之作', duration: '1小时', distance: '步行5分钟' },
+                    { name: '狮子林', type: 'attraction', startTime: '13:30', endTime: '15:00', tags: ['假山王国', '4A景区'], desc: '以假山闻名的禅宗园林', duration: '1.5小时', distance: '步行8分钟' },
+                    { name: '东园', type: 'attraction', startTime: '15:15', endTime: '16:30', tags: ['免费', '本地生活'], desc: '苏州人日常休闲的城市公园', duration: '1小时', distance: '步行10分钟' },
+                    { name: '观前街', type: 'food', startTime: '17:00', endTime: '18:30', tags: ['美食街', '购物'], desc: '苏州最繁华的商业步行街', duration: '1.5小时', distance: '步行12分钟' },
+                    { name: '章太炎故居', type: 'attraction', startTime: '19:00', endTime: '19:45', tags: ['名人故居', '免费'], desc: '近代国学大师章太炎的故居', duration: '45分钟', distance: '步行8分钟' },
+                    { name: '稻山村·苏州菜', type: 'food', startTime: '20:00', endTime: '21:30', tags: ['苏帮菜', '老字号'], desc: '品尝正宗苏州本帮菜', duration: '1.5小时', distance: '步行5分钟' }
+                ]
+            },
+            {
+                date: '05.02',
+                weekday: '周六',
+                title: '水乡古镇与太湖风光',
+                spots: 5,
+                distance: '约68km',
+                duration: '10小时',
+                route: [
+                    { name: '周庄古镇', type: 'attraction', startTime: '08:00', endTime: '12:00', tags: ['5A景区', '中国第一水乡'], desc: '江南六大古镇之一，双桥、沈厅', duration: '4小时', distance: '自驾35km' },
+                    { name: '同里古镇', type: 'attraction', startTime: '13:30', endTime: '16:00', tags: ['5A景区', '世界遗产'], desc: '退思园、三桥、明清街', duration: '2.5小时', distance: '自驾18km' },
+                    { name: '太湖东山', type: 'attraction', startTime: '16:30', endTime: '18:00', tags: ['日落', '湖景'], desc: '太湖最美日落观赏点', duration: '1.5小时', distance: '自驾15km' },
+                    { name: '太湖三白宴', type: 'food', startTime: '18:30', endTime: '20:00', tags: ['湖鲜', '特色'], desc: '白鱼、白虾、银鱼', duration: '1.5小时', distance: '0km' }
+                ]
+            },
+            {
+                date: '05.03',
+                weekday: '周日',
+                title: '吴中第一山与金鸡湖',
+                spots: 6,
+                distance: '约25km',
+                duration: '9小时',
+                route: [
+                    { name: '虎丘', type: 'attraction', startTime: '08:30', endTime: '11:30', tags: ['5A景区', '吴中第一山'], desc: '虎丘塔、剑池、千人石', duration: '3小时', distance: '0km' },
+                    { name: '寒山寺', type: 'attraction', startTime: '12:00', endTime: '13:30', tags: ['4A景区', '古诗'], desc: '姑苏城外寒山寺，夜半钟声到客船', duration: '1.5小时', distance: '自驾8km' },
+                    { name: '留园', type: 'attraction', startTime: '14:00', endTime: '16:00', tags: ['5A景区', '四大名园'], desc: '中国四大名园之一，建筑艺术精湛', duration: '2小时', distance: '自驾5km' },
+                    { name: '金鸡湖', type: 'attraction', startTime: '16:30', endTime: '18:30', tags: ['免费', '现代苏州'], desc: '苏州现代化地标，东方之门', duration: '2小时', distance: '自驾12km' },
+                    { name: '诚品书店', type: 'attraction', startTime: '19:00', endTime: '20:30', tags: ['文创', '台湾'], desc: '大陆首家诚品书店', duration: '1.5小时', distance: '步行5分钟' }
+                ]
+            },
+            {
+                date: '05.04',
+                weekday: '周一',
+                title: '丝绸文化与 farewell',
+                spots: 4,
+                distance: '约8km',
+                duration: '5小时',
+                route: [
+                    { name: '苏州丝绸博物馆', type: 'attraction', startTime: '09:00', endTime: '11:00', tags: ['免费', '非遗'], desc: '了解苏州丝绸历史与工艺', duration: '2小时', distance: '0km' },
+                    { name: '平江路', type: 'attraction', startTime: '11:30', endTime: '13:30', tags: ['历史街区', '免费'], desc: '苏州最完整的历史街区', duration: '2小时', distance: '步行10分钟' },
+                    { name: '哑巴生煎', type: 'food', startTime: '13:30', endTime: '14:30', tags: ['老字号', '生煎'], desc: '苏州最出名的生煎包', duration: '1小时', distance: '步行5分钟' }
+                ]
+            }
+        ];
+        
+        let currentDay = 0;
+        
+        // 切换日期
+        function switchDay(dayIndex) {
+            currentDay = dayIndex;
+            
+            // 更新标签状态
+            document.querySelectorAll('.day-tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index === dayIndex);
+            });
+            
+            // 更新行程信息
+            const dayData = planData[dayIndex];
+            document.getElementById('day-title').textContent = `${dayData.date} ${dayData.weekday}「${dayData.title}」`;
+            document.getElementById('day-spots').textContent = `${dayData.spots}个景点`;
+            document.getElementById('day-distance').textContent = dayData.distance;
+            document.getElementById('day-duration').textContent = dayData.duration;
+            
+            // 更新时间线
+            renderDayTimeline(dayIndex);
+        }
+        
+        // 渲染时间线
+        function renderDayTimeline(dayIndex) {
+            const timeline = document.getElementById('spot-timeline');
+            const dayData = planData[dayIndex];
+            
+            let html = '';
+            dayData.route.forEach((spot, index) => {
+                const dotClass = spot.type === 'food' ? 'food' : '';
+                const tagClass = spot.type === 'food' ? 'food-tag' : '';
+                
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-time">
+                            <div class="timeline-time-start">${spot.startTime}</div>
+                            <div class="timeline-time-end">${spot.endTime}</div>
+                        </div>
+                        <div class="timeline-dot ${dotClass}">${index + 1}</div>
+                        <div class="timeline-content">
+                            <div class="timeline-spot-name">${spot.name}</div>
+                            <div class="timeline-spot-tags">
+                                ${spot.tags.map(tag => `<span class="timeline-spot-tag ${tagClass}">${tag}</span>`).join('')}
+                            </div>
+                            <div class="timeline-spot-desc">${spot.desc}</div>
+                            <div class="timeline-spot-meta">
+                                <span>⏱️ ${spot.duration}</span>
+                                <span>🚗 ${spot.distance}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加路线距离提示（除了最后一个）
+                if (index < dayData.route.length - 1) {
+                    html += `
+                        <div class="route-distance-hint">
+                            <span>🚗</span>
+                            <span>前往下一站</span>
+                            <div class="line"></div>
+                            <span>${dayData.route[index + 1].distance}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            timeline.innerHTML = html;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDayTimeline(0);
+        });
+    </script>
+</body>
+</html>
