@@ -360,12 +360,11 @@
             padding: 8px 12px;
             width: auto;
             height: auto;
-            position: absolute;
-            top: -44px;
+            position: fixed;
             right: 12px;
             z-index: 2001;
             cursor: pointer;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
         }
@@ -393,7 +392,6 @@
             max-height: calc(100vh - 83px); /* 最大高度：到屏幕最顶端(状态栏下方) */
             box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
-            overflow: visible; /* 让大地图按钮能显示在弹窗外部 */
         }
         /* 弹窗展开到顶部时 */
         .spot-detail-panel.expanded {
@@ -2316,12 +2314,13 @@
                 <div class="carousel-indicators" id="carouselIndicators"></div>
             </div>
             
+            <!-- 大地图按钮（独立于弹窗，用JS追踪位置） -->
+            <div class="map-toggle-btn" id="btn-mapToggle" onclick="toggleMapType()">
+                <span style="font-size: 12px; color: white; font-weight: 600;">⇄ 大地图</span>
+            </div>
+            
             <!-- 景点列表弹窗（默认显示） -->
             <div class="spot-detail-panel" id="spotDetailPanel">
-                <!-- 大地图按钮：固定在弹窗右上角外侧上方 -->
-                <div class="map-toggle-btn" id="btn-mapToggle" onclick="toggleMapType()">
-                    <span style="font-size: 12px; color: black; font-weight: 600;">⇄ 大地图</span>
-                </div>
                 <div class="spot-detail-drag-handle" id="spotDragHandle">
                     <div class="spot-detail-drag-bar"></div>
                 </div>
@@ -3182,6 +3181,8 @@
             isCarouselMode = false;
             const backBtn = document.getElementById('btn-backToList');
             if (backBtn) backBtn.style.display = 'none';
+            const mapToggleBtn = document.getElementById('btn-mapToggle');
+            if (mapToggleBtn) mapToggleBtn.style.display = 'none';
             
             // 加载对应模式
             if (mode === 'spots') {
@@ -3382,7 +3383,7 @@
             panel.classList.remove('collapsed', 'expanded');
             
             // 更新大地图按钮位置 - 绑定到弹窗上边缘
-            
+            setTimeout(updateMapTogglePosition, 50);
         }
         
         // 摄影模式 - 50张网络照片
@@ -3865,6 +3866,7 @@
         function toggleMapType() {
             const panel = document.getElementById('spotDetailPanel');
             const overlay = document.getElementById('carouselOverlay');
+            const mapToggleBtn = document.getElementById('btn-mapToggle');
             const backBtn = document.getElementById('btn-backToList');
             
             if (!isCarouselMode) {
@@ -3873,6 +3875,7 @@
                 panel.classList.remove('active');
                 panel.style.display = 'none';
                 overlay.classList.add('active');
+                mapToggleBtn.style.display = 'none'; // 隐藏大地图按钮
                 backBtn.style.display = 'flex'; // 显示回列表按钮
                 renderCarousel();
             } else {
@@ -3882,6 +3885,7 @@
                 panel.classList.add('active');
                 panel.style.display = 'flex';
                 backBtn.style.display = 'none'; // 隐藏回列表按钮
+                updateMapTogglePosition(); // 显示并定位大地图按钮
             }
         }
         
@@ -4016,6 +4020,8 @@
                     panel.classList.remove('expanded');
                 }
                 // 更新大地图按钮位置（立即更新 + 过渡完成后修正）
+                updateMapTogglePosition();
+                setTimeout(updateMapTogglePosition, 350);
                 
                 
             }
@@ -4051,6 +4057,7 @@
                 }
                 
                 // 更新大地图按钮位置（传入当前 translateY 实现实时跟随）
+                updateMapTogglePosition();
                 
             }, { passive: true });
             
@@ -4078,6 +4085,7 @@
                 }
                 
                 // 更新大地图按钮位置
+                updateMapTogglePosition();
                 
             });
             
@@ -4103,6 +4111,7 @@
                 panel.style.transform = `translateX(-50%) translateY(${newTranslate}px)`;
                 
                 // 更新大地图按钮位置（传入当前 translateY 实现实时跟随）
+                updateMapTogglePosition();
                 
             });
             
@@ -4127,6 +4136,7 @@
                 }
                 
                 // 更新大地图按钮位置
+                updateMapTogglePosition();
                 
             });
             
@@ -4135,6 +4145,7 @@
                 if (isDragging) return;
                 setPanelState(!isExpanded);
                 // 更新大地图按钮位置
+                updateMapTogglePosition();
                 
             });
         }
@@ -4155,13 +4166,31 @@
             panel.style.top = 'auto';
             
             // 更新大地图按钮位置（立即 + 过渡完成后修正）
-            
-            
+            updateMapTogglePosition();
+            setTimeout(updateMapTogglePosition, 350);
         }
         
         // 关闭景点列表弹窗
         function closeSpotDetail() {
             document.getElementById('spotDetailPanel').classList.remove('active');
+            document.getElementById('btn-mapToggle').style.display = 'none';
+        }
+        
+        // 更新大地图按钮位置 - 绑定到弹窗上边缘（fixed定位）
+        function updateMapTogglePosition() {
+            const panel = document.getElementById('spotDetailPanel');
+            const btn = document.getElementById('btn-mapToggle');
+            if (!panel || !btn) return;
+            if (panel.style.display === 'none' || !panel.classList.contains('active')) {
+                btn.style.display = 'none';
+                return;
+            }
+            const rect = panel.getBoundingClientRect();
+            // 按钮底部紧贴弹窗上边缘（8px间距）
+            btn.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+            // 按钮右侧对齐弹窗右边缘内缩12px
+            btn.style.right = (window.innerWidth - rect.right + 12) + 'px';
+            btn.style.display = 'flex';
         }
         
         function initResultMap(center) {
