@@ -438,7 +438,8 @@
         }
         .carousel-back-btn {
             position: fixed;
-            right: 72px;
+            top: 80px;
+            right: 12px;
             background: #7C9A3D;
             border-radius: 12px;
             padding: 6px 10px;
@@ -446,7 +447,7 @@
             height: auto;
             z-index: 1002;
             cursor: pointer;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             pointer-events: auto;
@@ -3870,8 +3871,6 @@
                 mapToggleBtn.style.display = 'none'; // 隐藏大地图按钮
                 backBtn.style.display = 'flex'; // 显示回列表按钮
                 renderCarousel();
-                // 延迟一帧确保 carousel 已渲染，再更新按钮位置
-                requestAnimationFrame(() => updateBackBtnPosition());
             } else {
                 // 轮播 → 列表
                 isCarouselMode = false;
