@@ -436,6 +436,27 @@
             display: flex;
             pointer-events: auto;
         }
+        .carousel-back-btn {
+            position: fixed;
+            right: 72px;
+            background: #7C9A3D;
+            border-radius: 12px;
+            padding: 6px 10px;
+            width: auto;
+            height: auto;
+            z-index: 1002;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+        }
+        .carousel-back-btn span {
+            color: white !important;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
         .carousel-wrapper {
             width: 375px;
             height: 170px;
@@ -2279,6 +2300,9 @@
             
             <!-- 轮播卡片覆盖层（点大地图后显示） -->
             <div class="carousel-overlay" id="carouselOverlay">
+                <div class="carousel-back-btn" id="btn-backToList" onclick="toggleMapType()">
+                    <span style="font-size: 12px; color: white; font-weight: 600;">⇄ 回列表</span>
+                </div>
                 <div class="carousel-wrapper" id="carouselWrapper">
                     <div class="carousel-track" id="carouselTrack">
                         <!-- 动态渲染 -->
@@ -3147,8 +3171,10 @@
             
             // 重置轮播状态
             isCarouselMode = false;
-            const btnSpan = document.querySelector('#btn-mapToggle span');
-            if (btnSpan) btnSpan.textContent = '⇄ 大地图';
+            const backBtn = document.getElementById('btn-backToList');
+            if (backBtn) backBtn.style.display = 'none';
+            const mapToggleBtn = document.getElementById('btn-mapToggle');
+            if (mapToggleBtn) mapToggleBtn.style.display = 'flex';
             
             // 加载对应模式
             if (mode === 'spots') {
@@ -3832,7 +3858,8 @@
         function toggleMapType() {
             const panel = document.getElementById('spotDetailPanel');
             const overlay = document.getElementById('carouselOverlay');
-            const btnSpan = document.querySelector('#btn-mapToggle span');
+            const mapToggleBtn = document.getElementById('btn-mapToggle');
+            const backBtn = document.getElementById('btn-backToList');
             
             if (!isCarouselMode) {
                 // 列表 → 轮播
@@ -3840,16 +3867,34 @@
                 panel.classList.remove('active');
                 panel.style.display = 'none';
                 overlay.classList.add('active');
-                if (btnSpan) btnSpan.textContent = '⇄ 回列表';
+                mapToggleBtn.style.display = 'none'; // 隐藏大地图按钮
+                backBtn.style.display = 'flex'; // 显示回列表按钮
                 renderCarousel();
+                // 延迟一帧确保 carousel 已渲染，再更新按钮位置
+                requestAnimationFrame(() => updateBackBtnPosition());
             } else {
                 // 轮播 → 列表
                 isCarouselMode = false;
                 overlay.classList.remove('active');
                 panel.classList.add('active');
                 panel.style.display = 'flex';
-                if (btnSpan) btnSpan.textContent = '⇄ 大地图';
+                backBtn.style.display = 'none'; // 隐藏回列表按钮
+                mapToggleBtn.style.display = 'flex'; // 显示大地图按钮
+                updateMapTogglePosition();
             }
+        }
+        
+        // 更新回列表按钮位置 - 绑定到轮播覆盖层上边缘
+        function updateBackBtnPosition() {
+            const overlay = document.getElementById('carouselOverlay');
+            const backBtn = document.getElementById('btn-backToList');
+            if (!overlay || !backBtn) return;
+            
+            const rect = overlay.getBoundingClientRect();
+            const overlayTop = rect.top;
+            // 按钮底部紧贴轮播层上边缘（8px 间距）
+            const btnBottom = window.innerHeight - overlayTop + 8;
+            backBtn.style.bottom = btnBottom + 'px';
         }
         
         // 渲染轮播卡片
