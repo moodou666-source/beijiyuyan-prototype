@@ -354,15 +354,20 @@
         .explore-float-btn .btn-icon {
             font-size: 24px;
         }
-        .explore-float-btn.map-toggle-btn {
+        .map-toggle-btn {
             background: #7C9A3D;
             border-radius: 12px;
             padding: 6px 10px;
             width: auto;
             height: auto;
             position: absolute;
+            top: -40px;
             right: 12px;
-            z-index: 1001;
+            z-index: 2001;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .explore-float-btn.map-toggle-btn span {
             color: white !important;
@@ -2293,9 +2298,7 @@
                     <div class="explore-float-btn" id="btn-tracks" onclick="switchExploreMode('tracks')">
                         <img src="./北京雨燕1.0版_files/icon-plaza-50.png" alt="广场" class="btn-icon-img" style="width: 50px; height: 50px;">
                     </div>
-                    <div class="explore-float-btn map-toggle-btn" id="btn-mapToggle" onclick="toggleMapType()">
-                        <span style="font-size: 12px; color: white; font-weight: 600;">⇄ 大地图</span>
-                    </div>
+
                 </div>
             </div>
             
@@ -2314,6 +2317,10 @@
             
             <!-- 景点列表弹窗（默认显示） -->
             <div class="spot-detail-panel" id="spotDetailPanel">
+                <!-- 大地图按钮：固定在弹窗右上角外侧上方 -->
+                <div class="map-toggle-btn" id="btn-mapToggle" onclick="toggleMapType()">
+                    <span style="font-size: 12px; color: white; font-weight: 600;">⇄ 大地图</span>
+                </div>
                 <div class="spot-detail-drag-handle" id="spotDragHandle">
                     <div class="spot-detail-drag-bar"></div>
                 </div>
@@ -3174,8 +3181,6 @@
             isCarouselMode = false;
             const backBtn = document.getElementById('btn-backToList');
             if (backBtn) backBtn.style.display = 'none';
-            const mapToggleBtn = document.getElementById('btn-mapToggle');
-            if (mapToggleBtn) mapToggleBtn.style.display = 'flex';
             
             // 加载对应模式
             if (mode === 'spots') {
@@ -3376,7 +3381,7 @@
             panel.classList.remove('collapsed', 'expanded');
             
             // 更新大地图按钮位置 - 绑定到弹窗上边缘
-            setTimeout(updateMapTogglePosition, 50);
+            
         }
         
         // 摄影模式 - 50张网络照片
@@ -3859,7 +3864,6 @@
         function toggleMapType() {
             const panel = document.getElementById('spotDetailPanel');
             const overlay = document.getElementById('carouselOverlay');
-            const mapToggleBtn = document.getElementById('btn-mapToggle');
             const backBtn = document.getElementById('btn-backToList');
             
             if (!isCarouselMode) {
@@ -3868,7 +3872,6 @@
                 panel.classList.remove('active');
                 panel.style.display = 'none';
                 overlay.classList.add('active');
-                mapToggleBtn.style.display = 'none'; // 隐藏大地图按钮
                 backBtn.style.display = 'flex'; // 显示回列表按钮
                 renderCarousel();
             } else {
@@ -3878,22 +3881,7 @@
                 panel.classList.add('active');
                 panel.style.display = 'flex';
                 backBtn.style.display = 'none'; // 隐藏回列表按钮
-                mapToggleBtn.style.display = 'flex'; // 显示大地图按钮
-                updateMapTogglePosition();
             }
-        }
-        
-        // 更新回列表按钮位置 - 绑定到轮播覆盖层上边缘
-        function updateBackBtnPosition() {
-            const overlay = document.getElementById('carouselOverlay');
-            const backBtn = document.getElementById('btn-backToList');
-            if (!overlay || !backBtn) return;
-            
-            const rect = overlay.getBoundingClientRect();
-            const overlayTop = rect.top;
-            // 按钮底部紧贴轮播层上边缘（8px 间距）
-            const btnBottom = window.innerHeight - overlayTop + 8;
-            backBtn.style.bottom = btnBottom + 'px';
         }
         
         // 渲染轮播卡片
@@ -4027,8 +4015,8 @@
                     panel.classList.remove('expanded');
                 }
                 // 更新大地图按钮位置（立即更新 + 过渡完成后修正）
-                updateMapTogglePosition();
-                setTimeout(updateMapTogglePosition, 350);
+                
+                
             }
             
             // 触摸事件
@@ -4062,7 +4050,7 @@
                 }
                 
                 // 更新大地图按钮位置（传入当前 translateY 实现实时跟随）
-                updateMapTogglePosition(newTranslate);
+                
             }, { passive: true });
             
             document.addEventListener('touchend', () => {
@@ -4089,7 +4077,7 @@
                 }
                 
                 // 更新大地图按钮位置
-                updateMapTogglePosition();
+                
             });
             
             // 鼠标事件（桌面端）
@@ -4114,7 +4102,7 @@
                 panel.style.transform = `translateX(-50%) translateY(${newTranslate}px)`;
                 
                 // 更新大地图按钮位置（传入当前 translateY 实现实时跟随）
-                updateMapTogglePosition(newTranslate);
+                
             });
             
             document.addEventListener('mouseup', () => {
@@ -4138,7 +4126,7 @@
                 }
                 
                 // 更新大地图按钮位置
-                updateMapTogglePosition();
+                
             });
             
             // 点击拖拽条切换展开/收缩
@@ -4146,25 +4134,8 @@
                 if (isDragging) return;
                 setPanelState(!isExpanded);
                 // 更新大地图按钮位置
-                updateMapTogglePosition();
+                
             });
-        }
-        
-        // 更新大地图按钮位置 - 绑定到弹窗上边缘（absolute定位，相对于app-container）
-        function updateMapTogglePosition(dragTranslateY) {
-            const panel = document.getElementById('spotDetailPanel');
-            const mapToggleBtn = document.getElementById('btn-mapToggle');
-            const container = document.querySelector('.app-container');
-            if (!panel || !mapToggleBtn || !container) return;
-            
-            const containerRect = container.getBoundingClientRect();
-            const panelRect = panel.getBoundingClientRect();
-            const panelTop = panelRect.top;
-            
-            // 按钮bottom = app容器底部到弹窗顶部的距离
-            const containerBottom = containerRect.bottom;
-            const btnBottom = containerBottom - panelTop + 8;
-            mapToggleBtn.style.bottom = btnBottom + 'px';
         }
         
         // 设置弹窗位置 - 可停在任意位置
@@ -4183,8 +4154,8 @@
             panel.style.top = 'auto';
             
             // 更新大地图按钮位置（立即 + 过渡完成后修正）
-            updateMapTogglePosition();
-            setTimeout(updateMapTogglePosition, 350);
+            
+            
         }
         
         // 关闭景点列表弹窗
