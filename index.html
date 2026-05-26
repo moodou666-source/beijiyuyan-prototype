@@ -360,8 +360,8 @@
             padding: 6px 10px;
             width: auto;
             height: auto;
-            position: fixed;
-            right: 72px;
+            position: absolute;
+            right: 12px;
             z-index: 1001;
         }
         .explore-float-btn.map-toggle-btn span {
@@ -437,8 +437,8 @@
             pointer-events: auto;
         }
         .carousel-back-btn {
-            position: fixed;
-            top: -480px;
+            position: absolute;
+            top: 80px;
             right: 12px;
             background: #7C9A3D;
             border-radius: 12px;
@@ -4150,32 +4150,20 @@
             });
         }
         
-        // 更新大地图按钮位置 - 绑定到弹窗上边缘
+        // 更新大地图按钮位置 - 绑定到弹窗上边缘（absolute定位，相对于app-container）
         function updateMapTogglePosition(dragTranslateY) {
             const panel = document.getElementById('spotDetailPanel');
             const mapToggleBtn = document.getElementById('btn-mapToggle');
-            if (!panel || !mapToggleBtn) return;
+            const container = document.querySelector('.app-container');
+            if (!panel || !mapToggleBtn || !container) return;
             
-            let panelTop;
+            const containerRect = container.getBoundingClientRect();
+            const panelRect = panel.getBoundingClientRect();
+            const panelTop = panelRect.top;
             
-            if (typeof dragTranslateY === 'number') {
-                // 拖动中：用解析公式计算，避免 getBoundingClientRect 的性能问题
-                const panelBottom = 83;
-                const panelHeight = panel.classList.contains('expanded')
-                    ? (window.innerHeight - 83)
-                    : panel.offsetHeight;
-                const visibleHeight = panel.classList.contains('expanded')
-                    ? panelHeight
-                    : Math.max(120, panelHeight - dragTranslateY);
-                panelTop = window.innerHeight - panelBottom - visibleHeight;
-            } else {
-                // 非拖动状态：用实际渲染位置
-                const rect = panel.getBoundingClientRect();
-                panelTop = rect.top;
-            }
-            
-            // 按钮底部紧贴弹窗上边缘（8px 间距用于圆角过渡）
-            const btnBottom = window.innerHeight - panelTop + 8;
+            // 按钮bottom = app容器底部到弹窗顶部的距离
+            const containerBottom = containerRect.bottom;
+            const btnBottom = containerBottom - panelTop + 8;
             mapToggleBtn.style.bottom = btnBottom + 'px';
         }
         
