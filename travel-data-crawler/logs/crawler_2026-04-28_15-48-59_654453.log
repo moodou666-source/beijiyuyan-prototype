@@ -1,0 +1,21 @@
+2026-04-28 15:48:59.657 | INFO     | src.crawlers.weibo_crawler:set_cookie:41 - Cookie已设置
+2026-04-28 15:48:59.657 | INFO     | __main__:run:149 - 开始采集 1 个城市的数据
+2026-04-28 15:48:59.657 | INFO     | __main__:collect_weibo_data:41 - 开始采集 南京 的微博数据
+2026-04-28 15:48:59.657 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京旅游
+2026-04-28 15:49:02.866 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:06.737 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:06.738 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京打卡
+2026-04-28 15:49:11.341 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:15.191 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:15.191 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京美食
+2026-04-28 15:49:17.734 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:22.449 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:22.449 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京景点
+2026-04-28 15:49:26.205 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:29.538 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:29.539 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京攻略
+2026-04-28 15:49:31.851 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:35.711 | ERROR    | src.crawlers.weibo_crawler:search:96 - 搜索失败: Expecting value: line 1 column 1 (char 0)
+2026-04-28 15:49:35.712 | INFO     | __main__:collect_weibo_data:60 - 南京 共采集 0 条微博
+2026-04-28 15:49:35.712 | WARNING  | __main__:run:157 - 南京 未采集到数据
+2026-04-28 15:49:35.712 | INFO     | __main__:run:180 - 采集完成

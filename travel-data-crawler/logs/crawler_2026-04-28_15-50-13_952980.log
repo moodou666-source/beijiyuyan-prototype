@@ -1,0 +1,21 @@
+2026-04-28 15:50:13.955 | INFO     | src.crawlers.weibo_crawler:set_cookie:46 - Cookie已设置
+2026-04-28 15:50:13.956 | INFO     | __main__:run:149 - 开始采集 1 个城市的数据
+2026-04-28 15:50:13.956 | INFO     | __main__:collect_weibo_data:41 - 开始采集 南京 的微博数据
+2026-04-28 15:50:13.956 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京旅游
+2026-04-28 15:50:17.153 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京旅游' 第1页，获取0条数据
+2026-04-28 15:50:20.998 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京旅游' 第2页，获取0条数据
+2026-04-28 15:50:20.998 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京打卡
+2026-04-28 15:50:24.549 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京打卡' 第1页，获取0条数据
+2026-04-28 15:50:27.464 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京打卡' 第2页，获取0条数据
+2026-04-28 15:50:27.465 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京美食
+2026-04-28 15:50:32.570 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京美食' 第1页，获取0条数据
+2026-04-28 15:50:36.147 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京美食' 第2页，获取0条数据
+2026-04-28 15:50:36.147 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京景点
+2026-04-28 15:50:41.048 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京景点' 第1页，获取0条数据
+2026-04-28 15:50:44.977 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京景点' 第2页，获取0条数据
+2026-04-28 15:50:44.977 | INFO     | __main__:collect_weibo_data:47 - 搜索关键词: 南京攻略
+2026-04-28 15:50:49.733 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京攻略' 第1页，获取0条数据
+2026-04-28 15:50:52.907 | INFO     | src.crawlers.weibo_crawler:search:108 - 搜索 '南京攻略' 第2页，获取0条数据
+2026-04-28 15:50:52.907 | INFO     | __main__:collect_weibo_data:60 - 南京 共采集 0 条微博
+2026-04-28 15:50:52.907 | WARNING  | __main__:run:157 - 南京 未采集到数据
+2026-04-28 15:50:52.908 | INFO     | __main__:run:180 - 采集完成

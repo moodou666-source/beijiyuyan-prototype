@@ -1,0 +1,5 @@
+MEMORY.md
+memory/
+node_modules/
+.DS_Store
+arctic-swift/node_modules/
