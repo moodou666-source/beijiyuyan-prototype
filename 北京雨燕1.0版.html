@@ -14380,17 +14380,14 @@
             var tags = wrapper ? Array.from(wrapper.querySelectorAll('.roadbook-card-tag')).map(t => t.textContent.trim()).filter(Boolean) : [];
 
             if (btn.classList.contains('collected')) {
-                btn.classList.remove('collected');
-                btn.querySelector('svg').setAttribute('fill', 'none');
-                // 从已收藏列表中移除
-                savedRoadbooks = savedRoadbooks.filter(r => r.title !== title);
-                showToast('已取消收藏');
-            } else {
-                btn.classList.add('collected');
-                btn.querySelector('svg').setAttribute('fill', 'currentColor');
-                savedRoadbooks.push({ title: title, image: img, tags: tags });
-                showToast('已收藏');
+                showToast('已收藏过');
+                return;
             }
+
+            btn.classList.add('collected');
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>已收藏';
+            savedRoadbooks.push({ title: title, image: img, tags: tags });
+            showToast('已收藏到路书收藏');
         }
 
         function deleteRoadbook(btn, id) {
