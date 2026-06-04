@@ -10096,6 +10096,10 @@
             initTripScroll();
             initLocationProvinceList();
             initDoubleTapLike();
+            // 为行程卡片分配原始顺序索引
+            document.querySelectorAll('#tripScroll .topic-card').forEach(function(card, i) {
+                card.setAttribute('data-original-index', i);
+            });
         });
 
         // 行程卡片横向滚动(分页效果)
@@ -14696,7 +14700,8 @@
                 var durText = dur ? dur.textContent.trim() : '';
                 var destText = dest ? dest.textContent.trim() : '';
 
-                html += '<div class="trip-list-card-wrapper" data-trip-index="' + index + '" ontouchstart="tripListSwipeStart(event, this)" ontouchmove="tripListSwipeMove(event, this)" ontouchend="tripListSwipeEnd(event, this)">' +
+                var cardTid = card.getAttribute('data-trip-id') || ('trip-' + index);
+                html += '<div class="trip-list-card-wrapper" data-trip-index="' + index + '" data-trip-id="' + cardTid + '" ontouchstart="tripListSwipeStart(event, this)" ontouchmove="tripListSwipeMove(event, this)" ontouchend="tripListSwipeEnd(event, this)">' +
                     '<div class="trip-list-card" onclick="if(!this.closest(\'.trip-list-card-wrapper\').classList.contains(\'swiped\')){closeTripListPage(); showTripDetail();}">' +
                         '<div class="trip-card-info">' +
                             '<div class="trip-card-title">' + destText + (prefText ? ' · ' + prefText : '') + '</div>' +
@@ -14715,7 +14720,7 @@
                         '</div>' +
                         '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); tripListPin(' + index + ')">' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14l-1.5-6.5a2 2 0 0 0-2-1.5h-7a2 2 0 0 0-2 1.5L5 17z"/><path d="M9 9V5a3 3 0 0 1 6 0v4"/></svg>' +
-                            (tripPinnedId === ('trip-' + index) ? '取消置顶' : '置顶') +
+                            (tripPinnedId === cardTid ? '取消置顶' : '置顶') +
                         '</div>' +
                         '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); tripListShare(' + index + ')">' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' +
@@ -15046,6 +15051,10 @@
                 if (tripPinnedId && c.getAttribute('data-trip-id') === tripPinnedId) pinned = c;
                 else normal.push(c);
             });
+            // Sort non-pinned cards by their original index to maintain original order
+            normal.sort(function(a, b) {
+                return parseInt(a.getAttribute('data-original-index') || 0) - parseInt(b.getAttribute('data-original-index') || 0);
+            });
             if (pinned) scroll.appendChild(pinned);
             normal.forEach(function(c) { scroll.appendChild(c); });
             renderTripList();
@@ -15315,6 +15324,9 @@
                         '<div class="collab-add">+</div>' +
                     '</div>';
                 tripScroll.insertBefore(card, tripScroll.firstChild);
+                // Assign original-index based on current card count
+                var allCards = tripScroll.querySelectorAll('.topic-card');
+                allCards.forEach(function(c, i) { c.setAttribute('data-original-index', i); });
                 card.style.opacity = '0';
                 card.style.transform = 'scale(0.8)';
                 setTimeout(function() {
