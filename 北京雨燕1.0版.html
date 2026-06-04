@@ -427,6 +427,24 @@
         .trip-card-collab-group .collab-avatar svg {
             width: 14px; height: 14px;
         }
+        .trip-card-stats {
+            position: absolute;
+            bottom: 14px; right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #999;
+            z-index: 10;
+        }
+        .trip-card-stats span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .trip-card-stats svg {
+            width: 13px; height: 13px;
+        }
         /* 行程列表卡片左滑 */
         .trip-list-card-wrapper {
             position: relative;
@@ -15285,21 +15303,20 @@
                 var collects = rb.collects || Math.floor(Math.random() * 8000) + 500;
                 var views = rb.views || Math.floor(Math.random() * 40000) + 2000;
                 function fmtN(n) { return n >= 10000 ? (n/10000).toFixed(1) + 'w' : n >= 1000 ? (n/1000).toFixed(1) + 'k' : n; }
-                var statsHtml = '<div style="display:flex;gap:12px;margin-top:6px;font-size:12px;color:#999;">' +
-                    '<span style="display:flex;align-items:center;gap:3px;">' + ICON.collects + ' ' + fmtN(collects) + '</span>' +
-                    '<span style="display:flex;align-items:center;gap:3px;">' + ICON.views + ' ' + fmtN(views) + '</span>' +
-                '</div>';
                 html += '<div class="trip-list-card-wrapper saved-rb" data-rb-index="' + i + '" ontouchstart="tripListSwipeStart(event, this)" ontouchmove="tripListSwipeMove(event, this)" ontouchend="tripListSwipeEnd(event, this)">' +
                     '<div class="trip-list-card" onclick="if(!this.closest(\'.trip-list-card-wrapper\').classList.contains(\'swiped\')){showToast(\'查看路书详情\')}">' +
                         '<div class="trip-card-info">' +
                             '<div class="trip-card-title">' + rb.title + '</div>' +
                             '<div class="trip-card-detail" style="margin-top:4px;">' + tagsHtml + '</div>' +
-                            statsHtml +
                         '</div>' +
                         (rb.image ? '<div class="trip-card-image"><img src="' + rb.image + '" alt=""></div>' : '') +
                         '<div class="trip-card-collab-group" onclick="event.stopPropagation(); showCollabInvite(this)">' +
                             '<div class="collab-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>' +
                             '<div class="collab-add">+</div>' +
+                        '</div>' +
+                        '<div class="trip-card-stats">' +
+                            '<span>' + ICON.collects + ' ' + fmtN(collects) + '</span>' +
+                            '<span>' + ICON.views + ' ' + fmtN(views) + '</span>' +
                         '</div>' +
                     '</div>' +
                     '<div class="trip-list-swipe-actions">' +
