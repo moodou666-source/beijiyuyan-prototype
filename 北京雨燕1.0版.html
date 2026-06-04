@@ -299,6 +299,36 @@
             -webkit-overflow-scrolling: touch;
             padding: 12px 16px 100px;
         }
+        /* 行程列表 - 回到顶部按钮 */
+        .trip-list-back-top {
+            position: absolute;
+            bottom: 24px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #7C9A3D;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(124,154,61,0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .trip-list-back-top svg { width: 20px; height: 20px; }
+        .trip-list-back-top.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .trip-list-back-top:active {
+            transform: scale(0.92);
+        }
         /* 行程列表卡片 - 横排单列（参考路书推荐排版） */
         .trip-list-card {
             width: 100%;
@@ -8948,6 +8978,9 @@
             <div class="trip-list-body" id="tripListBody">
                 <!-- 动态渲染 -->
             </div>
+            <div class="trip-list-back-top" id="tripListBackTop" onclick="tripListScrollToTop()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            </div>
         </div>
 
         <!-- 设置页面 -->
@@ -14447,6 +14480,27 @@
                 switchTripListTab(currentTripTab, tabs[idx]);
             } else {
                 renderTripList();
+            }
+            // 绑定滚动监听，显示/隐藏置顶按钮
+            var body = document.getElementById('tripListBody');
+            if (body && !body._backTopBound) {
+                body._backTopBound = true;
+                body.addEventListener('scroll', function() {
+                    var btn = document.getElementById('tripListBackTop');
+                    if (!btn) return;
+                    if (body.scrollTop > 300) {
+                        btn.classList.add('show');
+                    } else {
+                        btn.classList.remove('show');
+                    }
+                });
+            }
+        }
+
+        function tripListScrollToTop() {
+            var body = document.getElementById('tripListBody');
+            if (body) {
+                body.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
