@@ -15972,15 +15972,29 @@
         }
 
         // 删除/不推荐路书
+        var rejectedRoadbooks = [];
         function deleteRoadbook(btnOrTitle, idx) {
-            var title;
+            var title, wrapper;
             if (typeof btnOrTitle === 'string') { title = btnOrTitle; }
             else {
-                var wrapper = btnOrTitle.closest('.roadbook-card-wrapper');
+                wrapper = btnOrTitle.closest('.roadbook-card-wrapper');
                 title = wrapper ? (wrapper.querySelector('.roadbook-card-title')?.textContent || '路书') : '路书';
-                if (wrapper) rbResetCard(wrapper);
             }
-            showToast(`已不推荐「${title}」`);
+            // 记录被拒绝的路书标题，防止重复推荐
+            rejectedRoadbooks.push(title);
+            if (wrapper) {
+                rbResetCard(wrapper);
+                wrapper.style.transition = 'all 0.3s';
+                wrapper.style.opacity = '0';
+                wrapper.style.height = wrapper.offsetHeight + 'px';
+                setTimeout(function() {
+                    wrapper.style.height = '0';
+                    wrapper.style.marginBottom = '0';
+                    wrapper.style.padding = '0';
+                }, 50);
+                setTimeout(function() { wrapper.remove(); }, 400);
+            }
+            showToast('已不推荐「' + title + '」');
         }
 
         // 分享路书
@@ -16028,7 +16042,8 @@
                 }
             ];
 
-            const filtered = category === '全部' ? roadbooks : roadbooks.filter(rb => rb.tags.includes(category));
+            const filtered = (category === '全部' ? roadbooks : roadbooks.filter(rb => rb.tags.includes(category)))
+                .filter(rb => !rejectedRoadbooks.includes(rb.title));
 
             list.innerHTML = filtered.map(rb => `
                 <div class="roadbook-card-wrapper" ontouchstart="rbTouchStart(event, this)" ontouchmove="rbTouchMove(event, this)" ontouchend="rbTouchEnd(event, this)">
