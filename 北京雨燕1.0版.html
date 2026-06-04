@@ -15083,7 +15083,19 @@
                 wrapper.querySelector('.trip-list-card').style.transition = 'transform 0.3s ease';
                 wrapper.querySelector('.trip-list-card').style.transform = 'translateX(0)';
             }
-            showToast('已收藏到我的收藏');
+            var trip = completedTrips[index];
+            if (trip) {
+                // 复制到收藏路书，避免重复
+                if (!savedRoadbooks.some(function(r) { return r.title === trip.dest; })) {
+                    savedRoadbooks.push({
+                        title: trip.dest,
+                        image: trip.img,
+                        tags: trip.pref ? [trip.pref] : [],
+                        duration: trip.duration
+                    });
+                }
+                showToast('已收藏到收藏路书');
+            }
         }
 
         function completedTripDelete(index) {
