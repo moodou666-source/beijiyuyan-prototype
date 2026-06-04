@@ -14661,7 +14661,7 @@
                         '</div>' +
                         '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); tripListPin(' + index + ')">' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14l-1.5-6.5a2 2 0 0 0-2-1.5h-7a2 2 0 0 0-2 1.5L5 17z"/><path d="M9 9V5a3 3 0 0 1 6 0v4"/></svg>' +
-                            '置顶' +
+                            (tripPinnedId === ('trip-' + index) ? '取消置顶' : '置顶') +
                         '</div>' +
                         '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); tripListShare(' + index + ')">' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' +
@@ -14826,11 +14826,14 @@
             var tid = wrapper.getAttribute('data-trip-id');
             if (!tid) { tid = 'trip-' + index; wrapper.setAttribute('data-trip-id', tid); }
 
+            var btn = wrapper.querySelector('.trip-list-swipe-btn:nth-child(2)');
             if (tripPinnedId === tid) {
                 tripPinnedId = null;
+                if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14l-1.5-6.5a2 2 0 0 0-2-1.5h-7a2 2 0 0 0-2 1.5L5 17z"/><path d="M9 9V5a3 3 0 0 1 6 0v4"/></svg>置顶';
                 showToast('已取消置顶');
             } else {
                 tripPinnedId = tid;
+                if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14l-1.5-6.5a2 2 0 0 0-2-1.5h-7a2 2 0 0 0-2 1.5L5 17z"/><path d="M9 9V5a3 3 0 0 1 6 0v4"/></svg>取消置顶';
                 showToast('已置顶');
             }
             applyPinnedOrder();
@@ -14879,7 +14882,7 @@
             var pin = document.createElement('div');
             pin.className = 'trip-card-pin-float' + (tripPinnedId === tid ? ' pinned' : '');
             pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>' +
-                (tripPinnedId === tid ? '已置顶' : '置顶');
+                (tripPinnedId === tid ? '取消置顶' : '置顶');
             pin.onclick = function(e) {
                 e.stopPropagation();
                 if (tripPinnedId === tid) {
@@ -14889,7 +14892,7 @@
                 } else {
                     tripPinnedId = tid;
                     pin.classList.add('pinned');
-                    pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>已置顶';
+                    pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>取消置顶';
                 }
             };
             wrapper.style.position = 'relative';
@@ -16146,7 +16149,7 @@
                     return '<div class="trip-sort-item" draggable="true" data-sort-id="' + t.id + '" ondragstart="onTripDragStart(event)" ondragover="onTripDragOver(event)" ondrop="onTripDrop(event)" ondragenter="onTripDragEnter(event)" ondragleave="onTripDragLeave(event)">' +
                         '<div class="trip-sort-handle">⠿</div>' +
                         '<div class="trip-sort-name">' + t.name + '<div style="font-size:11px;color:#999;margin-top:2px;">' + t.detail + '</div></div>' +
-                        '<button class="trip-pin-btn' + (isPinned ? ' pinned' : '') + '" onclick="toggleTripPin(\'' + t.id + '\', this)">' + (isPinned ? '已置顶' : '置顶') + '</button>' +
+                        '<button class="trip-pin-btn' + (isPinned ? ' pinned' : '') + '" onclick="toggleTripPin(\'' + t.id + '\', this)">' + (isPinned ? '取消置顶' : '置顶') + '</button>' +
                         '</div>';
                 }).join('') +
                 '</div>' +
@@ -16211,7 +16214,7 @@
                 }
                 tripPinnedId = id;
                 btn.classList.add('pinned');
-                btn.textContent = '已置顶';
+                btn.textContent = '取消置顶';
             }
         }
 
