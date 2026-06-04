@@ -15255,7 +15255,7 @@
                         '<div class="collab-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>' +
                         '<div class="collab-add">+</div>' +
                     '</div>';
-                tripScroll.appendChild(card);
+                tripScroll.insertBefore(card, tripScroll.firstChild);
                 card.style.opacity = '0';
                 card.style.transform = 'scale(0.8)';
                 setTimeout(function() {
@@ -15265,6 +15265,9 @@
                 }, 50);
             }
             showToast('✅ 已收录我的行程');
+            setTimeout(function() {
+                closeTripListPage();
+            }, 800);
         }
 
         function savedRbShare(index) {
