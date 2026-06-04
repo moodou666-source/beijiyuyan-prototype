@@ -12559,37 +12559,28 @@
             var bodyHtml = '';
 
             if (currentCollectionSubtab === 'roadbook') {
-                var roadbooks = [
-                    { title: '苏州3日经典路线', cover: 'https://picsum.photos/200/150?random=3001', days: 3, spots: 12, author: '旅行达人小美', avatar: 'https://i.pravatar.cc/50?img=5', collects: 2345, date: '2026-05-20' },
-                    { title: '杭州西湖禅意之旅', cover: 'https://picsum.photos/200/150?random=3002', days: 4, spots: 18, author: '风光旅拍', avatar: 'https://i.pravatar.cc/50?img=15', collects: 5678, date: '2026-05-10' },
-                    { title: '黄山2日徒步攻略', cover: 'https://picsum.photos/200/150?random=3003', days: 2, spots: 8, author: '徒步客', avatar: 'https://i.pravatar.cc/50?img=41', collects: 8901, date: '2026-04-28' },
-                    { title: '南京深度文化游5日', cover: 'https://picsum.photos/200/150?random=3004', days: 5, spots: 22, author: '历史迷', avatar: 'https://i.pravatar.cc/50?img=21', collects: 3456, date: '2026-04-15' },
-                    { title: '周庄古镇一日游', cover: 'https://picsum.photos/200/150?random=3005', days: 1, spots: 6, author: '水乡记忆', avatar: 'https://i.pravatar.cc/50?img=40', collects: 1234, date: '2026-04-02' },
-                    { title: '上海4日都市探索', cover: 'https://picsum.photos/200/150?random=3006', days: 4, spots: 16, author: '都市漫步者', avatar: 'https://i.pravatar.cc/50?img=52', collects: 6789, date: '2026-03-20' }
-                ];
-                bodyHtml = roadbooks.map(function(r) {
-                    var collectsText = r.collects >= 10000 ? (r.collects/10000).toFixed(1) + 'w' : r.collects >= 1000 ? (r.collects/1000).toFixed(1) + 'k' : r.collects;
-                    return '<div class="roadbook-collect-card" onclick="showToast(\'路书详情\')">' +
-                        '<div class="roadbook-collect-top">' +
-                            '<img class="roadbook-collect-cover" src="' + r.cover + '">' +
-                            '<div class="roadbook-collect-info">' +
-                                '<div class="roadbook-collect-title">' + r.title + '</div>' +
-                                '<div class="roadbook-collect-meta">' +
-                                    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + r.days + '天</span>' +
-                                    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + r.spots + '个景点</span>' +
-                                    '<span>' + r.date + '</span>' +
+                bodyHtml = savedRoadbooks.length === 0
+                    ? '<div style="text-align:center;padding:60px 20px;color:#999;">' +
+                        '<div style="font-size:40px;margin-bottom:12px;">📖</div>' +
+                        '<div>还没有收藏路书</div>' +
+                    '</div>'
+                    : savedRoadbooks.map(function(r, i) {
+                        var tagsHtml = r.tags && r.tags.length > 0
+                            ? r.tags.map(function(t) { return '<span class="spot-collect-tag">' + t + '</span>'; }).join('')
+                            : '';
+                        return '<div class="roadbook-collect-card" onclick="showToast(\'路书详情\')">' +
+                            '<div class="roadbook-collect-top">' +
+                                '<img class="roadbook-collect-cover" src="' + (r.image || 'https://picsum.photos/200/150?random=300' + i) + '">' +
+                                '<div class="roadbook-collect-info">' +
+                                    '<div class="roadbook-collect-title">' + r.title + '</div>' +
+                                    '<div class="roadbook-collect-meta">' +
+                                        (r.duration ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + r.duration + '</span>' : '') +
+                                    '</div>' +
+                                    (tagsHtml ? '<div style="margin-top:4px;">' + tagsHtml + '</div>' : '') +
                                 '</div>' +
                             '</div>' +
-                        '</div>' +
-                        '<div class="roadbook-collect-bottom">' +
-                            '<div class="roadbook-collect-author">' +
-                                '<img src="' + r.avatar + '">' +
-                                '<span class="roadbook-collect-author-name">' + r.author + '</span>' +
-                            '</div>' +
-                            '<span class="roadbook-collect-stats">' + collectsText + '人收藏</span>' +
-                        '</div>' +
-                    '</div>';
-                }).join('');
+                        '</div>';
+                    }).join('');
             } else if (currentCollectionSubtab === 'spot') {
                 var spots = [
                     { name: '拙政园', addr: '苏州·姑苏区', img: 'https://picsum.photos/200/160?random=3101', rating: 4.8, tags: ['园林','世界遗产'] },
