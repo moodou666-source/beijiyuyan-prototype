@@ -468,12 +468,7 @@
         .trip-list-empty-text {
             font-size: 14px;
         }
-        .trip-list-fab {
-            display: none;
-        }
-        .trip-list-page.active .trip-list-fab {
-            display: none;
-        }
+
 
         /* 长按拖拽排序 */
         .trip-list-card-wrapper.dragging {
@@ -15251,15 +15246,15 @@
                 }, 50);
             }
             showToast('✅ 已收录我的行程');
-            // Remove from saved roadbooks
+            // Remove from saved roadbooks immediately
             savedRoadbooks.splice(index, 1);
+            // Jump to myTrips tab after brief delay
             setTimeout(function() {
-                closeTripListPage();
-                // Reopen trip list page on "我的行程" tab
-                setTimeout(function() {
-                    currentTripTab = 'myTrips';
-                    showTripListPage();
-                }, 100);
+                currentTripTab = 'myTrips';
+                var tabs = document.querySelectorAll('#tripListTabs .trip-list-tab');
+                if (tabs[0]) {
+                    switchTripListTab('myTrips', tabs[0]);
+                }
             }, 800);
         }
 
