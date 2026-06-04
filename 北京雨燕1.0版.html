@@ -12279,6 +12279,12 @@
             if (tab === 'trip') {
                 document.getElementById('tripPage').classList.add('active');
                 document.querySelectorAll('.nav-item')[0].classList.add('active');
+                // 关闭行程列表并重置标签（底部导航入口）
+                var tripListEl = document.getElementById('tripListPage');
+                if (tripListEl && tripListEl.classList.contains('active')) {
+                    tripListEl.classList.remove('active');
+                }
+                currentTripTab = 'myTrips';
             } else if (tab === 'explore') {
                 document.getElementById('explorePage').classList.add('active');
                 document.querySelectorAll('.nav-item')[2].classList.add('active');
