@@ -15095,6 +15095,14 @@
                     });
                 }
                 showToast('已收藏到收藏路书');
+                // 跳转到收藏路书界面
+                setTimeout(function() {
+                    currentTripTab = 'savedRoadbooks';
+                    var tabs = document.querySelectorAll('#tripListTabs .trip-list-tab');
+                    if (tabs[1]) {
+                        switchTripListTab('savedRoadbooks', tabs[1]);
+                    }
+                }, 800);
             }
         }
 
