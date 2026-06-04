@@ -466,6 +466,15 @@
         .trip-list-card-wrapper.saved-rb .trip-list-swipe-actions {
             width: 150px;
         }
+        /* Profile roadbook collect card swipe support */
+        .trip-list-card-wrapper.saved-rb[data-profile-rb-index] .roadbook-collect-card {
+            transition: transform 0.3s ease;
+            z-index: 2;
+            position: relative;
+        }
+        .trip-list-card-wrapper.saved-rb[data-profile-rb-index].swiped .roadbook-collect-card {
+            transform: translateX(-150px);
+        }
         .trip-list-card-wrapper.swiped .trip-list-swipe-actions {
             transform: translateX(0);
         }
@@ -12585,15 +12594,36 @@
                         var tagsHtml = r.tags && r.tags.length > 0
                             ? r.tags.map(function(t) { return '<span class="spot-collect-tag">' + t + '</span>'; }).join('')
                             : '';
-                        return '<div class="roadbook-collect-card" onclick="showToast(\'路书详情\')">' +
-                            '<div class="roadbook-collect-top">' +
-                                '<img class="roadbook-collect-cover" src="' + (r.image || 'https://picsum.photos/200/150?random=300' + i) + '">' +
-                                '<div class="roadbook-collect-info">' +
-                                    '<div class="roadbook-collect-title">' + r.title + '</div>' +
-                                    '<div class="roadbook-collect-meta">' +
-                                        (r.duration ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + r.duration + '</span>' : '') +
+                        var fmtN = function(n) { return n >= 10000 ? (n/10000).toFixed(1) + 'w' : n >= 1000 ? (n/1000).toFixed(1) + 'k' : n; };
+                        var collects = r.collects || Math.floor(Math.random() * 8000) + 500;
+                        var views = r.views || Math.floor(Math.random() * 40000) + 2000;
+                        return '<div class="trip-list-card-wrapper saved-rb" data-profile-rb-index="' + i + '" ontouchstart="tripListSwipeStart(event, this)" ontouchmove="tripListSwipeMove(event, this)" ontouchend="tripListSwipeEnd(event, this)">' +
+                            '<div class="roadbook-collect-card" onclick="if(!this.closest(\'.trip-list-card-wrapper\').classList.contains(\'swiped\')){showToast(\'路书详情\')}" style="margin-bottom:0;">' +
+                                '<div class="roadbook-collect-top">' +
+                                    '<img class="roadbook-collect-cover" src="' + (r.image || 'https://picsum.photos/200/150?random=300' + i) + '">' +
+                                    '<div class="roadbook-collect-info">' +
+                                        '<div class="roadbook-collect-title">' + r.title + '</div>' +
+                                        '<div class="roadbook-collect-meta">' +
+                                            (r.duration ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + r.duration + '</span>' : '') +
+                                            '<span>' + ICON.collects + ' ' + fmtN(collects) + '</span>' +
+                                            '<span>' + ICON.views + ' ' + fmtN(views) + '</span>' +
+                                        '</div>' +
+                                        (tagsHtml ? '<div style="margin-top:4px;">' + tagsHtml + '</div>' : '') +
                                     '</div>' +
-                                    (tagsHtml ? '<div style="margin-top:4px;">' + tagsHtml + '</div>' : '') +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="trip-list-swipe-actions">' +
+                                '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); profileRbDelete(' + i + ')">' +
+                                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+                                    '删除' +
+                                '</div>' +
+                                '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); profileRbShare(' + i + ')">' +
+                                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' +
+                                    '分享' +
+                                '</div>' +
+                                '<div class="trip-list-swipe-btn" onclick="event.stopPropagation(); profileRbApply(' + i + ')">' +
+                                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9-6-6"/></svg>' +
+                                    '运用' +
                                 '</div>' +
                             '</div>' +
                         '</div>';
@@ -14757,16 +14787,20 @@
             document.querySelectorAll('.trip-list-card-wrapper.swiped').forEach(function(w) {
                 if (w !== wrapper) {
                     w.classList.remove('swiped');
-                    w.querySelector('.trip-list-card').style.transform = '';
-                    w.querySelector('.trip-list-card').style.transition = '';
+                    var c = getSwipeCard(w);
+                    if (c) { c.style.transform = ''; c.style.transition = ''; }
                 }
             });
             tripListSwipeState.wrapper = wrapper;
             tripListSwipeState.startX = e.touches ? e.touches[0].clientX : e.clientX;
             tripListSwipeState.currentX = tripListSwipeState.startX;
             tripListSwipeState.swiping = true;
-            var card = wrapper.querySelector('.trip-list-card');
-            card.style.transition = 'none';
+            var card = getSwipeCard(wrapper);
+            if (card) card.style.transition = 'none';
+        }
+
+        function getSwipeCard(wrapper) {
+            return wrapper.querySelector('.trip-list-card') || wrapper.querySelector('.roadbook-collect-card');
         }
 
         function getSwipeDistance(wrapper) {
@@ -14788,8 +14822,8 @@
             var diff = clientX - tripListSwipeState.startX;
             var maxSlide = getSwipeDistance(wrapper);
             if (diff < -10) {
-                var card = wrapper.querySelector('.trip-list-card');
-                card.style.transform = 'translateX(' + Math.max(diff, maxSlide) + 'px)';
+                var card = getSwipeCard(wrapper);
+                if (card) card.style.transform = 'translateX(' + Math.max(diff, maxSlide) + 'px)';
             }
         }
 
@@ -14797,7 +14831,8 @@
             if (!tripListSwipeState.swiping || tripListSwipeState.wrapper !== wrapper) return;
             tripListSwipeState.swiping = false;
             var diff = tripListSwipeState.currentX - tripListSwipeState.startX;
-            var card = wrapper.querySelector('.trip-list-card');
+            var card = getSwipeCard(wrapper);
+            if (!card) return;
             card.style.transition = 'transform 0.3s ease';
             var threshold = getSwipeThreshold(wrapper);
             var slideTo = getSwipeDistance(wrapper);
@@ -14828,8 +14863,8 @@
                 document.querySelectorAll('.trip-list-card-wrapper.swiped').forEach(function(w) {
                     if (w !== wrapper) {
                         w.classList.remove('swiped');
-                        w.querySelector('.trip-list-card').style.transform = '';
-                        w.querySelector('.trip-list-card').style.transition = '';
+                        var c = getSwipeCard(w);
+                        if (c) { c.style.transform = ''; c.style.transition = ''; }
                     }
                 });
             });
@@ -14839,10 +14874,12 @@
                 ms.currentX = e.clientX;
                 var diff = ms.currentX - ms.startX;
                 if (diff < -10) {
-                    var card = ms.wrapper.querySelector('.trip-list-card');
+                    var card = getSwipeCard(ms.wrapper);
                     var maxSlide = getSwipeDistance(ms.wrapper);
-                    card.style.transition = 'none';
-                    card.style.transform = 'translateX(' + Math.max(diff, maxSlide) + 'px)';
+                    if (card) {
+                        card.style.transition = 'none';
+                        card.style.transform = 'translateX(' + Math.max(diff, maxSlide) + 'px)';
+                    }
                 }
             });
 
@@ -14850,7 +14887,8 @@
                 if (!ms.dragging || !ms.wrapper) return;
                 ms.dragging = false;
                 var diff = ms.currentX - ms.startX;
-                var card = ms.wrapper.querySelector('.trip-list-card');
+                var card = getSwipeCard(ms.wrapper);
+                if (!card) { ms.wrapper = null; return; }
                 card.style.transition = 'transform 0.3s ease';
                 var threshold = getSwipeThreshold(ms.wrapper);
                 var slideTo = getSwipeDistance(ms.wrapper);
@@ -14868,7 +14906,8 @@
                 if (!ms.dragging || !ms.wrapper) return;
                 ms.dragging = false;
                 var diff = ms.currentX - ms.startX;
-                var card = ms.wrapper.querySelector('.trip-list-card');
+                var card = getSwipeCard(ms.wrapper);
+                if (!card) { ms.wrapper = null; return; }
                 card.style.transition = 'transform 0.3s ease';
                 var threshold = getSwipeThreshold(ms.wrapper);
                 var slideTo = getSwipeDistance(ms.wrapper);
@@ -15371,6 +15410,84 @@
             showShareModal();
         }
 
+        // ========== 我的-收藏-路书收藏 左滑操作 ==========
+        function profileRbDelete(index) {
+            var wrapper = document.querySelectorAll('.trip-list-card-wrapper[data-profile-rb-index]')[index];
+            if (!wrapper) return;
+            var title = savedRoadbooks[index]?.title || '路书';
+            var modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:3002;display:flex;align-items:center;justify-content:center;';
+            modal.innerHTML = '<div style="background:white;border-radius:16px;width:280px;padding:24px;text-align:center;">' +
+                '<div style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">确认删除</div>' +
+                '<div style="font-size:14px;color:#666;margin-bottom:20px;">确定要删除"' + title + '"吗?</div>' +
+                '<div style="display:flex;gap:12px;">' +
+                    '<button style="flex:1;padding:12px;background:#f5f5f5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;" onclick="this.closest(\'div[style*=fixed]\').remove()">取消</button>' +
+                    '<button style="flex:1;padding:12px;background:#7C9A3D;border:none;border-radius:10px;font-size:14px;color:white;font-weight:600;cursor:pointer;" onclick="doProfileRbDelete(' + index + ',this)">删除</button>' +
+                '</div></div>';
+            document.body.appendChild(modal);
+            modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+        }
+
+        function doProfileRbDelete(index, btn) {
+            savedRoadbooks.splice(index, 1);
+            var modal = btn.closest('div[style*="fixed"]');
+            if (modal) modal.remove();
+            renderCollectionSubtabs('roadbook');
+            showToast('已删除');
+        }
+
+        function profileRbShare(index) {
+            var wrapper = document.querySelectorAll('.trip-list-card-wrapper[data-profile-rb-index]')[index];
+            if (wrapper) {
+                wrapper.classList.remove('swiped');
+                wrapper.querySelector('.roadbook-collect-card').style.transition = 'transform 0.3s ease';
+                wrapper.querySelector('.roadbook-collect-card').style.transform = 'translateX(0)';
+            }
+            showShareModal();
+        }
+
+        function profileRbApply(index) {
+            var wrapper = document.querySelectorAll('.trip-list-card-wrapper[data-profile-rb-index]')[index];
+            if (wrapper) {
+                wrapper.classList.remove('swiped');
+                wrapper.querySelector('.roadbook-collect-card').style.transition = 'transform 0.3s ease';
+                wrapper.querySelector('.roadbook-collect-card').style.transform = 'translateX(0)';
+            }
+            var rb = savedRoadbooks[index];
+            if (rb) {
+                var tripScroll = document.getElementById('tripScroll');
+                var card = document.createElement('div');
+                card.className = 'topic-card';
+                card.onclick = function() { showTripDetail(); };
+                var imgSrc = rb.image || './北京雨燕1.0版_files/photo-1531366936337-7c912a4589a7';
+                var dest = rb.title || '新行程';
+                card.innerHTML = '<img class="topic-card-bg" src="' + imgSrc + '" alt="' + dest + '">' +
+                    '<div class="topic-card-actions">' +
+                        '<div class="topic-card-delete" onclick="event.stopPropagation(); confirmDeleteTrip(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>' +
+                    '</div>' +
+                    '<div class="topic-card-content">' +
+                        '<div class="topic-preference"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF6B6B"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>路书收录</div>' +
+                        '<div class="topic-duration"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" fill="#4ECDC4"/><line x1="3" y1="10" x2="21" y2="10" stroke="white" stroke-width="1.5"/></svg>自定义</div>' +
+                        '<div class="topic-destination"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="white" opacity="0.8"/><circle cx="12" cy="9" r="2.5" fill="none" stroke="white" stroke-width="1.5"/></svg>' + dest + '</div>' +
+                    '</div>' +
+                    '<div class="topic-card-collab-group" onclick="event.stopPropagation(); showCollabInvite(this)">' +
+                        '<div class="collab-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>' +
+                        '<div class="collab-add">+</div>' +
+                    '</div>';
+                tripScroll.insertBefore(card, tripScroll.firstChild);
+                var allCards = tripScroll.querySelectorAll('.topic-card');
+                allCards.forEach(function(c, i) { c.setAttribute('data-original-index', i); });
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.8)';
+                setTimeout(function() {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 50);
+            }
+            showToast('✅ 已收录我的行程');
+        }
+
         function renderCompletedTrips() {
             var body = document.getElementById('tripListBody');
             if (!body) return;
@@ -15423,8 +15540,11 @@
             document.querySelectorAll('.trip-list-card-wrapper.swiped').forEach(function(w) {
                 if (!w.contains(e.target)) {
                     w.classList.remove('swiped');
-                    w.querySelector('.trip-list-card').style.transition = 'transform 0.3s ease';
-                    w.querySelector('.trip-list-card').style.transform = 'translateX(0)';
+                    var c = getSwipeCard(w);
+                    if (c) {
+                        c.style.transition = 'transform 0.3s ease';
+                        c.style.transform = 'translateX(0)';
+                    }
                 }
             });
         });
