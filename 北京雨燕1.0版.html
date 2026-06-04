@@ -469,27 +469,10 @@
             font-size: 14px;
         }
         .trip-list-fab {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 390px;
-            padding: 14px;
-            background: #7C9A3D;
-            color: white;
-            border: none;
-            border-radius: 28px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            z-index: 3001;
-            text-align: center;
-            box-shadow: 0 4px 16px rgba(124,154,61,0.4);
             display: none;
         }
         .trip-list-page.active .trip-list-fab {
-            display: block;
+            display: none;
         }
 
         /* 长按拖拽排序 */
@@ -8970,7 +8953,6 @@
             <div class="trip-list-body" id="tripListBody">
                 <!-- 动态渲染 -->
             </div>
-            <button class="trip-list-fab" onclick="showCreatePage(); closeTripListPage();">+ 创建新行程</button>
         </div>
 
         <!-- 设置页面 -->
@@ -14592,8 +14574,6 @@
             document.querySelectorAll('.trip-list-tab').forEach(function(t) { t.classList.remove('active'); });
             el.classList.add('active');
             var body = document.getElementById('tripListBody');
-            var fab = document.querySelector('.trip-list-fab');
-            if (fab) fab.style.display = (tab === 'myTrips') ? 'block' : 'none';
             if (tab === 'myTrips') {
                 renderTripList();
             } else if (tab === 'savedRoadbooks') {
