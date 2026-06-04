@@ -14826,11 +14826,11 @@
             var tid = wrapper.getAttribute('data-trip-id');
             if (!tid) { tid = 'trip-' + index; wrapper.setAttribute('data-trip-id', tid); }
 
-            if (tripPinnedIds.has(tid)) {
-                tripPinnedIds.delete(tid);
+            if (tripPinnedId === tid) {
+                tripPinnedId = null;
                 showToast('已取消置顶');
             } else {
-                tripPinnedIds.add(tid);
+                tripPinnedId = tid;
                 showToast('已置顶');
             }
             applyPinnedOrder();
@@ -14875,19 +14875,19 @@
             lpOffsetY = rect.height / 2;
 
             // 创建置顶浮标
+            var tid = wrapper.getAttribute('data-trip-id');
             var pin = document.createElement('div');
-            pin.className = 'trip-card-pin-float' + (tripPinnedIds.has(wrapper.getAttribute('data-trip-id')) ? ' pinned' : '');
+            pin.className = 'trip-card-pin-float' + (tripPinnedId === tid ? ' pinned' : '');
             pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>' +
-                (tripPinnedIds.has(wrapper.getAttribute('data-trip-id')) ? '已置顶' : '置顶');
+                (tripPinnedId === tid ? '已置顶' : '置顶');
             pin.onclick = function(e) {
                 e.stopPropagation();
-                var tid = wrapper.getAttribute('data-trip-id');
-                if (tripPinnedIds.has(tid)) {
-                    tripPinnedIds.delete(tid);
+                if (tripPinnedId === tid) {
+                    tripPinnedId = null;
                     pin.classList.remove('pinned');
                     pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>置顶';
                 } else {
-                    tripPinnedIds.add(tid);
+                    tripPinnedId = tid;
                     pin.classList.add('pinned');
                     pin.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M5 10l7 7 7-7"/><line x1="5" y1="17" x2="19" y2="17"/></svg>已置顶';
                 }
@@ -14984,12 +14984,13 @@
         function applyPinnedOrder() {
             var scroll = document.getElementById('tripScroll');
             if (!scroll) return;
-            var pinned = [], normal = [];
+            var pinned = null, normal = [];
             scroll.querySelectorAll('.topic-card').forEach(function(c) {
-                if (tripPinnedIds.has(c.getAttribute('data-trip-id'))) pinned.push(c);
+                if (tripPinnedId && c.getAttribute('data-trip-id') === tripPinnedId) pinned = c;
                 else normal.push(c);
             });
-            pinned.concat(normal).forEach(function(c) { scroll.appendChild(c); });
+            if (pinned) scroll.appendChild(pinned);
+            normal.forEach(function(c) { scroll.appendChild(c); });
             renderTripList();
         }
 
@@ -16073,7 +16074,7 @@
 
         // ========== 行程排序/置顶(长按触发) ==========
         let tripLongPressTimer = null;
-        let tripPinnedIds = new Set();
+        let tripPinnedId = null;
 
         function initTripLongPress() {
             document.querySelectorAll('.topic-card').forEach(function(card, index) {
@@ -16121,7 +16122,7 @@
                 '<div class="trip-sort-title">行程排序与置顶<div class="trip-sort-close" onclick="closeTripSort()">✕</div></div>' +
                 '<div id="tripSortList">' +
                 trips.map(function(t, i) {
-                    const isPinned = tripPinnedIds.has(t.id);
+                    const isPinned = tripPinnedId === t.id;
                     return '<div class="trip-sort-item" draggable="true" data-sort-id="' + t.id + '" ondragstart="onTripDragStart(event)" ondragover="onTripDragOver(event)" ondrop="onTripDrop(event)" ondragenter="onTripDragEnter(event)" ondragleave="onTripDragLeave(event)">' +
                         '<div class="trip-sort-handle">⠿</div>' +
                         '<div class="trip-sort-name">' + t.name + '<div style="font-size:11px;color:#999;margin-top:2px;">' + t.detail + '</div></div>' +
@@ -16177,12 +16178,18 @@
         }
 
         function toggleTripPin(id, btn) {
-            if (tripPinnedIds.has(id)) {
-                tripPinnedIds.delete(id);
+            if (tripPinnedId === id) {
+                tripPinnedId = null;
                 btn.classList.remove('pinned');
                 btn.textContent = '置顶';
             } else {
-                tripPinnedIds.add(id);
+                // 取消之前的置顶按钮样式
+                const prevBtn = document.querySelector('.trip-pin-btn.pinned');
+                if (prevBtn && prevBtn !== btn) {
+                    prevBtn.classList.remove('pinned');
+                    prevBtn.textContent = '置顶';
+                }
+                tripPinnedId = id;
                 btn.classList.add('pinned');
                 btn.textContent = '已置顶';
             }
@@ -16207,16 +16214,16 @@
             });
 
             // 置顶的排最前
-            const pinnedCards = [];
+            const pinnedCard = [];
             const normalCards = [];
             scroll.querySelectorAll('.topic-card').forEach(function(card) {
-                if (tripPinnedIds.has(card.getAttribute('data-trip-id'))) {
-                    pinnedCards.push(card);
+                if (tripPinnedId && card.getAttribute('data-trip-id') === tripPinnedId) {
+                    pinnedCard.push(card);
                 } else {
                     normalCards.push(card);
                 }
             });
-            pinnedCards.concat(normalCards).forEach(function(card) {
+            pinnedCard.concat(normalCards).forEach(function(card) {
                 scroll.appendChild(card);
             });
 
