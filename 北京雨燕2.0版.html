@@ -2199,7 +2199,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">清晨的拙政园,光影在粉墙黛瓦间流转</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2218,7 +2218,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">西湖断桥残雪,水墨画卷般的意境</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2237,7 +2237,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">黄山云海日出,不虚此行</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2256,7 +2256,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">周庄古镇的夜景,水乡的温柔</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2275,7 +2275,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">南京中山陵的梧桐大道</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2294,7 +2294,7 @@
 <div class="profile-grid-info">
 <div class="profile-grid-desc">上海外滩的霓虹夜景</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile(&#39;旅行者小明&#39;)" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="./北京雨燕1.0版_files/50">
 <span class="profile-grid-name">旅行者小明</span>
 </div>
@@ -2363,8 +2363,8 @@
 <div class="work-detail-back" onclick="closeWorkDetail()">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
 </div>
-<div class="work-detail-author-info" onclick="event.stopPropagation();closeWorkDetail();openUserProfile(document.getElementById(&#39;workDetailAuthorName&#39;).textContent)" style="cursor:pointer;margin-left:8px;flex:1;">
-<img class="work-detail-avatar" id="workDetailAvatar" src="file:///Users/jiyi/.openclaw/workspace/%E5%8C%97%E4%BA%AC%E9%9B%A8%E7%87%951.0%E7%89%88.html" alt="" style="cursor:pointer;width:36px;height:36px;" onclick="event.stopPropagation();closeWorkDetail();openUserProfile(document.getElementById(&#39;workDetailAuthorName&#39;).textContent)">
+<div class="work-detail-author-info" onclick="event.stopPropagation();closeWorkDetail();if(document.getElementById(&#39;workDetailAuthorName&#39;).textContent!==&#39;旅行者小明&#39;)openUserProfile(document.getElementById(&#39;workDetailAuthorName&#39;).textContent)" style="cursor:pointer;margin-left:8px;flex:1;">
+<img class="work-detail-avatar" id="workDetailAvatar" src="https://i.pravatar.cc/50?img=33" alt="" style="cursor:pointer;width:36px;height:36px;" onclick="event.stopPropagation();closeWorkDetail();if(document.getElementById(&#39;workDetailAuthorName&#39;).textContent!==&#39;旅行者小明&#39;)openUserProfile(document.getElementById(&#39;workDetailAuthorName&#39;).textContent)">
 <div>
 <div class="work-detail-author-name" id="workDetailAuthorName"></div>
 <div class="work-detail-author-meta" id="workDetailAuthorMeta"></div>
@@ -6425,7 +6425,7 @@ window._profileWorks = works; content.innerHTML = '<div class="profile-grid">' +
 <div class="profile-grid-info">
 <div class="profile-grid-desc">${w.desc}</div>
 <div class="profile-grid-footer">
-<div class="profile-grid-author" onclick="event.stopPropagation();openUserProfile('${w.author}')" style="cursor:pointer">
+<div class="profile-grid-author" onclick="event.stopPropagation()" style="cursor:pointer">
 <img class="profile-grid-avatar" src="${w.avatar}">
 <span class="profile-grid-name">${w.author}</span>
 </div>
