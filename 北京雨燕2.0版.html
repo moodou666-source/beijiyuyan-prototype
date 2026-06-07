@@ -6640,9 +6640,10 @@ var spots = [
 { name: '鼓浪屿', addr: '厦门·思明区', img: 'https://picsum.photos/200/160?random=3107', rating: 4.5, tags: ['海岛','建筑'] },
 { name: '洱海', addr: '大理·大理市', img: 'https://picsum.photos/200/160?random=3108', rating: 4.8, tags: ['湖泊','骑行'] }
 ];
-bodyHtml = spots.map(function(s) {
+bodyHtml = spots.map(function(s, idx) {
 var tagsHtml = s.tags.map(function(t) { return '<span class="spot-collect-tag">' + t + '</span>'; }).join('');
-return '<div class="spot-collect-card" onclick="showToast(\'景点详情\')">' +
+return '<div class="spot-collect-card" onclick="showToast(\'景点详情\')" style="position:relative;">' +
+'<div onclick="event.stopPropagation();confirmDeleteCollection(\'spot\',' + idx + ',this)" style="position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;font-size:13px;line-height:1;">✕</div>' +
 '<img class="spot-collect-img" src="' + s.img + '">' +
 '<div class="spot-collect-body">' +
 '<div>' +
@@ -6665,9 +6666,10 @@ var works = [
 { desc: '南京中山陵的梧桐大道', img: 'https://picsum.photos/400/530?random=3205', count: 9, likes: 3456, author: '历史迷', avatar: 'https://i.pravatar.cc/50?img=21' },
 { desc: '上海外滩的霓虹夜景', img: 'https://picsum.photos/400/280?random=3206', count: 11, likes: 6789, author: '都市漫步者', avatar: 'https://i.pravatar.cc/50?img=52' }
 ];
-bodyHtml = '<div class="profile-grid">' + works.map(function(w) {
+bodyHtml = '<div class="profile-grid">' + works.map(function(w, idx) {
 var likesText = w.likes >= 1000 ? (w.likes/1000).toFixed(1) + 'k' : w.likes;
-return '<div class="profile-grid-item" onclick="showToast(\'作品详情\')">' +
+return '<div class="profile-grid-item" onclick="showToast(\'作品详情\')" style="position:relative;">' +
+'<div onclick="event.stopPropagation();confirmDeleteCollection(\'work\',' + idx + ',this)" style="position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;font-size:13px;line-height:1;">✕</div>' +
 '<div class="profile-grid-img-wrap">' +
 '<img src="' + w.img + '">' +
 '<div class="profile-grid-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' + w.count + '</div>' +
@@ -6695,6 +6697,54 @@ applyRbGreen(content);
 function switchCollectionSubtab(subtab) {
 currentCollectionSubtab = subtab;
 renderCollectionSubtabs(subtab);
+}
+
+// 删除收藏确认弹窗
+function confirmDeleteCollection(type, index, el) {
+var modal = document.createElement('div');
+modal.className = 'confirm-delete-modal';
+modal.id = 'collectionDeleteModal';
+modal.innerHTML = '<div class="confirm-delete-panel">' +
+'<div class="confirm-delete-title">确认删除该收藏</div>' +
+'<div class="confirm-delete-desc">删除后无法恢复</div>' +
+'<div class="confirm-delete-actions">' +
+'<button class="confirm-delete-cancel" onclick="this.closest(\'.confirm-delete-modal\').remove()">取消</button>' +
+'<button class="confirm-delete-confirm" onclick="doDeleteCollection(\'' + type + '\',' + index + ');this.closest(\'.confirm-delete-modal\').remove()">删除</button>' +
+'</div></div>';
+document.body.appendChild(modal);
+modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+}
+
+function doDeleteCollection(type, index) {
+// 找到对应的卡片元素并移除
+var content = document.getElementById('profileContent');
+var cards;
+if (type === 'spot') {
+cards = content.querySelectorAll('.spot-collect-card');
+} else if (type === 'work') {
+cards = content.querySelectorAll('.profile-grid-item');
+}
+if (cards && cards[index]) {
+var card = cards[index];
+var wrapper = card.closest('.spot-collect-card') || card;
+wrapper.style.transition = 'opacity 0.3s, transform 0.3s';
+wrapper.style.opacity = '0';
+wrapper.style.transform = 'scale(0.9)';
+setTimeout(function() {
+wrapper.remove();
+// 检查是否还有卡片
+var remaining;
+if (type === 'spot') {
+remaining = content.querySelectorAll('.spot-collect-card');
+} else {
+remaining = content.querySelectorAll('.profile-grid-item');
+}
+if (remaining.length === 0) {
+renderCollectionSubtabs(currentCollectionSubtab);
+}
+}, 300);
+showToast('已删除收藏');
+}
 }
 
 function closeCreatePage() {
