@@ -13695,9 +13695,7 @@ html += '<span class="profile-stamp-icon">✈</span>';
 html += '<span class="profile-stamp-num">' + user.cities + '<span class="profile-stamp-city">city</span></span>';
 html += '<span class="profile-stamp-text">已打卡</span>';
 html += '</div>';
-html += '<div class="profile-footprint-btn" onclick="showToast(\'打卡新足迹\')">';
-html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
-html += ' 打卡新足迹</div>';
+// 别人的主页不显示打卡新足迹按钮（只有自己的主页才有）
 html += '</div>';
 // Tab栏
 html += '<div class="profile-tabs">';
@@ -13720,8 +13718,11 @@ updateFabVisibility();
 
 function renderUserProfileGrid(works) {
 var html = '<div class="profile-grid">';
-works.forEach(function(w) {
-html += '<div class="profile-grid-item">';
+works.forEach(function(w, idx) {
+// 作品可点击查看作品详情
+var escapedImg = w.img.replace(/'/g, "\\'");
+var escapedTitle = w.title.replace(/'/g, "\\'");
+html += '<div class="profile-grid-item" onclick="openWorkDetail({img:\'' + escapedImg + '\',title:\'' + escapedTitle + '\',likes:' + w.likes + ',author:\'\',date:\'3天前\',count:6})">';
 html += '<div class="profile-grid-image"><img src="' + w.img + '" alt=""></div>';
 html += '<div class="profile-grid-info">';
 html += '<div class="profile-grid-desc">' + w.title + '</div>';
