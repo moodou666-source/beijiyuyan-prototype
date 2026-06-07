@@ -6514,7 +6514,6 @@ renderProfileTrips(subtab);
 function renderProfileTrips(subtab) {
 currentProfileTripSubtab = subtab || currentProfileTripSubtab;
 var content = document.getElementById('profileContent');
-var fmtN = function(n) { return n >= 10000 ? (n/10000).toFixed(1) + 'w' : n >= 1000 ? (n/1000).toFixed(1) + 'k' : n; };
 
 var tabsHtml = '<div class="collection-subtabs">' +
 '<div class="collection-subtab' + (currentProfileTripSubtab === 'myTrips' ? ' active' : '') + '" onclick="switchProfileTripSubtab(\'myTrips\')">我的行程</div>' +
@@ -6523,91 +6522,21 @@ var tabsHtml = '<div class="collection-subtabs">' +
 '<div class="collection-subtab' + (currentProfileTripSubtab === 'completedTrips' ? ' active' : '') + '" onclick="switchProfileTripSubtab(\'completedTrips\')">完成行程</div>' +
 '</div>';
 
-var bodyHtml = '';
+content.innerHTML = tabsHtml + '<div id="profileTripsBody" class="trip-list-body" style="padding:12px 16px 40px;overflow-y:auto;flex:1;min-height:0;"></div>';
+var bodyEl = document.getElementById('profileTripsBody');
 
+// 使用行程列表页的渲染函数，数据自动同步
 if (currentProfileTripSubtab === 'myTrips') {
-var tripCards = document.querySelectorAll('#tripScroll .topic-card:not(.recommend-card):not(.create-card)');
-if (tripCards.length === 0) {
-bodyHtml = '<div style="text-align:center;padding:60px 20px;color:#999;">' +
-'<div style="font-size:15px;margin-bottom:8px;color:#666;">还没有行程</div>' +
-'<div style="font-size:13px;color:#bbb;margin-bottom:24px;">去规划你的第一次旅行吧</div>' +
-'<button onclick="document.querySelectorAll(\'.nav-item\')[1].click();" style="padding:10px 28px;background:#7C9A3D;color:white;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer;">去规划</button></div>';
-} else {
-bodyHtml = '';
-tripCards.forEach(function(card, index) {
-var bgImg = card.querySelector('.topic-card-bg');
-var pref = card.querySelector('.topic-preference');
-var dur = card.querySelector('.topic-duration');
-var dest = card.querySelector('.topic-destination');
-var bgSrc = bgImg ? bgImg.src : '';
-var prefText = pref ? pref.textContent.trim() : '';
-var durText = dur ? dur.textContent.trim() : '';
-var destText = dest ? dest.textContent.trim() : '';
-bodyHtml += '<div class="trip-list-card-wrapper" style="margin-bottom:12px;" onclick="_tripDetailFrom=null;closeProfilePage();showTripDetail();">' +
-'<div class="trip-list-card">' +
-'<div class="trip-card-info">' +
-'<div class="trip-card-title">' + destText + (prefText ? ' \u00b7 ' + prefText : '') + '</div>' +
-'<div class="trip-card-detail">' + durText + ' · 自定义行程</div>' +
-'</div>' +
-(bgSrc ? '<div class="trip-card-image"><img src="' + bgSrc + '" alt=""></div>' : '') +
-'<div class="trip-card-stats"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + (Math.floor(Math.random()*15)+5) + '景点</span></div>' +
-'</div></div>';
-});
-}
+renderTripList(bodyEl);
 } else if (currentProfileTripSubtab === 'savedRb') {
-if (savedRoadbooks.length === 0) {
-bodyHtml = '<div style="text-align:center;padding:60px 20px;color:#999;">' +
-'<div style="font-size:15px;margin-bottom:8px;color:#666;">还没有收藏路书</div>' +
-'<div style="font-size:13px;color:#bbb;margin-bottom:24px;">去发现精彩路书，收藏你喜欢的行程</div>' +
-'<button onclick="showRoadbookFilter();" style="padding:10px 28px;background:#7C9A3D;color:white;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer;">去收藏</button></div>';
-} else {
-bodyHtml = savedRoadbooks.map(function(r, i) {
-var collects = r.collects || Math.floor(Math.random() * 8000) + 500;
-var views = r.views || Math.floor(Math.random() * 40000) + 2000;
-var days = r.days || (Math.floor(Math.random() * 5) + 2) + '\u5929';
-var spots = r.spots || Math.floor(Math.random() * 20) + 8;
-var dateStr = r.dateStr || '0' + (Math.floor(Math.random()*9)+1) + '.' + (Math.floor(Math.random()*9)+1) + '0\u81f30' + (Math.floor(Math.random()*9)+1) + '.' + (Math.floor(Math.random()*9)+1) + '0';
-var img = r.image || 'https://picsum.photos/200/150?random=400' + i;
-return '<div class="roadbook-card-wrapper" style="margin-bottom:10px;" onclick="_tripDetailFrom=null;closeProfilePage();showRoadbookDetail(this);">' +
-'<div class="roadbook-card"><div class="roadbook-card-info"><div class="roadbook-card-title">' + r.title + '</div>' +
-'<div class="roadbook-card-detail">' + dateStr + ' \u00b7 ' + days + '<br>' + spots + '\u4e2a\u5730\u70b9</div></div>' +
-'<div class="roadbook-card-image"><img src="' + img + '" alt=""></div></div></div>';
-}).join('');
-}
+renderSavedRoadbooks(bodyEl);
 } else if (currentProfileTripSubtab === 'friendTrips') {
-if (friendTripsData.length === 0) {
-bodyHtml = '<div style="text-align:center;padding:60px 20px;color:#999;">' +
-'<div style="font-size:15px;margin-bottom:8px;color:#666;">还没有好友行程</div>' +
-'<div style="font-size:13px;color:#bbb;margin-bottom:24px;">快邀请好友参与行程</div></div>';
-} else {
-bodyHtml = friendTripsData.map(function(ft, i) {
-var collects = ft.collects || Math.floor(Math.random() * 8000) + 500;
-var views = ft.views || Math.floor(Math.random() * 40000) + 2000;
-var img = ft.image || 'https://picsum.photos/200/150?random=500' + i;
-return '<div class="roadbook-card-wrapper" style="margin-bottom:10px;" onclick="_tripDetailFrom=null;closeProfilePage();showRoadbookDetail(this);">' +
-'<div class="roadbook-card"><div class="roadbook-card-info"><div class="roadbook-card-title">' + ft.title + '</div>' +
-'<div class="roadbook-card-detail">' + ft.dateStr + ' \u00b7 ' + ft.days + '<br>' + ft.spots + '\u4e2a\u5730\u70b9</div></div>' +
-'<div class="roadbook-card-image"><img src="' + img + '" alt=""></div></div></div>';
-}).join('');
-}
+renderFriendTrips(bodyEl);
 } else if (currentProfileTripSubtab === 'completedTrips') {
-if (completedTrips.length === 0) {
-bodyHtml = '<div style="text-align:center;padding:60px 20px;color:#999;">' +
-'<div style="font-size:15px;margin-bottom:8px;color:#666;">还没有完成行程</div>' +
-'<div style="font-size:13px;color:#bbb;margin-bottom:24px;">完成一次旅行，记录美好回忆</div></div>';
-} else {
-bodyHtml = completedTrips.map(function(trip, i) {
-var img = trip.img || 'https://picsum.photos/200/150?random=600' + i;
-return '<div class="roadbook-card-wrapper" style="margin-bottom:10px;" onclick="_tripDetailFrom=null;closeProfilePage();showTripDetail();">' +
-'<div class="roadbook-card"><div class="roadbook-card-info"><div class="roadbook-card-title">' + trip.dest + (trip.pref ? ' \u00b7 ' + trip.pref : '') + '</div>' +
-'<div class="roadbook-card-detail">' + trip.duration + '<br>完成于 ' + trip.completedDate + '</div></div>' +
-(img ? '<div class="roadbook-card-image"><img src="' + img + '" alt=""></div>' : '') +
-'</div></div>';
-}).join('');
+renderCompletedTrips(bodyEl);
 }
-}
-
-content.innerHTML = tabsHtml + bodyHtml;
+// 初始化左滑支持
+initTripListMouseSwipe();
 }
 
 function closeProfilePage() {
@@ -8785,8 +8714,8 @@ dropdown.classList.remove('show');
 }, 300);
 }
 
-function renderTripList() {
-var body = document.getElementById('tripListBody');
+function renderTripList(targetBody) {
+var body = targetBody || document.getElementById('tripListBody');
 if (!body) return;
 
 var cards = document.querySelectorAll('#tripScroll .topic-card:not(.recommend-card):not(.create-card)');
@@ -9350,8 +9279,8 @@ wrapper.querySelector('.trip-list-card').style.transform = 'translateX(0)';
 showShareModal();
 }
 
-function renderSavedRoadbooks() {
-var body = document.getElementById('tripListBody');
+function renderSavedRoadbooks(targetBody) {
+var body = targetBody || document.getElementById('tripListBody');
 if (!body) return;
 if (savedRoadbooks.length === 0) {
 body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px 20px;">' +
@@ -9538,8 +9467,8 @@ var friendTripsData = [
 { title: '小李的西安历史文化游', image: 'https://images.unsplash.com/photo-1529921879218-f99546d03a40?w=400', days: '3天', spots: 12, dateStr: '04.20至04.22', collects: 987, views: 6543 }
 ];
 
-function renderFriendTrips() {
-var body = document.getElementById('tripListBody');
+function renderFriendTrips(targetBody) {
+var body = targetBody || document.getElementById('tripListBody');
 if (!body) return;
 if (friendTripsData.length === 0) {
 body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px 20px;">' +
@@ -9737,8 +9666,8 @@ if (tabs[0]) switchTripListTab('myTrips', tabs[0]);
 }, 800);
 }
 
-function renderCompletedTrips() {
-var body = document.getElementById('tripListBody');
+function renderCompletedTrips(targetBody) {
+var body = targetBody || document.getElementById('tripListBody');
 if (!body) return;
 if (completedTrips.length === 0) {
 body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px 20px;">' +
